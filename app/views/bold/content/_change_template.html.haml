@@ -1,0 +1,12 @@
+.modal-dialog.modal-sm
+  .modal-content
+    = simple_form_for @content, url: { action: 'update_template' } do |f|
+      .modal-header
+        %button.close{"data-dismiss" => "modal", :type => "button"} ×
+        %h4= t '.heading'
+
+      .modal-body{style: 'min-height: 100px;'}
+        = f.input :template, required: false, collection: current_site.theme.templates.values, value_method: :name, label_method: :pretty_name, include_blank: false, input_html: { class: 'input-sm' }
+
+      .modal-footer
+        = button '.save', 'success btn-sm save', name: 'save'

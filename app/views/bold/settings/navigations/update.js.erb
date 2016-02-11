@@ -1,0 +1,4 @@
+$('#<%= dom_id @navigation %>').replaceWith('<%= escape_javascript render 'navigation', navigation: @navigation %>');
+$('.navigations-list').sortable();
+window.bold.initDirtyForNavigation($('#<%= dom_id @navigation %> form'));
+<%= raw flash_message %>

@@ -1,0 +1,16 @@
+.modal-dialog.modal-sm
+  .modal-content
+    = simple_form_for @site_user, url: admin_user_site_users_path(@user), remote: true do |f|
+
+      .modal-header
+        %button.close{"data-dismiss" => "modal", :type => "button"} ×
+        %h4#modal-label.modal-title= @user.display_name
+
+      .modal-body
+        = f.input :site_id, collection: @site_user.site_values, include_blank: false
+        = f.input :manager, wrapper: :vertical_boolean
+
+      .modal-footer
+        = button
+
+

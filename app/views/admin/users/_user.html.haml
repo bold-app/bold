@@ -1,0 +1,11 @@
+%h2= @user.name_and_email
+
+%dl
+  - if @user.name.present?
+    %dt= t 'simple_form.user.name'
+    %dd= @user.name
+  %dt= t 'simple_form.user.email'
+  %dd= mail_to @user.email
+
+- if @user.admin?
+  %p= t'.is_admin', name: @user.display_name

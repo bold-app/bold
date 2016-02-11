@@ -1,0 +1,155 @@
+/*
+ * Bold - more than just blogging.
+ * Copyright (C) 2015-2016 Jens Krämer <jk@jkraemer.net>
+ *
+ * This file is part of Bold.
+ *
+ * Bold is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Bold is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Bold.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@media (min-width: $screen-md-min){
+  .container-fluid.absolute {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 50px;
+  }
+
+  .independent-scroll {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    overflow-y: auto;
+    padding-top: 10px;
+
+    header {
+      padding: 10px 0 10px 0;
+    }
+  }
+  .independent-scroll.left-col {
+    left: 0;
+  }
+  .independent-scroll.right-col {
+    right: 0;
+  }
+
+  .independent-scroll.right-col > div {
+    padding-bottom: 50px;
+  }
+
+}
+
+#list-col {
+
+  #new-page, #new-post {
+    margin-left: 20px;
+  }
+
+  .list-group.posts, .list-group.pages {
+    margin-top: 10px;
+
+    .list-group-item {
+      border: none;
+      h4 {
+        font-weight: 400;
+        font-size: 16px;
+        margin-top: 8px;
+      }
+      .date {
+        color: $list-group-link-heading-color;
+        float: left;
+        text-align: center;
+        font-family: 'Yanone Kaffeesatz';
+        line-height: 1.2em;
+        padding: 10px 20px 10px 0;
+        span.md {
+          font-size: 24px;
+        }
+        span.y {
+          font-size: 16px;
+        }
+      }
+      .post {
+        padding-left: 70px;
+      }
+        .hits {
+          float: right;
+          font-family: 'Yanone Kaffeesatz';
+          font-size: 24px;
+          margin-left: 20px;
+        }
+      .date.draft {
+        font-weight: 300;
+      }
+    }
+  }
+
+  p.paging {
+    padding-bottom: 40px;
+    text-align: center;
+  }
+}
+
+#preview article, .comments article {
+  font-size: 16px;
+  font-weight: 300;
+}
+
+#preview {
+
+  header {
+    .back-to-list-group {
+      margin-right: 20px;
+    }
+    p {
+      margin-top: 4px;
+    }
+  }
+  > article {
+    padding: 0 50px 30px 50px;
+  }
+  article {
+
+    h2 {
+      margin-bottom: 30px;
+      a {
+        color: #333;
+      }
+      a:hover {
+        color: #333;
+        text-decoration: none;
+      }
+    }
+
+    img {
+      max-width: 300px;
+    }
+  }
+
+}
+
+@media (max-width: $screen-md-min){
+  #preview {
+    article {
+      padding: 10px 10px;
+    }
+  }
+}
+
+@media (max-width: ($screen-md-min - 1px)){
+}
+

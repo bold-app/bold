@@ -1,0 +1,11 @@
+.col-xs-12.col-sm-3.left-col
+
+  %header.clearfix
+    = link_to icon(:plus), new_admin_invitation_path, title: t('.new'), class: 'pull-right btn btn-success btn-sm', remote: true, id: 'new-user'
+
+  .list-group
+
+    = link_to t('.active'), admin_users_path, class: "list-group-item#{' active' if (@user && @user.active_for_authentication?) || ('index' == params[:action] && 'admin/users' == params[:controller])}"
+    = link_to t('.invited'), admin_invitations_path, class: "list-group-item#{' active' if (@user && !@user.confirmed?) || 'admin/invitations' == params[:controller]}"
+    = link_to t('.locked'), locked_admin_users_path, class: "list-group-item#{' active' if (@user && @user.access_locked?) || 'locked' == params[:action]}"
+

@@ -1,0 +1,4 @@
+<% if comment = results.map(&:object).detect{|o| Comment === o} %>
+  $('#<%= dom_id comment %>').remove();
+  $('.comment-list').replaceWith('<%= escape_javascript render 'bold/activity/comments/comment_list', comment_list: comment.post.comments %>');
+<% end %>

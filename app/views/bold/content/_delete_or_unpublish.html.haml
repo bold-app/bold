@@ -1,0 +1,5 @@
+- if @content.published?
+  = link_with_icon :'eye-close', t('.unpublish'), (Post === @content ? bold_post_path(@content) : bold_page_path(@content)), class: 'btn btn-danger btn-sm', method: :delete, data: {confirm: t('.confirm_unpublish', title: @content.title)}, tabindex: 112
+- elsif @content.persisted?
+  = link_with_icon :trash, t('.delete'), (Post === @content ? bold_post_path(@content) : bold_page_path(@content)), class: 'btn btn-danger btn-sm', method: :delete, data: {confirm: t('.confirm_delete', title: @content.title)}, tabindex: 112
+

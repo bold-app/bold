@@ -1,0 +1,22 @@
+.row
+  = render 'admin/profiles/left_col'
+
+  .col-xs-12.col-sm-7.col-sm-offset-1.col-md-6.right-col
+
+    %h2= t'.heading'
+
+    - if @user.pending_reconfirmation?
+      %p= t'.currently_waiting', email: @user.unconfirmed_email
+    - else
+      %p= t'.info'
+
+    = simple_form_for @user, url: update_email_admin_profile_path, method: :put do |f|
+      = f.input :email
+
+
+      = f.input :current_password, hint: t('.current_password_hint')
+
+      .buttons
+        = button '.button'
+
+

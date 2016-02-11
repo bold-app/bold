@@ -1,0 +1,15 @@
+.form-inputs
+  = f.input :name, input_html: { class: 'input-lg' }, placeholder: t('.placeholder.name')
+  .row
+    .col-lg-4.col-md-6
+      = f.input :theme_name, collection: all_themes, value_method: :id, label_method: :name, include_blank: false
+  .row
+    .col-sm-3
+      = f.input :url_scheme, collection: %w(https http), value_method: :to_s, label_method: :to_s, include_blank: false
+    .col-sm-9
+      = f.input :hostname, placeholder: 'example.com'
+
+  = f.input :alias_string, placeholder: 'example.de example.biz'
+
+
+

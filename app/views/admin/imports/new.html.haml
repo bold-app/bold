@@ -1,0 +1,34 @@
+%h2= t '.h1'
+
+%p
+  = raw t'.info', site: h(@site.name)
+
+.row
+  .col-md-6
+    %h3= t'.upload'
+
+    = simple_form_for @site_import, url: admin_site_import_path(@site) do |f|
+      .form-inputs
+        .row
+          .col-lg-4.col-sm-6
+            = f.input :zipfile, as: :file, wrapper: "vertical_file_input"
+
+
+      .form-actions
+        = f.button :submit, t('.submit'), class: 'btn-primary'
+
+
+  - if @site_import.available_files_for_import.any?
+    .col-md-6
+      %h3= t'.select_file_on_server'
+
+      %table.table
+        %tbody
+          - @site_import.available_files_for_import.each do |digest, file|
+            %tr
+              %td
+                = link_to File.basename(file), admin_site_import_path(@site, local_file: digest), method: :post
+                %small
+                  #{number_to_human_size File.size file},
+                  = l_date_time File.mtime file
+

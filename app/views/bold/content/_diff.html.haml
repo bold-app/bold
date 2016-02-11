@@ -1,0 +1,16 @@
+.modal-dialog.modal-lg.big
+  .modal-content
+    .modal-header
+      %button.close{"data-dismiss" => "modal", :type => "button"} ×
+      %h4#modal-label.modal-title= t '.heading', title: @content.title
+
+    .modal-body
+      - if @diff.present?
+        =raw @diff
+      - else
+        = t '.no_data'
+
+    .modal-footer
+      = link_with_icon :trash, t('.delete_draft'), (Post === @content ? delete_draft_bold_post_path(@content) : delete_draft_bold_page_path(@content)), method: :delete, class: 'btn btn-danger btn-sm'
+
+

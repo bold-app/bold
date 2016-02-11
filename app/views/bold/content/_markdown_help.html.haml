@@ -1,0 +1,47 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button{type:"button", class:"close", data: { dismiss:"modal" }, aria: { label:"Close" }}
+        %span{aria:{hidden:"true"}} &times;
+      %h4#helpHeader.modal-title= t'.heading'
+
+    .modal-body
+
+      %table.table.no-borders
+        %tbody
+          %tr
+            %td
+              %strong Strong Emphasis
+            %td **Strong Emphasis**
+          %tr
+            %td
+              %em Light Emphasis
+            %td *Light Emphasis*
+          %tr
+            %td
+              %code Inline code
+            %td `Inline code`
+          %tr
+            %td
+              %a{href:"https://trybold.org"} External Link
+            %td [Link](https://trybold.org)
+          %tr
+            %td External Image
+            %td ![Alt text](http://...)
+          %tr
+            %td Lists
+            %td * List item
+          %tr
+            %td Blockquote
+            %td &gt; quote
+          %tr
+            %td Headline
+            %td # Headline
+          %tr
+            %td Headline 2nd level
+            %td ## Headline
+          %tr
+            %td Headline 3rd level
+            %td ### Headline
+
+      %p=raw t '.more', link: link_to( t('.link'), 'http://kramdown.gettalong.org/quickref.html', target: '_blank')

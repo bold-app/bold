@@ -1,0 +1,16 @@
+- if content.published?
+  %br/
+  - if count = content.desktop_hits
+    %span{title: t('.desktop_hits')}
+      = icon(:home)
+      = count
+  - if count = content.mobile_hits
+    %span{title: t('.mobile_hits')}
+      = icon(:phone)
+      = count
+  - if content.commentable? and content.comments?
+    %a{href: '#comments', title: t('.comments')}
+      = icon(:comment)
+      = content.comment_count
+
+

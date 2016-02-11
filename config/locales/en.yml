@@ -1,0 +1,630 @@
+en:
+  date:
+    formats:
+      bold_ymd: '%b %d, %Y'
+      month_long: '%B %Y'
+  time:
+    formats:
+      bold_md_y: '<span class="md">%b&nbsp;%d</span><br /><span class="y">%Y</span>'
+      bold_md: '<span class="md" title="%Y-%m-%d">%b&nbsp;%d</span>'
+      bold_ymd: '%b %d, %Y'
+      bold_ymdt: '%b %d, %Y, %H:%M'
+      month_long: '%B %Y'
+
+  common:
+    back: Back
+    more: More
+
+  flash:
+    admin:
+      email_changed: Do not forget to confirm your new address.
+      not_imported: Import failed.
+      password_changed: Password changed.
+      profile_saved: Profile saved.
+      reset_user_password: "The user's password was reset, and an email with recovery instructions was sent to %{email}."
+      site_not_configured: Please complete the configuration of your site now.
+      user_invited: "Sent invitation to %{email}."
+
+    bold:
+      category:
+        deleted: Category deleted.
+      comment:
+        deleted: 'Comment deleted.'
+        spam: 'The comment was reported as spam and deleted.'
+        ham: 'The comment has been marked as not spam.'
+      content:
+        created: Published!
+        created_draft: Draft saved.
+        draft_deleted: Draft deleted.
+        deleted: "%{title} was deleted."
+        no_changes: Nothing changed.
+        no_changes_draft: Nothing changed.
+        not_saved: Error, could not publish.
+        not_saved_draft: Draft could not be saved.
+        saved: Published!
+        saved_draft: Draft saved.
+        template_change_failure: Template change failed.
+        template_change_success: Template changed.
+        unpublished: "%{title} changed to draft state."
+      navigation:
+        deleted: 'Navigation deleted.'
+        created: 'Navigation created.'
+        updated: 'Navigation updated.'
+      plugin:
+        enabled: "Plugin %{name} enabled"
+        disabled: "Plugin %{name} disabled"
+      theme_changed: "Theme changed to %{name}"
+      undo:
+        failed: Undo failed
+        link: Undo
+        success: Undo successful!
+
+    comments:
+      created_appears_soon: Thank you very much. Your comment will be visible as soon as it passed the spam check.
+      created_awaits_moderation: Thank you very much. Your comment will be visible once it has been manually approved.
+
+    created: Created.
+    saved: Saved.
+
+  admin:
+
+    imports:
+      create:
+        back_to_index: Sites
+        h1: Import
+        p: Import completed.
+      new:
+        back_to_index: Sites
+        file: Filename
+        h1: Import
+        info: Import posts, pages and assets into <strong>%{site}</strong>.
+        ctime: Created
+        select_file_on_server: "Or, select a file from your server's exports directory:"
+        size: Size
+        submit: Import
+        upload: 'Upload'
+
+    invitations:
+      index:
+        heading: Pending invitations
+        no_data: There are no invitations pending at the moment.
+      new:
+        heading: Invite user
+        invite: Send invitation
+
+    profiles:
+      edit:
+        author_page_id_info: Have your name linked to a page where you describe yourself. Some themes may also provide a special template for this kind of page.
+        auto_locale: Automatic
+        button: Update Profile
+        heading: Your Profile
+        meta_author_name_plh: Defaults to Name from above if empty
+        meta_author_name_hint: "Will be used to populate the 'author' meta tag."
+        meta_google_plus_hint: "Will be used for the 'link rel=author' meta tag."
+        time_zone_name_info: The backend will display all times relative to the time zone you select here.
+        twitter_hint: "For Twitter Card meta data."
+        vim_hint: "Vim is an advanced text editor. Check the box to have the Bold text editor emulate it's keybindings."
+      edit_email:
+        button: Update Email Address
+        current_password_hint: Please enter your current password to confirm this change.
+        currently_waiting: Currently waiting for confirmation of %{email}.
+        heading: Update Email Address
+        info: A confirmation message will be sent to your new email address.
+      edit_password:
+        button: Change Password
+        current_password_hint: Please enter your current password to confirm this change.
+        heading: Change Password
+
+      left_col:
+        profile: Your Profile
+        email: Update Email Address
+        password: Change Password
+
+    sites:
+      edit:
+        confirm_delete: "Really delete site %{name} and all its contents?"
+        submit: Save
+        link:
+          delete: Delete
+          import: Import
+          export: Export
+      form:
+        label_hostname: Primary hostname
+        placeholder:
+          name: New site
+      index:
+        h1: Your sites
+        site: Site name
+      left_col:
+        new: New site
+      new:
+        heading: New site
+        label_hostname: Primary hostname
+        submit: Create
+
+      select:
+        h2: Select a site
+
+    site_users:
+      index:
+        new: New
+        confirm_delete: "Remove user %{name} from %{site}?"
+
+    users:
+      index:
+        heading: Active users
+      users:
+        invited_at: Invitation sent %{date} ago
+        last_sign_in: Last sign in %{date} ago from %{ip}
+        locked_at: Locked at %{date} (%{attempts} failed login attempts)
+        resend: Resend
+        revoke: Revoke
+      left_col:
+        new: New user
+        active: Active users
+        invited: Pending invitations
+        locked: Locked users
+      locked:
+        heading: Locked users
+        no_data: There are no locked users at the moment.
+      show:
+        confirm_delete: "Delete user %{name}?"
+        lock: Lock user
+        unlock: Unlock user
+        resend: Resend invitation
+        reset_password: Reset password
+        memberships: Site memberships
+        new: New
+        back: Back
+      user:
+        is_admin: "%{name} is an Administrator."
+
+
+  bold:
+
+    activity:
+      comments:
+        index:
+          apply: Apply
+          delete: Delete
+          heading: Comments
+          status: &comment_states
+            pending: Pending
+            approved: Approved
+            deleted: Deleted
+            spam: Spam
+          th:
+            author: Author
+            comment: Comment
+            in_response_to: In response to
+        comment:
+          approve: Approve
+          delete: Delete
+          ham: Not Spam
+          post_comment_count:
+            zero: 'no comments'
+            one: '%{count} comment'
+            other: '%{count} comments'
+          spam: Spam
+          status:
+            <<: *comment_states
+          unapprove: Unapprove
+
+      left_col:
+        comments: Comments
+        stats: Statistics
+
+      stats:
+        index:
+          heading: Statistics
+          pageviews_per_visit: "%{number} page views / visit (%{delta})"
+          pageviews: Page views / day
+          pageviews_avg: "%{value} / day (%{delta})"
+          visits: Visits / day
+          visits_avg: "%{value} / day (%{delta})"
+          day: Today
+          week: This week
+          month: Last 4 weeks
+          quarter: Last 12 weeks
+          year: The last year
+
+    alert:
+      close: Close
+
+    asset_links:
+      new:
+        heading: Select an Image
+        original: Original size
+        label:
+          size: Image size
+          link: Create link to...
+        placeholder:
+          size: Please pick one
+          link: ''
+      show:
+        link_to: Link target
+        size: Image size
+      form:
+        copy: Copy
+        link_to_hint: Enter a URL or select an image size to link to. Leave blank for no link.
+        link_to_placeholder: Link to...
+        remove: Remove
+        size_placeholder: ''
+      form_builder:
+        click_to_select: Select
+        remove_image: Clear
+      index:
+        heading:
+          file: Choose File
+          image: Choose Image
+        button_close: Cancel
+
+    assets:
+      asset:
+        confirm_delete:
+          zero: Delete %{name}?
+          one: "%{name} is referenced by one page or post. Delete anyway?"
+          other: "%{name} is referenced by %{count} pages or posts. Delete anyway?"
+      edit:
+        button_close: Cancel
+        change_file: Replace file...
+        save: Update
+      index:
+        upload: Upload
+      new:
+        add_files: Click to select
+        add_more: Add more files...
+        drag_photos_here: Drag files here
+        heading: Upload
+      meta:
+        taken_on: "Shot on %{date}"
+      update:
+        success: 'Saved.'
+
+    common:
+      nav:
+        activities: Activity
+        admin: Administration
+        assets: Files
+        back: "Return to %{site}"
+        change_site: Switch site
+        new_post: New post
+        pages: Pages
+        plugins: Plugins
+        posts: Posts
+        profile: Profile
+        settings: Settings
+        signout: Sign out
+        sites: Sites
+        users: Users
+
+      none: none
+      or: or
+      placeholder: Placeholder
+      roles:
+        admin: Administrator
+        manager: Manager
+        editor: Editor
+      save: Save
+      untitled: Untitled
+
+    content:
+
+      navigation:
+        home: Home
+
+      page_body:
+        notfound: Page not found.
+        error: Your request could not be fulfilled.
+      page_title:
+        archive: Posts Archive
+        author: Posts by Author
+        homepage: Homepage
+        notfound: Not Found
+        error: Error
+        tag: Posts by Tag
+        category: Category Posts
+        search: Search
+
+      change_template:
+        heading: Change template
+        save: Save
+      delete_or_unpublish:
+        confirm_delete: "Delete '%{title}'?"
+        confirm_unpublish: "Remove '%{title}' from the public site?"
+        delete: Delete
+        unpublish: Unpublish
+      diff:
+        heading: "Drafted changes on '%{title}'"
+        delete_draft: Delete draft
+      edit:
+        insert_media: Add images
+        image_picker: Insert image...
+        info_no_body: "The %{template} template indicates that it does not render any body content."
+        title: Title
+        title_plh: Title Goes Here
+        toolbar:
+          capitalize: Title-case selection or current line
+          link: Insert link
+          image: Insert image
+          zenmode: Enter fullscreen mode
+      editor_sidebar:
+        bold/post:
+          not_published_yet: This post has not been published yet.
+        bold/page:
+          not_published_yet: This page has not been published yet.
+        change_template: 'Select...'
+        meta_description_remaining_chars: 'Suggested characters remaining: '
+        meta_title_plh: Leave empty to use the Headline
+        post_date_str_plh: tomorrow, sunday at 11pm
+        publish: 'Save & Publish'
+        published_on: Published on %{date}.
+        published_on_updated: First published on %{date}, last update on %{update}.
+        save: Save
+
+      markdown_help:
+        heading: Markdown
+        more: For a detailed reference of the supported syntax see %{link}.
+        link: the kramdown docs
+
+      publish_status:
+        draft_info: Draft saved on %{date}.
+        last_updated_on: 'Last updated on %{date}.'
+        last_saved: 'Last saved on %{date}.'
+        state:
+          draft: Not published yet.
+          new: Not saved yet.
+          published: "First published on %{date}."
+        view_diff: View changes
+
+      stats:
+        mobile_hits: mobile visits
+        desktop_hits: desktop visits
+        comments: comments
+
+      update:
+        error: Error saving post!
+        published: Published!
+        saved: Saved!
+
+    extensions:
+      no_config: This extension cannot be configured.
+
+
+      plugin:
+        enabled: "%{name} is now enabled."
+        disabled: "%{name} has been disabled."
+      theme:
+        changed: "Theme changed to %{name}"
+
+    pages:
+      edit:
+        h1: Edit Page
+
+      form:
+      index:
+        no_content: "You don't have any pages yet. Click the plus icon above to create one!"
+        unpublished_changes: Has unpublished changes.
+        hits_info: all time visits
+
+      new:
+        h1: New Page
+      show:
+        created_by: Created by %{author} on %{date}.
+        published_by: Published by %{author} on %{date}.
+        template: "Template: %{name}"
+        edit: Edit
+        back: Back
+
+
+    posts:
+      edit:
+        h1: Edit Post
+
+      index:
+        more: Load more...
+        no_content: "You don't have any posts yet. Click the plus icon above to create one!"
+        unpublished_changes: Has unpublished changes.
+      new:
+        h1: New Post
+      post:
+        hits_info: all time visits
+      show:
+        created_by: Created by %{author} on %{date}.
+        published_by: Published by %{author} on %{date}.
+        edit: Edit
+        template: "Template: %{name}"
+        back: Back
+        comments:
+          zero: "No Comments"
+          one: "One Comment"
+          other: "%{count} Comments"
+
+
+    settings:
+      backups:
+        index:
+          get_backup: Download Backup
+          heading: Backup
+          info: Backups include all pages, posts and files of the site, but not any user data or configuration. You can also use them to move your site to another Bold installation.
+
+      categories:
+        category:
+          name_plh: Category name
+          slug_plh: "category-name"
+        edit:
+          heading: "Category: %{name}"
+        index:
+          heading: Categories
+          new_category: New category
+          no_data: There are no categories.
+        new:
+          heading: New category
+        form:
+          asset: Category image
+          save: Save
+          select_image: Select
+          remove_image: Remove
+
+      html_snippets:
+        edit:
+          heading: Custom HTML
+          info: These snippets will be inserted into each page. You can use them to add custom meta tags, javascript or tracking code to your site.
+
+      left_col:
+        general: General
+        html_snippets: Custom HTML
+        plugins: Plugins
+        themes: Themes
+        users: Users
+        backup: Backup
+
+      navigations:
+        index:
+          heading: Navigation
+        navigation:
+          name_plh: Label
+
+      plugins:
+        edit:
+          back: "Plugins"
+          disable: Disable
+        index:
+          heading: Plugins
+          info: "Click a plugin to enable and configure it for this site. To turn off a specific plugin, click it and select <em>Disable</em>. Plugin configuration will not be lost if you disable a plugin temporarily for a site."
+        plugin:
+          by: "by %{author}"
+
+      settings:
+        edit:
+          akismet_key_hint: Akismet is a comment spam filtering service. To use it, get an API key at akismet.com
+          twitter_hint: "For Twitter Card meta data."
+          comments:
+            disabled: Disabled
+            enabled: Enabled
+            with_approval: Approval required
+          heading: General
+          hostname_plh: yoursite.com
+          legend:
+            comments: Comments & Spam Filtering
+            i18n: Internationalization
+            pages: Special Pages
+          set_favicon: "Select..."
+          change: "Change..."
+        image_picker:
+          heading: Select an image
+          no_possible_files: "I couldn't find any suitable files."
+          upload: "Upload one!"
+
+
+
+      site_users:
+        index:
+          heading: Users
+          invited: Invited
+          locked: Locked
+          invited_at: Invitation sent %{date} ago
+          last_sign_in: Last sign in %{date} ago from %{ip}
+          locked_at: Locked at %{date} due to %{attempts} failed login attempts
+          new_user: Invite a new user
+          resend: Resend email
+          revoke: Revoke invitation
+        new:
+          heading: Invite a new user
+          invite: Send invitation
+
+      themes:
+        edit:
+          back: "Themes"
+          templates: Templates
+          template_hint: "These are presets for new posts and pages and can be overriden if necessary."
+          config: Theme Options
+        index:
+          heading: Themes
+          current_theme: "Your current theme is <strong>%{name}</strong>."
+          info: Click any theme below to activate and configure it. Theme settings will be persisted for each theme separately so you do not lose them when switching back and forth between themes.
+        theme:
+          by: "by %{author}"
+
+  layouts:
+    admin:
+
+  setup:
+    users:
+      new:
+        intro: Hello! Before you start, please set up a user account.
+    sites:
+      new:
+        hello: "Nice to meet you, %{name}!"
+        intro: "Please provide some basic information about your site. You can change these settings anytime later, so don't worry too much for now."
+        label_hostname: Hostname
+        submit: Continue
+
+  activerecord:
+    site:
+      hostname_not_unique: This hostname is already in use.
+      aliases_not_unique: "The alias %{alias} is already in use."
+  simple_form:
+    labels:
+      defaults:
+        title: Title
+        tag_list: Tags
+        category_id: Category
+        slug: Permalink
+
+      asset:
+        title: Title
+        caption: Caption
+      asset_search:
+        query: Filename, title, caption, tags
+        content_type: Content type
+        content_type_blank: Any content type
+      comment_search:
+        query: Author, IP, content
+        state: State
+        state_blank: Any state
+      content_search:
+        query: Search...
+      content:
+        post_date_str: Publish date
+      site:
+        akismet_key: Akismet API key
+        alias_string: Alternative hostnames
+        default_locale: Default language
+        detect_user_locale: Try to detect the preferred language of frontend users
+        default_image_version: Default inline image size
+        default_image_link_version: Image size which inline images will link to by default
+        hostname: Hostname
+        homepage_id: Homepage
+        honor_donottrack: "Respect the 'Do Not Track' header"
+        html_head_snippet: Insert into <head>
+        body_start_snippet: Insert at beginning of <body>
+        body_end_snippet: Append to <body>
+        name: Site name
+        notfound_page_id: File Not Found page
+        tag_page_id: Page for listing posts by tag
+        author_page_id: Page for listing posts by author
+        scheme: URL scheme
+        theme_name: Theme
+        time_zone_name: Time zone
+        twitter_handle: Twitter handle
+        post_comments: Comments
+        url_scheme: URL scheme
+      theme_config:
+        default_post_template: Default template for posts
+        default_page_template: Default template for pages
+        subtitle: Subtitle
+      user:
+        author_page_id: About page
+        email: Email address
+        meta_author_name: Full name
+        meta_google_plus: 'Google+ profile URL'
+        twitter_handle: Twitter handle
+        name: Name
+        current_password: Current password
+        password: Password
+        password_confirmation: Confirm your new password
+        time_zone_name: Your time zone
+        vim_mode: Enable Vim mode for content editing
+        admin: Administrator
+

@@ -1,0 +1,16 @@
+.row
+  .col-sm-9.col-sm-offset-1.col-md-8.col-lg-7
+
+    %h2= t '.heading'
+
+    %p= t '.info'
+
+    = simple_form_for @site, url: bold_settings_html_snippet_path do |f|
+
+      = f.input :html_head_snippet, as: :text, input_html: { rows: 6 }
+      = f.input :body_start_snippet,  as: :text, input_html: { rows: 6 }
+      = f.input :body_end_snippet,  as: :text, input_html: { rows: 6 }
+
+      .buttons
+        = button
+

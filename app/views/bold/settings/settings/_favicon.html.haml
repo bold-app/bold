@@ -1,0 +1,31 @@
+.modal-dialog.modal-lg.big
+  .modal-content
+    .modal-header
+      %button.close{"data-dismiss" => "modal", :type => "button"} ×
+      %h4#modal-label.modal-title= t '.heading'
+
+    .modal-body
+
+      .row
+        - if @assets.blank?
+          .col-xs-12
+            %p
+              = t'.no_possible_icons'
+              = link_to t('.upload'), new_bold_asset_path , class: 'btn btn-default'
+        - else
+          - for asset in @assets
+            .col-xs-2
+              .thumbnail
+                = link_to asset_tag(asset, :bold_thumb), bold_settings_settings_path(site: { favicon_id: asset.id }), method: :put, title: asset.filename
+                .caption
+                  = asset.filename
+                  - if asset.title.present?
+                    %br/
+                    = asset.title
+                  %br/
+                  = number_to_human_size asset.file_size
+                  %br/
+                  = l_date_time asset.created_at
+
+    .modal-footer
+      = bold_pagination_for @assets, remote: true

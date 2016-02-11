@@ -1,0 +1,9 @@
+%h2= t '.h2'
+
+%table.table
+  %tbody
+    - for site in @sites
+      %tr
+        %td
+          = link_to site.name, select_admin_site_path(site)
+

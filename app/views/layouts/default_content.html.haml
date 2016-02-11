@@ -1,0 +1,11 @@
+!!!
+%html{itemscope: true, itemtype: 'http://schema.org/WebPage', prefix:'og: http://ogp.me/ns#'}
+  %head
+    = bold_meta
+    = yield :html_head
+
+  %body{id: yield(:body_id), class: yield(:body_class)}
+    = bold_header
+    = yield
+    = bold_footer
+

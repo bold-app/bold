@@ -1,0 +1,13 @@
+- enabled = current_site.plugin_enabled? plugin.id
+
+= link_to( (enabled ? edit_bold_settings_plugin_path(plugin.id) : enable_bold_settings_plugin_path(plugin.id)), method: (enabled ? :get : :put), class: "clearfix list-group-item#{' active' if current_site.plugin_enabled? plugin.id}" ) do
+  %h4.list-group-item-heading
+    = plugin.name
+    %small= plugin.version if plugin.version.present?
+  %p.list-group-item-text
+    = t '.by', author: plugin.author if plugin.author.present?
+    - if plugin.description.present?
+      %br/
+      %small= plugin.description
+
+

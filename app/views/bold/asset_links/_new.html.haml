@@ -1,0 +1,58 @@
+.modal-dialog.modal-lg.big
+  .modal-content
+    .modal-header
+      %button.close{"data-dismiss" => "modal", :type => "button"} ×
+      %h4= t '.heading'
+
+    .modal-body
+      .row
+
+        #imagepicker.col-xs-12.col-sm-9.col-md-10{ data: { rel: params[:rel] || 'editor' }}
+
+          .thumb.preview.img.template
+            %img/
+            .progress-wrapper
+              .progress
+                .progress-bar{"aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => "0", :role => "progressbar", :style => "width: 0;"}
+              %a.cancel{:href => "#"}
+                %span.glyphicon.glyphicon-remove
+
+          - for asset in @assets
+            .thumb{data:{ md: asset.markdown, asset_id: asset.id }}
+              = link_to asset_tag(asset, :bold_thumb), '#', title: asset.filename
+
+          = bold_pagination_for @assets, remote: true
+
+        #imagepicker-sidebar.col-xs-12.col-sm-3.col-md-2
+          = form_for Asset.new, url: bold_assets_path, html: { multipart: true, id: 'fileupload' } do |f|
+            %span.btn.btn-sm.btn-primary.btn-file
+              %span= t('.upload')
+              = f.file_field :file, :multiple => true
+
+          - unless params[:rel].present?
+            %hr/
+            %form
+              #image-version.form-group.select
+                %label{for:'image-version'}= t '.label.size'
+                %select.select.form-control.combobox.input-sm
+                  %option{value:''}= t '.placeholder.size'
+                  = options_from_collection_for_select @image_versions, :name, :pretty_name
+                  %option{value:'original'}= t '.original'
+              #image-link.form-group.select
+                %label{for:'image-link'}= t '.label.link'
+                %select.select.form-control.combobox.input-sm{data:{freeform: 1}}
+                  %option{value:''}= t '.placeholder.link'
+                  = options_from_collection_for_select @image_versions, :name, :pretty_name, include_blank: true
+                  %option{value:'original'}= t '.original'
+
+
+
+= javascript_tag do
+  - if params[:rel].blank?
+    window.boldEditor.restoreImageOptions();
+    $('.combobox').combobox();
+  window.boldEditor.initImagepicker();
+  $(function () {
+  $('#fileupload').uploader({debug: false, container: '#imagepicker', onlyImages: true, initPicker: true});
+  });
+

@@ -1,0 +1,6 @@
+.col-xs-12.col-sm-3.left-col
+
+  .list-group
+    = link_to t('.comments'), bold_activity_comments_path, class: "list-group-item#{' active' if 'bold/activity/comments' == params[:controller]}"
+    = link_to t('.stats'), bold_activity_stats_path, class: "list-group-item#{' active' if 'bold/activity/stats' == params[:controller]}"
+

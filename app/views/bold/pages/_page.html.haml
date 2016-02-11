@@ -1,0 +1,13 @@
+= link_to bold_page_path(page), remote: true, class: "clearfix list-group-item #{'active' if page == @content}" do
+  .hits{title: t('.hits_info')}
+    = page.hit_count if page.hit_count > 0
+  .page
+    %h4.list-group-item-heading
+      = page.title
+    %p.list-group-item-text
+      %small
+        = page.slug
+        - if page.published? && page.has_draft?
+          %br/
+          (#{t '.unpublished_changes'})
+

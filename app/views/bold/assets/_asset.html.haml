@@ -1,0 +1,27 @@
+.col-xs-3.col-sm-2
+  .thumbnail
+    = link_to asset_tag(asset), edit_bold_asset_path(asset), remote: true
+    .caption
+      = asset.filename
+      - if asset.title.present?
+        %br/
+        = asset.title
+      %br/
+      = number_to_human_size asset.file_size
+      %br/
+      = l_date_time asset.created_at
+
+      %span.pull-right
+        = link_to icon(:trash), bold_asset_path(asset), method: :delete, data: { confirm: t('.confirm_delete', name: asset.filename, count: 0) }
+
+/%td
+/  = link_to asset.filename, edit_admin_asset_path(asset), remote: true
+/  - if asset.title.present?
+/    %br/
+/    %small= asset.title
+/%td= number_to_human_size asset.file_size
+/%td= l asset.created_at
+/%td
+/  %span.pull-right
+/    = link_to icon(:trash), admin_asset_path(asset), method: :delete, data: { confirm: t('.confirm_delete', name: asset.filename, count: 0) }
+

@@ -1,0 +1,166 @@
+/*
+ * Bold - more than just blogging.
+ * Copyright (C) 2015-2016 Jens Krämer <jk@jkraemer.net>
+ *
+ * This file is part of Bold.
+ *
+ * Bold is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Bold is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Bold.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#editor-sidebar label, #imagepicker-sidebar label,
+#editor-sidebar .help-block, #imagepicker-sidebar .help-block {
+  font-size: 85%;
+}
+
+#editor-wrapper {
+  input.title {
+    margin: 20px 0;
+    height: 46px;
+    padding: 10px 20px;
+    font-size: 18px;
+    line-height: 1.33333;
+    background: $component-active-bg;
+    border: none;
+    width: 100%;
+  }
+
+  .toolbar {
+    font-size: 18px;
+    height: 30px;
+    span.group {
+      margin-left: 10px;
+    }
+    a, a:visited {
+      color: $gray-dark;
+      margin-left: 5px;
+    }
+    a:hover {
+      color: #333;
+    }
+  }
+
+  #editor {
+    font-family: $font-family-monospace;
+    clear: both;
+    font-size: $font-size-base;
+    line-height: 1.66666;
+    background-color: $body-bg;
+    max-width: 100em;
+    .ace_gutter {
+      background-color: $component-active-bg;
+    }
+  }
+
+}
+#editor-sidebar {
+  padding-top: 20px;
+  padding-bottom: 50px;
+
+  .actions-top {
+    margin-bottom: 20px;
+  }
+  .actions-bottom {
+    padding-top: 20px;
+  }
+  #publish-status {
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+
+  .checkbox label {
+    line-height: 2.5em;
+    font-weight: bold;
+    input {
+      margin-top: 0;
+    }
+  }
+
+}
+
+
+@media (min-width: $screen-sm-min) {
+  #editor-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+
+    #editor {
+      // leave space for the title field and toolbar
+      height: calc(100% - 116px);
+    }
+  }
+  #editor-sidebar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+@media (max-width: ($screen-sm-min - 1px)) {
+  #editor-wrapper {
+    #editor {
+      height: 400px;
+    }
+  }
+  #editor-sidebar {
+    .actions {
+      text-align: right;
+    }
+  }
+
+}
+
+
+.zenmode {
+
+  #editor-wrapper {
+
+    position: fixed;
+    padding: 0 20px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    width: 100%;
+    z-index: 1025;
+    background-color: #fbfbfb;
+
+    .ace_editor {
+      height: 100%;
+      font-size: 15px;
+      line-height: 25px;
+      background-color: inherit;
+
+      .ace_gutter, .ace_gutter-active-line {
+        background-color: inherit;
+      }
+    }
+
+    @media (max-width: ($screen-sm-min - 1px)) {
+      #editor {
+        height: 100%;
+      }
+    }
+
+    @media (min-width: $screen-sm-min) {
+      padding: 0 200px;
+    }
+
+  }
+}
+

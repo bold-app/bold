@@ -1,0 +1,6 @@
+<% if partial = @undo_session.try(:undo_info) %>
+  <%= render partial, results: @undo_results %>
+  <%= raw flash_message %>
+<% else %>
+  window.location.reload();
+<% end %>

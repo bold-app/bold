@@ -1,0 +1,17 @@
+.row
+  = render 'bold/settings/left_col'
+
+  .col-xs-12.col-sm-8.col-md-7.col-sm-offset-1
+
+    %h2
+      = link_to icon(:plus), new_bold_settings_category_path, class: 'btn btn-sm btn-success pull-right', title: t('.new_category'), id: 'new-category'
+      = t'.heading'
+
+    %ul.media-list.categories
+      = render partial: 'category', collection: @categories
+
+    - if @categories.empty?
+      %p.no-data= t'.no_data'
+
+
+

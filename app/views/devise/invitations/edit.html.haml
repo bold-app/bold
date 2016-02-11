@@ -1,0 +1,15 @@
+%h2= t 'devise.invitations.edit.header'
+
+.row
+  .col-md-8
+
+    = simple_form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :put } do |f|
+      /= devise_error_messages!
+      = f.error_notification
+      = f.input :invitation_token, as: :hidden
+      = f.full_error :invitation_token
+      .form-inputs
+        = f.input :password
+        = f.input :password_confirmation
+      .form-actions
+        = f.button :submit, t(".button"), class: 'btn-primary'

@@ -1,0 +1,18 @@
+.row
+  = render 'bold/settings/left_col'
+
+  .col-xs-12.col-sm-7.col-md-6.col-sm-offset-1.right-col
+
+    %header.clearfix
+      = link_with_icon :trash, t('common.delete'), bold_settings_category_path(@category), method: :delete, class: 'pull-right btn btn-danger btn-sm'
+      = link_with_icon :menu_left, t('common.back'), bold_settings_categories_path, class: 'btn btn-default btn-sm'
+
+    %h2= t'.heading', name: @category.name
+
+    = simple_form_for @category, url: bold_settings_category_path(@category) do |f|
+      = render 'form', f: f
+
+
+
+
+

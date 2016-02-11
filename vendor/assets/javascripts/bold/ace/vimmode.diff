@@ -1,0 +1,14 @@
+diff --git a/vendor/assets/javascripts/bold/ace/keybinding-vim.js b/vendor/assets/javascripts/bold/ace/keybinding-vim.js
+index 2c1e89b..f05ab04 100644
+--- a/vendor/assets/javascripts/bold/ace/keybinding-vim.js
++++ b/vendor/assets/javascripts/bold/ace/keybinding-vim.js
+@@ -5515,7 +5515,8 @@ dom.importCssString(".normal-mode .ace_cursor{\
+     type: "boolean"
+   }, false);
+   Vim.defineEx('write', 'w', function() {
+-    console.log(':write is not implemented')
++    // the Save command is defined in bold/editor.js.coffee
++    cm.ace.execCommand('Save');
+   });
+   defaultKeymap.push(
+     { keys: 'zc', type: 'action', action: 'fold', actionArgs: { open: false } },

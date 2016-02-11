@@ -1,0 +1,44 @@
+.row
+  .col-xs-12.col-sm-10.col-sm-offset-1
+
+    .actions
+
+      = button '.save', 'success btn-sm save', name: 'save', tabindex: 110, icon: :save, disabled: true
+      = button '.publish', "primary btn-sm save #{@content.has_unpublished_changes? ? 'has-draft' : 'has-no-draft'}", name: 'publish', tabindex: 111, icon: :globe, disabled: !@content.has_unpublished_changes?
+
+      #other-actions.pull-right
+        = render partial: 'bold/content/delete_or_unpublish'
+
+    %p#publish-status
+      = render partial: 'bold/content/publish_status', locals: { content: @content }
+
+    - unless @content.published?
+      #pubdate-field
+        %p
+          = f.input :post_date_str, as: :string, placeholder: t('.post_date_str_plh'), input_html: { tabindex: 105 }
+
+
+    = f.input :slug, wrapper_html: { class: 'content-slug' }, input_html: { data: { locked: @content.slug.present? }, tabindex: 100, class: 'content-slug input-sm' }, disabled: @content.published?
+
+    - if current_site.categories.any? && @content.is_a?(Post)
+      = f.input :category_id, collection: current_site.categories, label_method: :name, value_method: :id
+
+    = f.input :tag_list, as: :text, input_html: { rows: 2, class: 'input-sm', tabindex: 101 } if Post === @content
+    = f.input :meta_title, as: :string, input_html: { class: 'input-sm', placeholder: t('.meta_title_plh'), tabindex: 102 }
+    = f.input :meta_description, as: :text, wrapper_html: { id: 'meta_description_wrapper' }, input_html: { class: 'input-sm', rows: 2, tabindex: 103 }, hint: t('.meta_description_remaining_chars')
+
+    - if @content.new_record?
+      = f.input :template, required: false, collection: current_site.theme.templates.values, value_method: :name, label_method: :pretty_name, include_blank: false, input_html: { class: 'input-sm', tabindex: 104 }
+    - else
+      .form-group
+        %label.control-label= t'.template'
+        %p.small.form-control-static
+          = link_to t('.change_template'), { action: 'change_template' }, data: { ondirty: 'Please save your changes first before changing the template.' }, id: 'change-template', remote: true, class: 'btn btn-default btn-sm pull-right'
+          = @content.get_template.pretty_name
+
+    - if @content.has_template_fields?
+      = f.fields_for :template_field_values, f.object, builder: Bold::Views::TemplateFieldsFormBuilder do |f|
+        = render @content.template_fields_partial, f: f
+
+
+

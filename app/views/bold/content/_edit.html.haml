@@ -1,0 +1,35 @@
+- content_for :container_class, 'absolute'
+
+#markdown-help.modal.fade{ tabindex:"-1", role:"dialog", aria: { labelledby:"helpHeader", hidden:"true" } }
+  = render 'bold/content/markdown_help'
+
+
+= simple_form_for @content, url: content_form_url(@content), html: { id: 'bold-editor-form', role: 'form', remote: true } do |f|
+  .row
+
+    #editor-wrapper.col-xs-12.col-sm-8.col-md-7
+      = f.text_field :title, placeholder:t('.title_plh'), class: 'title', id: 'title-field', autofocus: ('autofocus' if @content.new_record?)
+
+      - if @content.get_template.body?
+        .toolbar
+          = link_to icon(:'question-sign'), '#', data: { toggle: 'modal', target: '#markdown-help' }, tabindex: 999
+          .pull-right
+            %span.group
+              = link_to icon(:header), '#', id: 'title-caps', title: t('.toolbar.capitalize'), tabindex: 999
+
+            %span.group
+              = link_to icon(:link), '#', id: 'link', title: t('.toolbar.link'), tabindex: 999
+              = link_to icon(:picture), new_bold_asset_link_path, remote: true, id: 'picture', title: t('.toolbar.image'), tabindex: 999
+
+            %span.group
+              = link_to icon(:fullscreen), '#', id: 'zen-mode', title: t('.toolbar.zenmode'), tabindex: 999
+
+
+        = f.text_area :body, class: 'ace', data: { container: 'editor', vimmode: current_user.vim_mode? }
+        #editor
+      - else
+        %p= t'.info_no_body', template: @content.template
+
+    #editor-sidebar.independent-scroll.col-xs-12.col-sm-4.col-md-5
+      = render 'bold/content/editor_sidebar', f: f
+

@@ -1,0 +1,12 @@
+.row
+  .col-sm-11.col-sm-offset-1.col-md-10
+
+    %h2= t'.heading'
+
+    .sortable.navigations-list{data:{ url: sort_bold_settings_navigations_path }}
+      = render partial: 'navigation', collection: @navigations
+
+    = render 'navigation', navigation: @navigation
+
+= javascript_tag do
+  window.bold.initDirtyForNavigations();

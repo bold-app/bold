@@ -1,0 +1,94 @@
+.row
+  .col-sm-9.col-sm-offset-1.col-md-8.col-lg-7
+
+    %h2= t '.heading'
+
+    = simple_form_for @site, url: bold_settings_settings_path do |f|
+
+      = f.input :name, input_html: { class: 'input-lg' }
+      .row
+        .col-sm-3
+          = f.input :url_scheme, collection: %w(https http), value_method: :to_s, label_method: :to_s, include_blank: false
+        .col-sm-9
+          = f.input :hostname, placeholder: t('.hostname_plh')
+      = f.input :alias_string
+
+      .row
+        .col-sm-3
+          .form-group
+            %label.control-label= t'.favicon'
+            %div.favicon
+              - if @site.favicon
+                = link_to image_tag(bold_asset_path(@site.favicon), alt: 'favicon'), favicon_bold_settings_settings_path, remote: true
+                &nbsp;
+                = link_to t('.change'), favicon_bold_settings_settings_path, remote: true, class: 'btn btn-default btn-sm'
+              - else
+                = link_to t('.set_favicon'), favicon_bold_settings_settings_path, remote: true, class: 'btn btn-default btn-sm'
+
+        .col-sm-9
+          .form-group
+            %label.control-label= t'.logo'
+            %div.logo
+              - if @site.logo
+                = link_to image_tag(bold_asset_path(@site.logo), alt: 'logo'), logo_bold_settings_settings_path, remote: true
+                &nbsp;
+                = link_to t('.change'), logo_bold_settings_settings_path, remote: true, class: 'btn btn-default btn-sm'
+              - else
+                = link_to t('.set_favicon'), logo_bold_settings_settings_path, remote: true, class: 'btn btn-default btn-sm'
+
+      = f.input :twitter_handle, hint: t('.twitter_hint')
+
+      = f.input :honor_donottrack, as: :boolean, wrapper: :vertical_boolean
+
+      %fieldset
+        %legend= t '.legend.i18n'
+        .row
+          .col-sm-6
+            = f.input :default_locale, collection: languages_for_select(@site.available_locales), value_method: :last, label_method: :first, include_blank: false
+          .col-sm-6
+            = f.input :detect_user_locale, as: :boolean, wrapper: :vertical_boolean
+
+        .row
+          .col-sm-6
+            = f.input :time_zone_name
+
+
+      %fieldset
+        %legend= t '.legend.pages'
+
+        .row
+          .col-sm-6
+            = f.input :homepage_id, collection: pages_for(:homepage), value_method: :to_param, label_method: :title, include_blank: false
+          .col-sm-6
+            = f.input :search_page_id, collection: pages_for(:search), value_method: :to_param, label_method: :title, include_blank: true
+        .row
+          .col-sm-6
+            = f.input :tag_page_id, collection: pages_for(:tag), value_method: :to_param, label_method: :title, include_blank: true
+          .col-sm-6
+            = f.input :category_page_id, collection: pages_for(:category), value_method: :to_param, label_method: :title, include_blank: true
+        .row
+          .col-sm-6
+            = f.input :author_page_id, collection: pages_for(:author), value_method: :to_param, label_method: :title, include_blank: true
+          .col-sm-6
+            = f.input :archive_page_id, collection: pages_for(:archive), value_method: :to_param, label_method: :title, include_blank: true
+        .row
+          .col-sm-6
+            = f.input :notfound_page_id, collection: pages_for(:not_found), value_method: :to_param, label_method: :title, include_blank: true
+          .col-sm-6
+            = f.input :error_page_id, collection: pages_for(:error), value_method: :to_param, label_method: :title, include_blank: true
+
+
+      %fieldset
+        %legend= t '.legend.comments'
+
+        .row
+          .col-sm-6
+            = f.input :post_comments, collection: comment_options, value_method: :first, label_method: :last, include_blank: t('admin.sites.edit.comments.disabled')
+        .row
+          .col-sm-12
+            = f.input :akismet_key, hint: t('.akismet_key_hint')
+
+
+      .buttons
+        = button
+

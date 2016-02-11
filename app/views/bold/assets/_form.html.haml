@@ -1,0 +1,12 @@
+.meta
+  .thumb
+    - if @asset.image?
+      = asset_tag @asset, :bold_thumb
+    - else
+      = placeholder_image_tag 105, 4.0/3
+
+  = render 'meta', asset: @asset
+
+= f.input :title, label: false, placeholder: t('simple_form.labels.defaults.title'), wrapper_html: { class: 'clearfix'}, input_html: { class: 'input-sm' }
+= f.input :caption, label: false, placeholder: t('simple_form.labels.asset.caption'), input_html: { rows: 3, class: 'input-sm' }
+= f.input :tag_list, input_html: { class: 'input-sm' }, as: :text

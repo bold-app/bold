@@ -1,0 +1,2 @@
+- @content.variables.each do |name, kind|
+  = render "bold/content/theme_variable_#{kind}", f: f, name: name, label: theme_text("variables.#{name}")

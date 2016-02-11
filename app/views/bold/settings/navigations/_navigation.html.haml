@@ -1,0 +1,16 @@
+- html_id = dom_id(navigation)
+.row{id: html_id, data: { id: navigation.id, pos: navigation.position }}
+  = simple_form_for navigation, html: {id: ('new_navigation_form' if navigation.new_record?) }, url: (navigation.new_record? ? bold_settings_navigations_path : bold_settings_navigation_path(navigation)), remote: true do |f|
+    .col-xs-12.col-sm-4
+      = link_to icon(:sort), '#', class: 'move pull-left' unless navigation.new_record?
+      = f.input :name, input_html: { id: "#{html_id}_name" }, placeholder: t('.name_plh'), label: false
+    .col-xs-12.col-sm-6
+      = f.input :url, input_html: { id: "#{html_id}_url" }, placeholder: current_site.external_url, label: false
+    .col-sm-2.col-xs-12
+      %p
+        - if navigation.new_record?
+          = button '', 'success', icon: :plus
+        - else
+          = link_to icon(:minus), bold_settings_navigation_path(navigation), method: :delete, class: 'btn btn-default btn-danger', remote: true
+          = button '', 'primary', icon: :ok, style: ('display: none;' unless navigation.errors.any?)
+

@@ -1,0 +1,6 @@
+<% if @success %>
+  $('#<%= dom_id @asset %>').html('<%= escape_javascript render('bold/assets/asset', asset: @asset) %>');
+  $('#modal').html('').modal('hide');
+<% else %>
+  $('#modal').html('<%= escape_javascript render 'modal_edit' %>');
+<% end %>

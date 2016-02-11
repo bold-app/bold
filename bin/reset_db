@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# rake db:data:dump db:drop db:create db:migrate db:seed db:data:load
+rake db:data:dump db:drop db:create db:migrate db:data:load

@@ -1,0 +1,16 @@
+<h2>Setup</h2>
+<p><%= t '.intro' %></p>
+
+<%= simple_form_for @user, url: setup_user_path do |f| %>
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :email %>
+    <%= f.input :password %>
+    <%= f.input :password_confirmation %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, "Continue", class: 'btn-primary' %>
+  </div>
+
+<% end %>

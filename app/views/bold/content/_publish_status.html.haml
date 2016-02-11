@@ -1,0 +1,15 @@
+%small
+  - if content.new_record?
+    = t '.state.new'
+  - else
+    = t ".state.#{content.status}", date: l_date_time(content.post_date)
+  - if content.last_update
+    = t '.last_updated_on', date: l_date_time(content.last_update)
+  - elsif content.updated_at && l_date_time(content.updated_at) != l_date_time(content.post_date)
+    = t '.last_saved', date: l_date_time(content.updated_at)
+  - if content.has_draft?
+    = t '.draft_info', date: l_date_time(content.draft.updated_at)
+    = link_to t('.view_diff'), (Post === @content ? diff_bold_post_path(@content) : diff_bold_page_path(@content)), remote: true
+
+  = hidden_field_tag 'do_publish', '', id: 'do_publish'
+  = hidden_field_tag 'go_back', '', id: 'go_back'

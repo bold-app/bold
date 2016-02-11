@@ -1,0 +1,28 @@
+.row
+  = render 'admin/profiles/left_col'
+
+  .col-xs-12.col-sm-7.col-sm-offset-1.col-md-6.right-col
+
+    %h2= t'.heading'
+
+    = simple_form_for @user, url: admin_profile_path, method: :put do |f|
+
+      %fieldset
+        .row
+          .col-xs-8
+            = f.input :name
+            = f.input :meta_author_name, input_html: { placeholder: t('.meta_author_name_plh') }, hint: t('.meta_author_name_hint')
+          .col-xs-4
+            = gravatar_image_tag @user.email, 100
+        .row
+          .col-xs-12
+            = f.input :meta_google_plus, hint: t('.meta_google_plus_hint')
+            = f.input :twitter_handle, hint: t('.twitter_hint')
+            = f.input :time_zone_name, hint: t('.time_zone_name_info')
+            = f.input :backend_locale, collection: languages_for_select(Bold::Application.config.i18n.available_locales), value_method: :last, label_method: :first, include_blank: t('.auto_locale')
+
+      %fieldset
+        = f.input :vim_mode, as: :boolean, wrapper: :vertical_boolean, hint: t('.vim_hint')
+
+      .buttons
+        = button '.button'

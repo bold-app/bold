@@ -1,0 +1,19 @@
+= link_to bold_post_path(post), remote: true, class: "clearfix list-group-item #{'active' if post == @content}" do
+  - if post.published? && post.post_date
+    .date= raw l post.post_date, format: :bold_md_y
+
+  .hits{title: t('.hits_info')}
+    - if post.comments?
+      = "#{post.comment_count} / "
+    = post.hit_count if post.hit_count > 0
+  .post
+    %h4.list-group-item-heading
+      = post.title
+    %p.list-group-item-text
+      %small
+        = post.tag_list.to_s
+        - if post.published? && post.draft?
+          %br/
+          (#{t '.unpublished_changes'})
+
+

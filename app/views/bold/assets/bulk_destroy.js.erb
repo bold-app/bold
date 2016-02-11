@@ -1,0 +1,6 @@
+<% @ids.each do |id| %>
+  $('.thumb[data-id=<%= id %>]').fadeOut().remove();
+<% end %>
+$('#delete-btn').text($('#delete-btn').data('label')).addClass('btn-default').removeClass('btn-danger');
+
+

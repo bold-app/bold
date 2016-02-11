@@ -1,0 +1,24 @@
+---
+development:
+  backend_host: bold.local
+  mail_default_from: user@test.com
+
+test:
+  backend_host: bold.local
+  mail_default_from: user@test.com
+
+production:
+  # Hostname of the backend.
+  # In production this is the hostname where the Bold backend can be
+  # reached. All other hostnames will just render their sites but return 404 on
+  # any backend paths.
+  # Also used for url generation e.g. in devise mails.
+  backend_host: cms.yoursite.com
+
+  # default from address for emails. can be overridden for each site.
+  mail_default_from: cms@yoursite.com
+
+  # Services to ping when a new post is published
+  rpc_ping_urls:
+    - 'http://blogsearch.google.com/ping/RPC2'
+    - 'http://rpc.pingomatic.com/'

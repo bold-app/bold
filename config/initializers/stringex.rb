@@ -1,0 +1,1 @@
+Stringex::Localization.locale = :en

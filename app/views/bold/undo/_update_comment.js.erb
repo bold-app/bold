@@ -1,0 +1,4 @@
+<% if comment = results.map(&:object).detect{|o| Comment === o} %>
+  $('#<%= dom_id comment %>').replaceWith('<%= escape_javascript render 'bold/activity/comments/comment', comment: comment %>');
+<% end %>
+

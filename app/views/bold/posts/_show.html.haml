@@ -1,0 +1,24 @@
+- content.load_draft!
+%header.clearfix
+  = link_with_icon :menu_left, t('.back'), bold_posts_path, class: 'pull-left btn btn-default btn-sm back-to-list-group visible-xs-inline'
+  %p.pull-left
+    %small
+      - if content.author
+        - if content.published?
+          = t '.published_by', author: content.author.display_name, date: l_date(content.post_date)
+        - else
+          = t '.created_by', author: content.author.display_name, date: l_date(content.created_at)
+      = t '.template', name: content.get_template.pretty_name
+      = render 'bold/content/stats', content: content
+
+  = link_with_icon :pencil, t('.edit'), edit_bold_post_path(content), class: 'pull-right btn btn-default btn-sm'
+
+%article
+  %h2= link_to_if content.published?, content.title, content.public_url
+  = content.body_html
+
+  - if content.comments?
+    %section#comments
+      %h2= t '.comments', count: content.comment_count
+      = render 'bold/activity/comments/comment_list', comment_list: content.comments
+

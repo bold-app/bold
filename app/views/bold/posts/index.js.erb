@@ -1,0 +1,6 @@
+$('.list-group.posts').append('<%= escape_javascript render partial: 'post', collection: @contents %>');
+<% if p = @contents.next_page %>
+  $('.paging').html('<%= escape_javascript more_link %>');
+<% else %>
+  $('.paging').hide();
+<% end %>

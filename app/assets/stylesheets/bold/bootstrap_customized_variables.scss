@@ -1,0 +1,75 @@
+/*
+ * Bold - more than just blogging.
+ * Copyright (C) 2015-2016 Jens Krämer <jk@jkraemer.net>
+ *
+ * This file is part of Bold.
+ *
+ * Bold is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * Bold is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Bold.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$gray-darker:            #333;
+$gray-dark:              #5c595a;
+$gray:                   #a4a9a6;
+$gray-light:             #bbbdb6;
+$gray-lighter:           #eee;
+
+
+$brand-primary:         #878179;
+$nice-blue: #428bca;
+
+
+$body-bg:               lighten(#dfe0d9, 12%);
+$text-color:            $gray-darker;
+$link-color:            $nice-blue;
+
+
+$font-family-sans-serif:  "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-monospace:   Consolas, "Liberation Mono", Menlo, Monaco, "Courier New", monospace;
+
+$headings-font-weight:    700;
+
+$border-radius-base:        3px;
+$border-radius-large:       4px;
+$border-radius-small:       2px;
+
+$component-active-color:    $text-color;
+$component-active-bg:       lighten(#dfe0d9, 5%);
+
+$table-bg-active:           $component-active-bg;
+$table-bg-hover:            lighten($table-bg-active, 5%);
+
+$btn-primary-bg:                 $nice-blue;
+
+
+$input-color:                    $text-color;
+$input-color-placeholder:        $gray-light;
+
+$navbar-border-radius: 0;
+$navbar-default-toggle-icon-bar-bg:        #ccc;
+
+$navbar-inverse-bg:                         #2e2e32;
+
+$nav-pills-active-link-hover-color:         #fff;
+
+$state-success-text:             #468847;
+$state-info-text:                #3a87ad;
+$state-warning-text:             #c09853;
+$state-danger-text:              #b94a48;
+
+$list-group-bg:                 $body-bg;
+$list-group-border-radius:      0px;
+
+$list-group-active-text-color:  $text-color;
+$list-group-hover-bg:           lighten($component-active-bg, 5%) !default;
+

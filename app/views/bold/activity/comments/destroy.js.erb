@@ -1,0 +1,4 @@
+$('#<%= dom_id @comment %>').fadeOut();
+$('#comments h2').html('<%= t 'bold.posts.show.comments', count: @comment.post.comments.count %>');
+
+<%= raw flash_message %>

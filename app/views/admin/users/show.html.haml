@@ -1,0 +1,28 @@
+.row
+  = render 'left_col'
+
+  .col-xs-12.col-sm-7.col-md-6.col-sm-offset-1.right-col
+
+    %header.clearfix
+      = back_link @user
+      - unless @user == current_user
+        = link_with_icon :trash, t('.delete'), admin_user_path(@user), method: :delete, data: { confirm: t('.confirm_delete', name: @user.name_and_email) }, class: 'pull-right btn btn-danger btn-sm'
+        = link_with_icon :pencil, t('.edit'), edit_admin_user_path(@user), class: 'btn btn-default btn-sm pull-right', remote: :true
+        - if @user.pending_invitation?
+          = link_with_icon :send, t('.resend'), admin_invitation_path(@user.id), class: 'btn btn-default btn-sm pull-right', method: :patch
+        - else
+          - if @user.access_locked?
+            = link_with_icon :ok, t('.unlock'), unlock_admin_user_path(@user), class: 'btn btn-default btn-sm pull-right', method: :put
+          - else
+            = link_with_icon :refresh, t('.reset_password'), reset_password_admin_user_path(@user), class: 'btn btn-default btn-sm pull-right', method: :put
+            = link_with_icon :lock, t('.lock'), lock_admin_user_path(@user), class: 'btn btn-default btn-sm pull-right', method: :put
+
+    #user-details
+      = render 'user'
+
+    %h3= t '.memberships'
+
+    #site-users
+      = render 'admin/site_users/index'
+
+

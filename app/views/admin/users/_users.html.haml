@@ -1,0 +1,25 @@
+%table.table.table-hover
+  %tbody
+    - for user in @users
+      %tr
+        %td
+          = link_to user.name_and_email, admin_user_path(user)
+          %small
+            - if d = user.last_sign_in_at
+              %br/
+              = t '.last_sign_in', date: d, ip: user.last_sign_in_ip
+            - if d = user.locked_at
+              %br/
+              = t '.locked_at', attempts: user.failed_attempts, date: l_date_time(user.locked_at)
+            - if d = user.invited_at
+              %br/
+              = t '.invited_at', date: d, by: user.invited_by
+        %td
+          - if user.admin?
+            %strong= user.role_name
+          - else
+            - for su in user.site_users
+              = su.site.name
+              (#{user.role_name su.site})
+              %br/
+

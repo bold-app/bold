@@ -1,0 +1,7 @@
+$('.row.asset-list').append('<%= escape_javascript render partial: 'asset', collection: @assets %>');
+<% if p = @assets.next_page %>
+  $('.paging').html('<%= escape_javascript more_link @assets %>');
+<% else %>
+  $('.paging').hide();
+<% end %>
+

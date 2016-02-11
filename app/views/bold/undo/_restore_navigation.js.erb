@@ -1,0 +1,5 @@
+<% if nav = results.map(&:object).detect{|o| Navigation === o} %>
+  $('.navigations-list').html('<%= escape_javascript render partial: 'bold/settings/navigations/navigation', collection: nav.site.navigations(true) %>').sortable();
+  window.bold.initDirtyForNavigations();
+<% end %>
+

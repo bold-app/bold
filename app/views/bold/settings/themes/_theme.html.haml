@@ -1,0 +1,12 @@
+- enabled = current_site.theme_enabled? theme.id
+
+= link_to( (enabled ? edit_bold_settings_theme_path(theme.id) : enable_bold_settings_theme_path(theme.id)), method: (enabled ? :get : :put), class: "clearfix list-group-item#{' active' if current_site.theme_enabled? theme.id}", id: theme.id) do
+  %h4.list-group-item-heading
+    = theme.name
+    %small= theme.version if theme.version.present?
+  %p.list-group-item-text
+    = t '.by', author: theme.author if theme.author.present?
+    - if theme.description.present?
+      %br/
+      %small= theme.description
+

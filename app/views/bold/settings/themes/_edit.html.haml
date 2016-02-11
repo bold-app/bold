@@ -1,0 +1,39 @@
+.row
+  .col-sm-10.col-sm-offset-1.col-md-9.col-lg-8
+
+    %h2
+      = link_with_icon 'menu-left', t('.back'), bold_settings_themes_path, class: 'btn btn-default btn-sm back'
+      = @theme.name
+      %small= @theme.version if @theme.version.present?
+
+    %p= @theme.description
+    = render 'bold/settings/extension_author', ext: @theme
+
+    - if @theme.url.present?
+      %p= link_to @theme.url, @theme.url
+
+
+    %br/
+    = dynamic_configuration_form_for @theme_config, url: bold_settings_theme_path(@theme.id), method: :patch do |f|
+
+      %fieldset
+        %legend= t '.templates'
+
+        %p= t'.template_hint'
+        .row
+          .col-sm-6
+            = f.input :default_post_template, collection: @templates, value_method: :key, label_method: :name, include_blank: false
+          .col-sm-6
+            = f.input :default_page_template, collection: @templates, value_method: :key, label_method: :name, include_blank: false
+
+
+      - if @theme.configurable?
+
+        %fieldset
+          %legend= t '.config'
+
+          = render_extension_config @theme, locals: { f: f, theme_config: @theme_config }
+
+      .buttons
+        = button
+

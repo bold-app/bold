@@ -1,0 +1,29 @@
+.modal-dialog.modal-sm
+  .modal-content
+
+    .modal-header
+      %button.close{"data-dismiss" => "modal", :type => "button"} ×
+      %h4#modal-label.modal-title= @asset.name
+
+    .modal-body
+      = simple_form_for @asset, remote: true, url: bold_asset_path(@asset), multipart: true do |f|
+        = render 'form', f: f
+
+    .modal-footer
+      .progress-wrapper{style: 'display: none;'}
+        .progress
+          .progress-bar{"aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => "0", :role => "progressbar", :style => "width: 0;"}
+        %a.cancel{:href => "#"}
+          %span.glyphicon.glyphicon-remove
+      = form_for @asset, url: bold_asset_path(@asset), html: { multipart: true, id: 'fileupload', style: 'display: inline;' } do |f|
+        %span.btn.btn-default.btn-file
+          %span= t('.change_file')
+          = f.file_field :file, :multiple => false
+
+      = button '.save', 'primary', id: 'update-meta'
+
+= javascript_tag do
+  $(function () {
+  $('#update-meta').on('click', function(){ $('.modal-body form').submit(); });
+  $('#fileupload').uploader({debug: true, limitConcurrentUploads: 1, update: '.modal-content'});
+  });

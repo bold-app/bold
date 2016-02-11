@@ -1,0 +1,9 @@
+.col-xs-12.col-sm-3.left-col
+
+  %header.clearfix
+    = link_to icon(:plus), new_admin_site_path, id: 'new-site', title: t('.new'), class: 'pull-right btn btn-success btn-sm'
+
+  .list-group
+
+    - for site in @sites
+      = link_to site.name, edit_admin_site_path(site), class: "list-group-item#{' active' if site == @site}"

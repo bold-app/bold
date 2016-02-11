@@ -1,0 +1,13 @@
+%li.media
+  .media-left
+    - if category.asset
+      = link_to asset_tag(category.asset, :bold_thumb_sq, 'tiny'), edit_bold_settings_category_path(category)
+    - else
+      = link_to image_tag('bold/dummy.gif', width: 40, height: 40), edit_bold_settings_category_path(category)
+  .media-body
+    %h4.media-heading
+      = link_to category.name, edit_bold_settings_category_path(category)
+      %span.small= "/#{category.slug}"
+      - if category.posts.any?
+        %span.badge= category.posts.count
+    = category.description

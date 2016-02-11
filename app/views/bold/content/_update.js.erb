@@ -1,0 +1,22 @@
+<% @content.reload %>
+<% if @success %>
+  <% if @back_to %>
+    window.location.href = '<%= escape_javascript @back_to %>';
+  <% else %>
+    $('#publish-status').html('<%= escape_javascript render 'bold/content/publish_status', content: @content %>');
+    $('#other-actions').html('<%= escape_javascript render 'bold/content/delete_or_unpublish' %>');
+    <% if @content.published? %>
+      $('#pubdate-field').remove();
+    <% end %>
+    <% if @content.has_unpublished_changes? %>
+      $('button[name=publish]').removeClass('has-no-draft').addClass('has-draft').attr('disabled', false);
+    <% else %>
+      $('button[name=publish]').addClass('has-no-draft').removeClass('has-draft').attr('disabled', true);
+    <% end %>
+    $('button[name=save]').attr('disabled', true);
+    $('#change-template').attr('disabled', false);
+    window.boldEditor.initDirty($('#bold-editor-form'));
+  <% end %>
+<% end %>
+
+<%= raw flash_message unless @back_to %>

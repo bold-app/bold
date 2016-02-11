@@ -1,0 +1,6 @@
+<% if cat = results.map(&:object).detect{|o| Category === o} %>
+  $('ul.categories').html('<%= escape_javascript render partial: 'bold/settings/categories/category', collection: cat.site.categories(true) %>');
+  $('p.no-data').hide();
+<% end %>
+
+

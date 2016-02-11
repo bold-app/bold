@@ -1,0 +1,12 @@
+%h2= t 'devise.sessions.new.header'
+
+.row
+  .col-md-8
+    = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+      .form-inputs
+        = f.input :email, required: false, autofocus: true
+        = f.input :password, required: false
+        = f.input :remember_me, as: :boolean, wrapper: :vertical_boolean if devise_mapping.rememberable?
+      .form-actions
+        = f.button :submit, t('devise.sessions.new.sign_in'), class: 'btn-primary'
+= render "devise/shared/links"

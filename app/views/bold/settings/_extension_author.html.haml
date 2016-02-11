@@ -1,0 +1,15 @@
+- if ext.author.present?
+  - authors = Array(ext.author)
+  - urls = Array(ext.author_url)
+  = t '.by'
+  - authors.each_with_index do |author, idx|
+    = ', ' unless idx == 0
+    - if url = urls[idx]
+      = link_to author, url
+    - else
+      = author
+
+- elsif ext.author_url.present?
+  = t '.by'
+  = link_to ext.author_url, ext.author_url
+

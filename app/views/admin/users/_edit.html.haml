@@ -1,0 +1,16 @@
+.modal-dialog.modal-sm
+  .modal-content
+    = simple_form_for @user, url: admin_user_path(@user), remote: true do |f|
+
+      .modal-header
+        %button.close{"data-dismiss" => "modal", :type => "button"} ×
+        %h4#modal-label.modal-title= @user.display_name
+
+      .modal-body
+        = f.input :name
+        = f.input :email
+        = f.input :admin, wrapper: :vertical_boolean, disabled: @user == current_user
+
+      .modal-footer
+        = button
+

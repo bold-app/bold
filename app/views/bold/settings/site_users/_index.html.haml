@@ -1,0 +1,61 @@
+.row
+  .col-sm-9.col-sm-offset-1.col-md-8
+
+    %h2
+      = link_to icon(:plus), new_bold_settings_site_user_path, remote: true, class: 'btn btn-sm btn-success pull-right', title: t('.new_user'), id: 'new-user'
+      = t'.heading'
+
+    - if @invited_users.any?
+      %h3= t'.invited'
+      %table.table.table-hover
+        %tbody
+          - for user in @invited_users
+            %tr
+              %td
+                = user.email
+                - if user.invitation_sent_at
+                  %br/
+                  %small
+                    = t '.invited_at', date: distance_of_time_in_words_to_now(user.invitation_sent_at)
+                    %br/
+                    = l_date_time user.invitation_sent_at
+              %td.right
+                %small
+                  = link_to t('.resend'), resend_invitation_bold_settings_site_user_path(user.id), method: :put
+                  %br/
+                  = link_to t('.revoke'), revoke_invitation_bold_settings_site_user_path(user.id), method: :delete
+              %td.right
+                %strong= user.role_name
+
+
+    - if @locked_users.any?
+      %h3= t'.locked'
+      %table.table.table-hover
+        %tbody
+          - for user in @locked_users
+            %tr
+              %td
+                = user.display_name
+                %br/
+                %small
+                  - if d = user.last_sign_in_at
+                    = t '.last_sign_in', date: d, ip: user.last_sign_in_ip
+                  = t '.locked_at', attempts: user.failed_attempts, date: l_date_time(user.locked_at)
+              %td.right
+                %strong= user.role_name
+
+    %h3= t'.active'
+    %table.table.table-hover
+      %tbody
+        - for user in @active_users
+          %tr
+            %td
+              = user.display_name
+              - if d = user.last_sign_in_at
+                %br/
+                %small
+                  = t '.last_sign_in', date: d, ip: user.last_sign_in_ip
+            %td.right
+              %strong= user.role_name
+
+

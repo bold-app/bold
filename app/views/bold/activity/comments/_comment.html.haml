@@ -1,0 +1,23 @@
+%article{id: dom_id(comment)}
+  %aside
+    = gravatar_image_tag comment.author_email, 64
+
+  %header
+    %small= time_tag comment.comment_date, format: :bold_ymdt
+    %h1= "#{comment.author_name} (#{comment.author_email}#{", #{comment.author_website}" if comment.author_website.present?})"
+    %span.pull-right
+      - if comment.pending?
+        = link_with_icon :ok, t('.approve'), approve_bold_activity_comment_path(comment), remote: true, method: :patch, class: 'btn btn-default btn-sm'
+      - elsif comment.approved?
+        = link_with_icon :remove, t('.unapprove'), unapprove_bold_activity_comment_path(comment), remote: true, method: :patch, class: 'btn btn-default btn-sm'
+      - if comment.spam?
+        = link_with_icon :'thumbs-up', t('.ham'), mark_ham_bold_activity_comment_path(comment), remote: true, method: :patch, class: 'btn btn-success btn-sm'
+      - else
+        = link_with_icon :'usd', t('.spam'), mark_spam_bold_activity_comment_path(comment), remote: true, method: :patch, class: 'btn btn-danger btn-sm'
+      = link_with_icon :trash, t('.delete'), bold_activity_comment_path(comment), remote: true, method: :delete, class: 'btn btn-danger btn-sm'
+    %p.small
+      = t ".status.#{comment.status}"
+
+  %pre
+    = preserve h comment.body
+

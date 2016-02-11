@@ -1,0 +1,8 @@
+.row
+  .col-sm-9.col-sm-offset-1.col-md-8.col-lg-7
+
+    %h2= t '.heading'
+    %p= t '.info'
+    %br/
+    %p
+      = link_to t('.get_backup'), admin_site_path(current_site), class: 'btn btn-primary'

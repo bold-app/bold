@@ -1,0 +1,11 @@
+<% if @navigation.persisted? %>
+  $('.navigations-list').append('<%= escape_javascript render 'navigation', navigation: @navigation %>').sortable();
+  window.bold.initDirtyForNavigation($('#<%= dom_id @navigation %> form'));
+
+  $('#new_navigation').replaceWith('<%= escape_javascript render 'navigation', navigation: Navigation.new %>');
+  <%= raw flash_message %>
+<% else %>
+  $('#new_navigation').replaceWith('<%= escape_javascript render 'navigation', navigation: @navigation %>');
+<% end %>
+
+

@@ -150,7 +150,7 @@ class ThemeIntegrationTest < BoldIntegrationTest
     end
 
     if @post_tpl
-      @category = create :category, name: 'A Category'
+      @category = create :category, name: 'A Category' if @category_tpl
       @post = create :published_post, title: 'Test Post Title', body: 'test post body', site: @site, template: @post_tpl.key, post_date: Time.local(2015, 02, 05), tag_list: 'foo, "bar baz"', author: @user, category: @category
     end
   end
@@ -161,14 +161,14 @@ class ThemeIntegrationTest < BoldIntegrationTest
     @post_tpl     = @theme.find_template :post, :default
     @page_tpl     = @theme.find_template :page, :default
     @tag_tpl      = @theme.find_template :tag, :post_listing
-    @archive_tpl  = @theme.find_template :tag, :post_listing
+    @archive_tpl  = @theme.find_template :archive, :post_listing
     @category_tpl = @theme.find_template :category, :post_listing
     @author_tpl   = @theme.find_template :author, :post_listing
-    #@search_tpl   = @theme.find_template :tag, :post_listing
+    @search_tpl   = @theme.find_template :search, :post_listing
   end
 
   def check_special_pages(except: [])
-    %w(homepage tag_page author_page category_page notfound_page).each do |p|
+    %w(homepage archive_page tag_page author_page category_page notfound_page error_page search_page).each do |p|
       next if except.include? p
       assert @site.send(p).present?, "#{p} not found"
     end

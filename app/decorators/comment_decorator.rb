@@ -29,9 +29,7 @@ class CommentDecorator < Draper::Decorator
     if object.author_website?
       website = object.author_website.downcase
       website = "http://#{website}" unless website.start_with?('http')
-      h.sanitize(
-        h.link_to(object.author_name, website, rel: 'nofollow')
-      )
+      h.link_to object.author_name, website, rel: 'nofollow'
     else
       object.author_name
     end

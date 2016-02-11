@@ -26,6 +26,7 @@ class StatisticsTest < BoldIntegrationTest
     @site = create :site, hostname: 'site1.de', name: 'Site one'
     create :published_post, title: 'hello from site 1', body: 'lorem ipsum', site: @site
     @site.add_user! @user
+    RequestLog.any_instance.stubs(:bot?).returns false
   end
 
   test 'should count pageviews' do

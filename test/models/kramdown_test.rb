@@ -39,10 +39,10 @@ class KramdownTest < ActiveSupport::TestCase
     MARKDOWN
     assert_equal <<-HTML.strip_heredoc, md_render_text(markdown, true)
 
-<figure class="code highlighter-coderay"><pre class=\"highlight\"><code><span class=\"keyword\">def</span> <span class=\"function\">foo</span>
+<figure class="code highlighter-coderay"><figcaption>Lorem ipsum</figcaption><pre class=\"highlight\"><code><span class=\"keyword\">def</span> <span class=\"function\">foo</span>
   <span class=\"integer\">42</span>
 <span class=\"keyword\">end</span>
-</code></pre><figcaption>Lorem ipsum</figcaption></figure>
+</code></pre></figure>
 
     HTML
   end

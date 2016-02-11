@@ -46,12 +46,12 @@ class CommentDecoratorTest < Draper::TestCase
       assert_equal %{<a rel="nofollow" href="#{url}">#{c.author_name}</a>}, c.author
     end
 
-    [
-      %{javascript:"alert('bla');"},
-      %{" onclick="alert('bla');"}
-    ].each do |url|
+    {
+      %{javascript:"alert('bla');"} => 'javascript:&quot;alert(&#39;bla&#39;);&quot;',
+      %{" onclick="alert('bla');"} => '&quot; onclick=&quot;alert(&#39;bla&#39;);&quot;'
+    }.each do |url, escaped|
       c = CommentDecorator.decorate create(:comment, post: @post, author_website: url)
-      assert_equal %{<a rel="nofollow" href="http://#{URI.escape url}">#{c.author_name}</a>}, c.author
+      assert_equal %{<a rel="nofollow" href="http://#{escaped}">#{c.author_name}</a>}, c.author
     end
   end
 

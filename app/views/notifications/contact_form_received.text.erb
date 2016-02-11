@@ -1,0 +1,13 @@
+The contact form on <%= @contact_message.content.public_url %>
+has been submitted:
+
+
+Sender email: <%= @contact_message.sender_email %>
+Sender name: <%= @contact_message.sender_name %>
+
+Subject: <%= @contact_message.subject %>
+Message:
+
+<%= @contact_message.body %>
+
+

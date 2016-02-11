@@ -11,6 +11,7 @@
   %h2 Contact
 
   = contact_form do |f|
+    = flash_message
     = f.input :sender_name
     = f.input :sender_email
     = f.input :subject

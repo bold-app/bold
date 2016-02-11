@@ -24,6 +24,7 @@ class Frontend::ContactMessagesController < FrontendController
     @contact_message = ContactMessage.new contact_message_params
     @contact_message.content = @content
     if @contact_message.save
+      Notifications.contact_form_received(@contact_message).deliver_later
       redirect_to content_url(@content.path),
         notice: Bold::I18n.t('flash.contact_messages.created')
     elsif @contact_message.errors[:receiver_email].present?

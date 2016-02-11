@@ -19,10 +19,12 @@
 #
 FactoryGirl.define do
   factory :contact_message do
-    subject "MyString"
-body "MyText"
-sender_name "MyString"
-sender_email "MyString"
+    subject "Hello!"
+    body "Lorem Ipsum"
+    content { FactoryGirl.create(:published_page) }
+    sender_name { Faker::Name.name }
+    sender_email { Faker::Internet.email }
+    receiver_email { Faker::Internet.email }
   end
 
 end

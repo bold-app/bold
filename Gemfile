@@ -63,8 +63,11 @@ group :development, :test do
   gem 'puma'
   gem 'quiet_assets'
   gem 'spring'
-  gem 'web-console', '~> 2.0', platforms: :ruby
   gem 'yaml_db'
+end
+
+group :development do
+  gem 'web-console', '~> 2.0', platforms: :ruby
 end
 
 # Some default themes

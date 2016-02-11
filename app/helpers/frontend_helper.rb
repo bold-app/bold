@@ -257,4 +257,12 @@ module FrontendHelper
   def percent_encode(string)
     URI.escape string
   end
+
+  def flash_message
+    safe_join %i( alert warning info notice ).map{ |key|
+      if msg = flash[key]
+        content_tag :p, msg, class: "flash #{key}"
+      end
+    }.compact
+  end
 end

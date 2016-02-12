@@ -49,52 +49,43 @@ class KramdownTest < ActiveSupport::TestCase
 
   test 'should render figure' do
     markdown = <<-MARKDOWN.strip_heredoc
-      ![](foo.jpg)
-      : this is the
-        caption
+
+      ![](foo.jpg "this is the caption")
 
     MARKDOWN
     assert_equal <<-HTML.strip_heredoc, md_render_text(markdown, true)
-      <figure class="image">
-        <img src="foo.jpg" alt="" />
-        <figcaption>
-          <p>this is the
-      caption</p>
-        </figcaption>
-      </figure>
+
+      <figure class="image"><img src="foo.jpg" alt="" title="this is the caption" /><figcaption>this is the caption</figcaption></figure>
 
     HTML
   end
 
-  test 'should respect figure ial after' do
+  test 'should recognize figure ial before' do
     markdown = <<-MARKDOWN.strip_heredoc
-      ![](foo.jpg)
-      :   caption
       {:.left}
+      ![](foo.jpg "caption")
     MARKDOWN
     assert_equal <<-HTML.strip_heredoc, md_render_text(markdown, true)
-      <figure class="left image">
-        <img src="foo.jpg" alt="" />
-        <figcaption>
-          <p>caption</p>
-        </figcaption>
-      </figure>
+      <figure class="image left"><img src="foo.jpg" alt="" title="caption" /><figcaption>caption</figcaption></figure>
     HTML
   end
 
-  test 'should respect figure ial before' do
+  test 'should recognize figure ial after' do
     markdown = <<-MARKDOWN.strip_heredoc
+      ![](foo.jpg "caption")
       {:.left}
-      ![](foo.jpg)
-      : caption
     MARKDOWN
     assert_equal <<-HTML.strip_heredoc, md_render_text(markdown, true)
-      <figure class="left image">
-        <img src="foo.jpg" alt="" />
-        <figcaption>
-          <p>caption</p>
-        </figcaption>
-      </figure>
+      <figure class="image left"><img src="foo.jpg" alt="" title="caption" /><figcaption>caption</figcaption></figure>
+    HTML
+  end
+
+  test 'should recognize inline image ial after' do
+    markdown = <<-MARKDOWN.strip_heredoc
+      ![](foo.jpg "caption"){:.left}
+    MARKDOWN
+    assert_equal <<-HTML.strip_heredoc, md_render_text(markdown, true)
+      <figure class="image left"><img src="foo.jpg" alt="" title="caption" class="left" /><figcaption>caption</figcaption></figure>
     HTML
   end
 
@@ -190,7 +181,7 @@ class KramdownTest < ActiveSupport::TestCase
     site = create :site
     asset = create :asset, site: site
     page = create :page, site: site
-    md = "![](#{asset.slug} 'title\'s text')"
+    md = "![](#{asset.slug} 'title\'s text')\n"
     assert_equal <<-HTML.strip_heredoc, md_render_content(page, md)
       <figure class="image"><img src="#{asset.public_path}" alt="" title="title's text" /><figcaption>title's text</figcaption></figure>
     HTML
@@ -204,7 +195,7 @@ class KramdownTest < ActiveSupport::TestCase
     Bold::Kramdown.preview_mode!
 
     md = "![alt text](#{asset.slug}!small)"
-    assert_equal %{<figure class="image"><img src="/bold/assets/#{asset.id}?version=bold_preview" alt="alt text" class="small" /></figure>}, md_render_content(page, md).strip
+    assert_equal %{<figure class="image small"><img src="/bold/assets/#{asset.id}?version=bold_preview" alt="alt text" class="small" /></figure>}, md_render_content(page, md).strip
   end
 
   test 'should expand image references' do
@@ -222,19 +213,23 @@ class KramdownTest < ActiveSupport::TestCase
 
     # with class
     md = "![alt text](#{asset.slug} 'title text'){:class=\"some-class\"}"
-    assert_equal %{<figure class="image"><img src="#{asset.public_path}" alt="alt text" title="title text" class="some-class" /><figcaption>title text</figcaption></figure>}, md_render_content(page, md).strip
+    assert_equal %{<figure class="image some-class"><img src="#{asset.public_path}" alt="alt text" title="title text" class="some-class" /><figcaption>title text</figcaption></figure>}, md_render_content(page, md).strip
+
+    # with short class
+    md = "![alt text](#{asset.slug} 'title text'){:.some-class}"
+    assert_equal %{<figure class="image some-class"><img src="#{asset.public_path}" alt="alt text" title="title text" class="some-class" /><figcaption>title text</figcaption></figure>}, md_render_content(page, md).strip
 
     # with version
     md = "![alt text](#{asset.slug}!small)"
-    assert_equal %{<figure class="image"><img src="#{asset.public_path :small}" alt="alt text" class="small" /></figure>}, md_render_content(page, md).strip
+    assert_equal %{<figure class="image small"><img src="#{asset.public_path :small}" alt="alt text" class="small" /></figure>}, md_render_content(page, md).strip
 
     # with link to other version
     md = "![](#{asset.slug}!small!big 'title text')"
-    assert_equal %{<figure class="image"><a href="#{asset.public_path :big}"><img src="#{asset.public_path :small}" alt="" title="title text" class="small" /></a><figcaption>title text</figcaption></figure>}, md_render_content(page, md).strip
+    assert_equal %{<figure class="image small"><a href="#{asset.public_path :big}"><img src="#{asset.public_path :small}" alt="" title="title text" class="small" /></a><figcaption>title text</figcaption></figure>}, md_render_content(page, md).strip
 
     # with link to other page
     md = "![](#{asset.slug}!small!/foo/bar 'title text')"
-    assert_equal %{<figure class="image"><a href="/foo/bar"><img src="#{asset.public_path :small}" alt="" title="title text" class="small" /></a><figcaption>title text</figcaption></figure>}, md_render_content(page, md).strip
+    assert_equal %{<figure class="image small"><a href="/foo/bar"><img src="#{asset.public_path :small}" alt="" title="title text" class="small" /></a><figcaption>title text</figcaption></figure>}, md_render_content(page, md).strip
   end
 
 end

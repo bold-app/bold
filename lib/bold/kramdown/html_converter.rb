@@ -105,7 +105,7 @@ module Bold
         # Check if the paragraph only contains an image and treat it as a
         # figure instead.
         elsif el.children&.count == 1 && el.children.first.type == :img
-          render_figure_img el.children.first, indent
+          render_figure_img el, indent
         else
           format_as_block_html(el.type, el.attr, inner(el, indent), indent)
         end
@@ -145,10 +145,19 @@ module Bold
 
       private
 
-      def render_figure_img(el, indent)
-        attr = el.attr.dup
-        caption = extract_caption_from_attrs! attr
-        "#{' '*indent}<figure class=\"image\">#{convert_img el, 0}#{caption}</figure>\n"
+      def render_figure_img(para, indent)
+        el = para.children.first
+        caption = extract_caption_from_attrs el.attr
+
+        slug, size, link_to = el.attr['src'].to_s.split('!')
+        figure_class = ['image', para.attr['class'], el.attr['class'], size].map do |clazz|
+          clazz.to_s.split
+        end.flatten.uniq.join ' '
+        "#{' '*indent}<figure class=\"#{figure_class}\">#{convert_img el, 0}#{caption}</figure>\n"
+      end
+
+      def extract_caption_from_attrs(attr)
+        extract_caption_from_attrs! attr.dup
       end
 
       def extract_caption_from_attrs!(attr)

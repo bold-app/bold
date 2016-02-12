@@ -21,7 +21,6 @@ module Bold
   module Kramdown
 
     def self.setup
-      FiguresExtension.setup
       ::Kramdown::Parser::Kramdown.prepend DisableOptionsExtension
     end
 

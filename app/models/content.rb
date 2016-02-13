@@ -67,6 +67,38 @@ class Content < ActiveRecord::Base
     joins(:author).where("lower(users.name) = ?", name.to_s.unicode_downcase)
   }
 
+
+  #
+  # Destruction handling
+  #
+
+  scope :alive, ->{ where deleted_at: nil }
+
+  # true if not deleted
+  def alive?; !deleted? end
+
+  # true if deleted
+  def deleted?
+    deleted_at.present?
+  end
+
+   #marks this content as deleted and destroys the permalink
+  def delete
+    return false if homepage?
+    transaction do
+      unpublish if published?
+      update_attributes deleted_at: Time.now
+      permalink&.destroy
+      # FIXME need to cleanup any redirects pointing here as well. problem is,
+      # redirects just have a location(string)
+    end
+  end
+
+
+  #
+  # Search
+  #
+
   Bold::Search::ContentIndexer.setup self
 
   def fulltext_searchable?

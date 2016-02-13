@@ -33,7 +33,7 @@ module Bold
     end
 
     def collection
-      coll = current_site.posts.order('contents.post_date DESC, contents.created_at DESC')
+      coll = current_site.posts.alive.order('contents.post_date DESC, contents.created_at DESC')
       @content_search.present? ? @content_search.search(coll) : coll
     end
 

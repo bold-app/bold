@@ -2,7 +2,7 @@ require 'test_helper'
 
 class NotificationsTest < ActionMailer::TestCase
   setup do
-    @site = create :site
+    @site = create :site, post_comments: 'enabled'
     Bold.current_site = @site
     @post = create :published_post
     @contact = create :page, site: @site, template: 'contact_page', template_field_values: { contact_message_receiver: 'jk@bold-app.org' }

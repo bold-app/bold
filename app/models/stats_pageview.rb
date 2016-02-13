@@ -45,7 +45,7 @@ class StatsPageview < ActiveRecord::Base
           # inside the loop this brings up the next batch
           scope.limit(batch_size).each do |log|
             log.set_device_class!
-            build_for_log(log, site: site).save! unless log.bot?
+            build_for_log(log, site: site)&.save! unless log.bot?
             log.update_column :processed, true
           end
         end

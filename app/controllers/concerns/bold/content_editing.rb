@@ -101,7 +101,7 @@ module Bold
         @content.unpublish
         redirect_to edit_url, notice: t('flash.bold.content.unpublished', title: @content.title)
       else
-        @content.destroy
+        @content.delete
         redirect_to( {action: :index}, notice: t('flash.bold.content.deleted', title: @content.title) )
       end
     end

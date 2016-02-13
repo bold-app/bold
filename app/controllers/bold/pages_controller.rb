@@ -41,7 +41,7 @@ module Bold
     end
 
     def collection
-      coll = current_site.pages.order('slug ASC')
+      coll = current_site.pages.alive.order('slug ASC')
       @content_search.present? ? @content_search.search(coll) : coll
     end
 

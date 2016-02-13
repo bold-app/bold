@@ -27,6 +27,6 @@ FactoryGirl.define do
     theme_name 'test'
     hostname
     akismet_key '28736d172cca'
-    after(:create) { |s| Bold::current_site = s }
+    after(:create) { |s| ::Bold::current_site = s }
   end
 end

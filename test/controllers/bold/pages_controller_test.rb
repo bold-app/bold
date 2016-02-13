@@ -87,9 +87,11 @@ module Bold
       assert_equal 'new title', @page.title
     end
 
-    test 'should destroy page' do
-      assert_difference 'Page.count', -1 do
-        delete :destroy, id: @page.id
+    test 'should delete page' do
+      assert_difference 'Page.alive.count', -1 do
+        assert_no_difference 'Page.count' do
+          delete :destroy, id: @page.id
+        end
       end
     end
   end

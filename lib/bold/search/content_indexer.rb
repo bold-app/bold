@@ -29,7 +29,7 @@ module Bold
 
         # public index
         if content.published?
-          idx = indices.where(published: true).first_or_initialize
+          idx = indices.where(published: true).first_or_initialize(site_id: content.site_id)
           idx.data = data_for_index content
           idx.save
         else
@@ -38,7 +38,7 @@ module Bold
 
         # non published content
         if content.draft? || content.has_draft?
-          idx = indices.where(published: false).first_or_initialize
+          idx = indices.where(published: false).first_or_initialize(site_id: content.site_id)
           idx.data = if content.has_draft?
             drafted_content = model_class.find(content.id)
             drafted_content.load_draft!

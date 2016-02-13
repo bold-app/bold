@@ -140,8 +140,10 @@ module Bold
     end
 
     test 'should destroy post' do
-      assert_difference 'Post.count', -1 do
-        delete :destroy, id: @post.id
+      assert_difference 'Post.alive.count', -1 do
+        assert_no_difference 'Post.count' do
+          delete :destroy, id: @post.id
+        end
       end
       assert_redirected_to bold_root_path
     end

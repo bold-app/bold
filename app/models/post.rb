@@ -25,17 +25,17 @@ class Post < Content
 
   # memento_changes :update, :destroy
 
-  scope :recent, ->(count){ published.ordered.limit(count) }
+  scope :recent, ->(count){ alive.published.ordered.limit(count) }
   scope :ordered, ->{ order 'post_date DESC' }
 
   scope :for_year, ->(year){
     start = Time.zone.parse("#{year}-01-01")
-    where 'post_date between ? AND ?', start, start.end_of_year
+    alive.where 'post_date between ? AND ?', start, start.end_of_year
   }
 
   scope :for_month, ->(year, month){
     start = Time.zone.parse("#{year}-#{month}-01")
-    where 'post_date between ? AND ?', start, start.end_of_month
+    alive.where 'post_date between ? AND ?', start, start.end_of_month
   }
 
   after_initialize :set_default_values

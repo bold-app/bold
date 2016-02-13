@@ -30,7 +30,7 @@ class FulltextIndex < ActiveRecord::Base
   after_save :create_tsv
 
   before_create do |r|
-    r.site_id = Bold::current_site.id
+    r.site_id ||= Site.current.id
   end
 
   # map weight identifiers (a-d) to textual content
@@ -53,11 +53,11 @@ class FulltextIndex < ActiveRecord::Base
   private
 
   def set_default_config
-    self.config = Site.current.try :tsearch_config if config.blank?
+    self.config = Site.current&.tsearch_config if config.blank?
   end
 
   def create_tsv
-    self.data ||= searchable.try(:data_for_index)
+    self.data ||= searchable&.data_for_index
     return unless data
     tsvector = data.map do |weight, value|
       weight = weight.to_s.upcase

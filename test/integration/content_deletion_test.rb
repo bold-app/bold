@@ -19,35 +19,42 @@
 #
 require 'test_helper'
 
-class PermalinkResolvingTest < BoldIntegrationTest
+class ContentDeletionTest < BoldIntegrationTest
 
   setup do
     @post = create :published_post, slug: 'some-post', title: 'hello from site 1', body: 'lorem ipsum', site: @site
   end
 
-  test 'should redirect to new slug' do
-    assert pl = @post.permalink
-    assert old_path = pl.path
-    assert_equal '2014/07/some-post', old_path
+  test 'should not navigate to deleted post' do
+    path = @post.permalink.path
+    visit '/'+path
+    assert has_content? 'lorem ipsum'
 
-    assert_difference 'Redirect.count' do
-      assert_difference 'Permalink.count' do
-        @post.update_attribute :slug, 'new-link'
+    assert_no_difference 'Post.count' do
+      assert_difference 'Permalink.count', -1 do
+        @post.delete
       end
     end
-    @post.reload
-    assert pl2 = @post.permalink
-    assert new_path = pl2.path
-    assert_equal '2014/07/new-link', new_path
 
-    pl.reload
-    assert r = pl.destination
-    assert_equal Redirect, r.class
-    assert_equal '/2014/07/new-link', r.location
+    visit '/'+path
+    assert_equal 404, status_code
+    assert has_content? 'not found'
+  end
 
-    visit '/'+old_path
-    assert_equal '/2014/07/new-link', current_path
+  test 'search should not find deleted post' do
+    assert search = @site.search_page
+    visit '/'+search.permalink.path+'?q=lorem'
     assert has_content? 'hello from site 1'
+
+    assert_no_difference 'Post.count' do
+      assert_difference 'Permalink.count', -1 do
+        @post.delete
+      end
+    end
+
+    visit '/'+search.permalink.path+'?q=lorem'
+    assert !has_content?('hello from site 1')
   end
 
 end
+

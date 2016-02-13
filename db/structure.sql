@@ -244,7 +244,8 @@ CREATE TABLE contents (
     author_id uuid,
     meta hstore DEFAULT ''::hstore NOT NULL,
     template_field_values hstore DEFAULT ''::hstore NOT NULL,
-    category_id uuid
+    category_id uuid,
+    deleted_at timestamp without time zone
 );
 
 
@@ -1330,4 +1331,6 @@ INSERT INTO schema_migrations (version) VALUES ('20151011074758');
 INSERT INTO schema_migrations (version) VALUES ('20151024100100');
 
 INSERT INTO schema_migrations (version) VALUES ('20160116081325');
+
+INSERT INTO schema_migrations (version) VALUES ('20160213090357');
 

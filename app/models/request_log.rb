@@ -77,6 +77,10 @@ class RequestLog < ActiveRecord::Base
     end
   end
 
+  def resource_present?
+    resource.present?
+  end
+
   private
 
   def init_from_request_and_response

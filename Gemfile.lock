@@ -6,13 +6,13 @@ GIT
 
 GIT
   remote: git://github.com/bold-app/bold-theme-casper.git
-  revision: 9d457fcd7c7b325d67058a9fb1eae3457aeffd5b
+  revision: c2c9573670252c3893955b3b37816d5ceb8f674d
   specs:
     bold-theme-casper (1.0.0)
 
 GIT
   remote: git://github.com/bold-app/bold-theme-lean.git
-  revision: 6095fd9f1c5760dbf8265a86a3e42400f5bdf9b4
+  revision: f99611295003874f3d67870ae0fe63f71610ec43
   specs:
     bold-theme-lean (0.1.0)
 

@@ -20,9 +20,13 @@
 class ContentsDecorator < Draper::CollectionDecorator
   delegate :current_page, :total_pages, :limit_value, :entry_name, :total_count, :offset_value, :last_page?, :next_page, :previous_page
 
+  # renders link rel="next" and rel="prev" tags
+  def meta_pagination
+    pagination theme: 'meta'
+  end
 
-  def pagination
-    h.paginate object, theme: 'bold'
+  def pagination(theme: 'bold')
+    h.paginate object, theme: theme
   end
 
 end

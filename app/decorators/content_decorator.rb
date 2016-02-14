@@ -19,7 +19,7 @@
 #
 class ContentDecorator < Draper::Decorator
 
-  delegate :title, :commentable?, :teaser_html, :post_date, :id, :path, :homepage?
+  delegate :title, :title_html, :body_html, :commentable?, :teaser_html, :post_date, :id, :path, :homepage?
 
   def post?
     Post === object
@@ -27,16 +27,6 @@ class ContentDecorator < Draper::Decorator
 
   def body?
     object.body.present?
-  end
-
-  def body_html
-    # the find_and_preserve HAML helper fixes newline/indentation handling with
-    # textareas / pre blocks
-    h.find_and_preserve object.body_html
-  end
-
-  def title_html
-    object.title_html
   end
 
   def css_class
@@ -101,7 +91,7 @@ class ContentDecorator < Draper::Decorator
   end
 
   def category_link
-    category.try :link_to
+    category&.link_to
   end
 
   def category
@@ -163,11 +153,11 @@ class ContentDecorator < Draper::Decorator
   end
 
   def author
-    @author ||= object.author.try :decorate
+    @author ||= object.author&.decorate
   end
 
   def author_twitter_handle
-    object.author.try :twitter_handle
+    object.author&.twitter_handle
   end
 
   def site_twitter_handle
@@ -203,7 +193,7 @@ class ContentDecorator < Draper::Decorator
   end
 
   def method_missing(name, *, &block)
-    field, question = /\A(.+?)(\?)?\z/.match(name.to_s).try :captures
+    field, question = /\A(.+?)(\?)?\z/.match(name.to_s)&.captures
     if object.get_template.field?(field)
       val = self[field]
       if question
@@ -242,7 +232,7 @@ class ContentDecorator < Draper::Decorator
   #
   def next_post
     return unless Post === object
-    object.site.posts.where('post_date > ?', object.post_date).order('post_date ASC').first.try :decorate
+    object.site.posts.alive.published.where('post_date > ?', object.post_date).order('post_date ASC').first&.decorate
   end
 
   # FIXME actually suggest something here based on category / tags / content
@@ -253,7 +243,7 @@ class ContentDecorator < Draper::Decorator
 
   def prev_post
     return unless Post === object
-    object.site.posts.where('post_date < ?', object.post_date).order('post_date DESC').first.try :decorate
+    object.site.posts.alive.published.where('post_date < ?', object.post_date).order('post_date DESC').first&.decorate
   end
 
   def meta_pub_date
@@ -278,7 +268,7 @@ class ContentDecorator < Draper::Decorator
     ''.html_safe.tap do |meta|
       meta << h.rel_canonical(canonical_url)
 
-      meta << h.simple_meta(description: meta_description, author: author.try(:author_name))
+      meta << h.simple_meta(description: meta_description, author: author&.author_name)
 
       # Open graph
       og_meta = {
@@ -331,7 +321,7 @@ class ContentDecorator < Draper::Decorator
       end
       meta['image'] = image if image
       meta['keywords'] = tags.map(&:name) if tags?
-      meta['author'] = author.try(:meta_ld_json, include_context: false)
+      meta['author'] = author&.meta_ld_json(include_context: false)
     end
   end
 

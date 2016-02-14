@@ -19,7 +19,7 @@
 #
 class SiteDecorator < Draper::Decorator
   include PostList
-  delegate :name, :theme_name, :html_head_snippet, :body_start_snippet, :body_end_snippet, :tags, :search_page
+  delegate :name, :theme_name, :html_head_snippet, :body_start_snippet, :body_end_snippet, :tags, :search_page, :site_js
 
 
   # global meta tags displayed on every page
@@ -30,6 +30,9 @@ class SiteDecorator < Draper::Decorator
         output << h.tag(:link, rel: 'shortcut icon', href: h.favicon_url, type: 'image/x-icon') << "\n"
       end
       output << h.tag(:meta, name: 'generator', content: "Bold #{Bold::VERSION}") << "\n"
+      if object.site_css.present?
+        output << h.stylesheet_link_tag(h.site_content_path(format: :css))
+      end
     end
   end
 

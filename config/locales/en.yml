@@ -600,6 +600,8 @@ en:
         html_head_snippet: Insert into <head>
         body_start_snippet: Insert at beginning of <body>
         body_end_snippet: Append to <body>
+        site_css: Custom CSS
+        site_js: Custom JavaScript
         name: Site name
         notfound_page_id: File Not Found page
         tag_page_id: Page for listing posts by tag

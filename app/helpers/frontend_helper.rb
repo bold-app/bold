@@ -250,8 +250,12 @@ module FrontendHelper
   end
 
   def bold_footer
-    call_hook(:view_layout_body_end) <<
-      site.body_end_snippet.to_s.html_safe
+    call_hook(:view_layout_body_end).tap do |footer|
+      if site.site_js.present?
+        footer << javascript_include_tag(site_content_path(format: :js))
+      end
+      footer << site.body_end_snippet.to_s.html_safe
+    end
   end
 
   def percent_encode(string)

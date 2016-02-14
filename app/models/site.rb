@@ -69,6 +69,8 @@ class Site < ActiveRecord::Base
     url_scheme
     post_comments
     search_page_id
+    site_css
+    site_js
     tag_page_id
     theme_name
     time_zone_name

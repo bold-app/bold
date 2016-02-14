@@ -599,6 +599,8 @@ de:
         html_head_snippet: In HTML <head> einfügen
         body_start_snippet: Am Anfang vom <body> einfügen
         body_end_snippet: Am Ende vom <body> anhängen
+        site_css: Eigenes CSS
+        site_js: Eigenes JavaScript
         name: Name der Website
         notfound_page_id: "'Datei nicht gefunden'-Seite"
         tag_page_id: Seite für Artikel je Tag

@@ -155,12 +155,16 @@ Rails.application.routes.draw do
   # Sitemap
   get 'sitemap.xml' => 'frontend/sitemaps#show', as: :sitemap, defaults: { format: :xml }
 
+  # site specific css / js
+  get 'site' => 'frontend/site_contents#show', as: :site_content
+
   # Favicon
   get 'favicon.ico' => 'frontend/assets#favicon', as: :favicon
 
   # Assets
   get 'files/inline/:id(/:version)'    => 'frontend/assets#show',     as: :file
   get 'files/:id(/:version)/:filename' => 'frontend/assets#download', as: :download
+
 
   # Posts by Author
   get 'authors/:author' => 'frontend/contents#author', as: :author_posts, author: /.+/

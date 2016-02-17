@@ -37,6 +37,7 @@ class FrontendController < BaseController
   rescue_from Bold::NotFound, with: :handle_404
   rescue_from Bold::SiteNotFound, with: :handle_404_or_goto_admin
   rescue_from ActionController::InvalidAuthenticityToken, with: :handle_error
+  rescue_from ActionController::UnknownFormat, with: :handle_404
 
   decorate_assigned :site, :content, :tag, :author, :category
 

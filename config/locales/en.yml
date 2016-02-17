@@ -63,6 +63,9 @@ en:
       created_appears_soon: Thank you very much. Your comment will be visible as soon as it passed the spam check.
       created_awaits_moderation: Thank you very much. Your comment will be visible once it has been manually approved.
 
+    contact_messages:
+      created: Thank you for your message.
+
     created: Created.
     saved: Saved.
 
@@ -575,6 +578,8 @@ en:
       asset:
         title: Title
         caption: Caption
+        attribution: Attribution
+        original_url: Image URL
       asset_search:
         query: Filename, title, caption, tags
         content_type: Content type

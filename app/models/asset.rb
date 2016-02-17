@@ -44,7 +44,7 @@ class Asset < ActiveRecord::Base
 
   Bold::Search::AssetIndexer.setup self
 
-  %i( title caption width height taken_on ).each do |attribute|
+  %i( title caption width height taken_on attribution original_url ).each do |attribute|
     store_accessor :meta, attribute
   end
 

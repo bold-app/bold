@@ -63,6 +63,9 @@ de:
       created_appears_soon: Vielen Dank. Der Kommentar wird veröffentlicht nachdem er den Spam-Filter passiert hat.
       created_awaits_moderation: Vielen Dank. Der Kommentar wird veröffentlich sobald er durch uns freigeschaltet wurde.
 
+    contact_messages:
+      created: Vielen Dank für Ihre Nachricht.
+
     created: Erstellt.
     saved: Gespeichert.
 
@@ -574,6 +577,8 @@ de:
       asset:
         title: Titel
         caption: Beschreibung
+        attribution: Urheber
+        original_url: Quell-URL
       asset_search:
         query: Dateiname, Titel, Beschreibung, Tags
         content_type: Dateityp

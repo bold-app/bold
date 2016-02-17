@@ -8,5 +8,7 @@
   = render 'meta', asset: @asset
 
 = f.input :title, label: false, placeholder: t('simple_form.labels.defaults.title'), wrapper_html: { class: 'clearfix'}, input_html: { class: 'input-sm' }
-= f.input :caption, label: false, placeholder: t('simple_form.labels.asset.caption'), input_html: { rows: 3, class: 'input-sm' }
-= f.input :tag_list, input_html: { class: 'input-sm' }, as: :text
+= f.input :caption, label: false, placeholder: t('simple_form.labels.asset.caption'), input_html: { class: 'input-sm' }
+= f.input :attribution, label: false, placeholder: t('simple_form.labels.asset.attribution'), input_html: { class: 'input-sm' }
+= f.input :original_url, label: false, placeholder: t('simple_form.labels.asset.original_url'), input_html: { class: 'input-sm' }
+= f.input :tag_list, input_html: { class: 'input-sm', rows: 3 }, as: :text

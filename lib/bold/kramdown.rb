@@ -88,7 +88,19 @@ module Bold
       doc = ::Kramdown::Document.new text, opts
       output, warnings = HtmlConverter.convert(doc.root, opts)
       Rails.logger.warn warnings
-      output
+      sanitize output
+    end
+
+    ALLOWED_TAGS = Loofah::HTML5::WhiteList::ACCEPTABLE_ELEMENTS.to_a.freeze
+    ALLOWED_ATTRIBUTES = %w(id rel href src width height alt cite datetime title class name xml:lang abbr).freeze
+
+    def sanitize(html)
+      white_list_sanitizer.sanitize html, tags: ALLOWED_TAGS,
+                                          attributes: ALLOWED_ATTRIBUTES
+    end
+
+    def white_list_sanitizer
+      @white_list_sanitizer ||= Rails::Html::WhiteListSanitizer.new
     end
 
     def markdown_options(trusted = false)

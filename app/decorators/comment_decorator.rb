@@ -19,14 +19,10 @@
 #
 class CommentDecorator < Draper::Decorator
 
-  delegate :author_name, :author_email, :to_param
-
-  def body_html
-    h.sanitize object.body_html
-  end
+  delegate :body_html, :author_name, :author_email, :to_param
 
   def author
-    if object.author_website?
+    if object.author_website.present?
       website = object.author_website.downcase
       website = "http://#{website}" unless website.start_with?('http')
       h.link_to object.author_name, website, rel: 'nofollow'
@@ -50,7 +46,7 @@ class CommentDecorator < Draper::Decorator
   end
 
   def date
-    object.comment_date
+    object.created_at
   end
 
 end

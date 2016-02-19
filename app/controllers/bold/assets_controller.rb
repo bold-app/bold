@@ -88,7 +88,7 @@ module Bold
     end
 
     def asset_params
-      params.require(:asset).permit :file, :title, :caption, :tag_list
+      params.require(:asset).permit :file, :title, :caption, :tag_list, :attribution, :original_url
     end
 
     def new_asset_params

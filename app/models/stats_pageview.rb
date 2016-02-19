@@ -40,13 +40,17 @@ class StatsPageview < ActiveRecord::Base
       batch_size = 1000
       num_records = scope.count
       (num_records / batch_size + 1).times do
-        transaction do
-          # limit also reloads the scope, since we change the processed flag
-          # inside the loop this brings up the next batch
-          scope.limit(batch_size).each do |log|
-            log.set_device_class!
-            build_for_log(log, site: site)&.save! unless log.bot?
-            log.update_column :processed, true
+        # limit also reloads the scope, since we change the processed flag
+        # inside the loop this brings up the next batch
+        scope.limit(batch_size).each do |log|
+          begin
+            transaction do
+              log.set_device_class!
+              build_for_log(log, site: site)&.save! unless log.bot?
+              log.update_column :processed, true
+            end
+          rescue
+            Rails.logger.error "error processing request log #{log.id}: #{$!}"
           end
         end
       end

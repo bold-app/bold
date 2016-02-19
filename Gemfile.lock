@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: git://github.com/bold-app/bold-theme-casper.git
-  revision: 8cee5e8b634459fd93854d77dc94b6b26554c5eb
+  revision: 3e67e3b93ba30dad7ac3470b0305a2c8e1560e18
   specs:
     bold-theme-casper (1.0.0)
 

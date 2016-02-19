@@ -25,7 +25,7 @@ Bold::Theme.register :test do
   template :homepage, body: false
   template :post, fields: %w(teaser_image test)
   template :page
-  template :contact_page, fields: %w(contact_message_receiver)
+  template :contact_page
   template :tag, body: false
   template :not_found, fulltext_search: false
   template :author, body: false

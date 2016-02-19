@@ -25,7 +25,7 @@ class CommentApprovalJobTest < ActiveJob::TestCase
     Bold.current_site = create :site
     configure 'enabled'
     @post = create :published_post
-    @comment = create :comment, post: @post
+    @comment = create :comment, content: @post
   end
 
   test 'should auto-approve when not spam and configured to do so' do

@@ -29,40 +29,40 @@ class CommentTest < ActiveSupport::TestCase
   test 'should refuse creation on non-published post' do
     post = create :post, title: 'not published'
     assert_raise(ActiveRecord::RecordInvalid) do
-      create :comment, post: post
+      create :comment, content: post
     end
   end
 
   test 'should refuse creation when configured' do
     configure nil
     assert_raise(ActiveRecord::RecordInvalid) do
-      create :comment, post: @post
+      create :comment, content: @post
     end
   end
 
   test 'should take site from post' do
-    co = create :comment, post: @post
+    co = create :comment, content: @post
     assert_equal @post.site, co.site
   end
 
   test 'should be pending by default' do
-    co = create :comment, post: @post
+    co = create :comment, content: @post
     assert co.pending?
   end
 
   test 'mark spam should delete and enqueue job' do
-    co = create :comment, post: @post
+    co = create :comment, content: @post
     assert_difference 'Comment.count', -1 do
-      assert_enqueued_with(job: CommentAkismetUpdateJob) do
+      assert_enqueued_with(job: AkismetUpdateJob) do
         co.mark_as_spam!
       end
     end
   end
 
   test 'mark ham should change status and enqueue job' do
-    co = create :comment, post: @post
+    co = create :comment, content: @post
     co.spam!
-    assert_enqueued_with(job: CommentAkismetUpdateJob) do
+    assert_enqueued_with(job: AkismetUpdateJob) do
       co.mark_as_ham!
     end
     co.reload

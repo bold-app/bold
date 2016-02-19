@@ -23,12 +23,7 @@ module Frontend
   class ContactMessagesControllerTest < ActionController::TestCase
 
     setup do
-      @page = create :published_page, template: 'contact_page', template_field_values: { contact_message_receiver: 'user@host.com' }
-    end
-
-    test 'page should have template_field_value' do
-      @page.reload
-      assert_equal 'user@host.com', @page.template_field_value(:contact_message_receiver)
+      @page = create :published_page, template: 'contact_page'
     end
 
     test 'should validate message' do
@@ -47,21 +42,6 @@ module Frontend
                              body: Faker::Lorem.paragraph }
       end
       assert_redirected_to content_url(@page.path)
-    end
-
-    test 'should not create message if receiver is not set' do
-      @page.template_field_values = { contact_message_receiver: ''}
-      @page.save!
-      @page.reload
-      assert @page.template_field_value(:contact_message_receiver).blank?
-      assert_no_difference 'ContactMessage.count' do
-        post :create, path: @page.path,
-          contact_message: { sender_name: Faker::Name.name,
-                             sender_email: Faker::Internet.email,
-                             subject: 'test test',
-                             body: Faker::Lorem.paragraph }
-      end
-      assert_response 400
     end
   end
 

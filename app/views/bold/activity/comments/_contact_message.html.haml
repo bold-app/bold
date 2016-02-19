@@ -1,0 +1,23 @@
+%article{id: dom_id(contact_message)}
+  %aside
+    = gravatar_image_tag contact_message.sender_email, 64
+
+  %header
+    %span.pull-right
+      - if contact_message.spam?
+        = link_with_icon :'thumbs-up', t('bold.activity.comments.comment.ham'), mark_ham_bold_activity_comment_path(contact_message), remote: true, method: :patch, class: 'btn btn-success btn-sm'
+      - else
+        = link_with_icon :'usd', t('bold.activity.comments.comment.spam'), mark_spam_bold_activity_comment_path(contact_message), remote: true, method: :patch, class: 'btn btn-danger btn-sm'
+      = link_with_icon :trash, t('bold.activity.comments.comment.delete'), bold_activity_comment_path(contact_message), remote: true, method: :delete, class: 'btn btn-danger btn-sm'
+
+    %p.small
+      = public_content_link contact_message.content
+      %br
+      %strong= time_tag contact_message.created_at, format: :bold_ymdt
+      = "#{contact_message.sender_name} (#{contact_message.sender_email})"
+
+  %section
+    %h1= contact_message.subject
+    = posting_html contact_message.body
+
+

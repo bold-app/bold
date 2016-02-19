@@ -21,12 +21,12 @@ class CommentSearch < ContentSearch
   include ActiveModel::Model
 
   def self.status_values
-    %i(pending approved spam deleted)
+    %i(pending approved spam)
   end
 
   private
 
-  # TODO implement actual search
+  # FIXME implement actual search
   def apply_query(coll)
     coll
   end

@@ -21,6 +21,7 @@ class Content < ActiveRecord::Base
   include SiteModel
   include HasPermalink
   include Taggable
+  include Deletable
 
   # once published, content may have staged, not yet published changes:
   include Draftable
@@ -69,20 +70,7 @@ class Content < ActiveRecord::Base
 
 
   #
-  # Destruction handling
-  #
-
-  scope :alive, ->{ where deleted_at: nil }
-
-  # true if not deleted
-  def alive?; !deleted? end
-
-  # true if deleted
-  def deleted?
-    deleted_at.present?
-  end
-
-   #marks this content as deleted and destroys the permalink
+  # marks this content as deleted and destroys the permalink
   def delete
     return false if homepage?
     transaction do

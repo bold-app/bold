@@ -1,0 +1,13 @@
+Daily Activity Summary for <%= @site.name %>
+
+<% @postings.each do |type, postings| %>
+
+<%= t ".#{type.underscore}" %>
+
+<% postings.each do |posting| %>
+<%= posting.to_s %>
+<% end %>
+
+<% end %>
+
+

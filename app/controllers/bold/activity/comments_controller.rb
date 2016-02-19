@@ -19,32 +19,27 @@
 #
 module Bold::Activity
   class CommentsController < BoldController
-    before_action :set_comment, except: :index
+    before_action :set_object, except: :index
 
     def index
       @comment_search = CommentSearch.new search_params
-      @comments = @comment_search.search(current_site.comments.includes(:post)).
+      @postings = @comment_search.search(current_site.visitor_postings.includes(:content)).
         order('created_at DESC').page(params[:page]).per(20)
     end
 
     def approve
-      @comment.approved!
+      @object.approved!
       render 'update'
     end
 
     def unapprove
-      @comment.pending!
-      render 'update'
-    end
-
-    def restore
-      @comment.undelete!
+      @object.pending!
       render 'update'
     end
 
     def mark_ham
       memento do
-        @comment.mark_as_ham!
+        @object.mark_as_ham!
       end
       undo_with 'update_comment'
       flash[:notice] = 'bold.comment.ham'
@@ -53,7 +48,7 @@ module Bold::Activity
 
     def mark_spam
       memento undo_template: 'restore_comment' do
-        @comment.mark_as_spam!
+        @object.mark_as_spam!
       end
       flash.now[:notice] = 'bold.comment.spam'
       render 'destroy'
@@ -61,15 +56,15 @@ module Bold::Activity
 
     def destroy
       memento undo_template: 'restore_comment' do
-        @comment.destroy
+        @object.delete
       end
       flash.now[:notice] = 'bold.comment.deleted'
     end
 
     private
 
-    def set_comment
-      @comment = current_site.comments.find params[:id]
+    def set_object
+      @object = current_site.visitor_postings.alive.find params[:id]
     end
 
     def search_params

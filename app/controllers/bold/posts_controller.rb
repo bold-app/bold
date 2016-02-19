@@ -20,6 +20,7 @@
 module Bold
   class PostsController < BoldController
     include ContentEditing
+    helper "bold/activity/comments"
 
     def index
       super

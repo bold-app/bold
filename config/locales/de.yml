@@ -190,7 +190,7 @@ de:
         index:
           apply: Anwenden
           delete: Löschen
-          heading: Kommentare
+          heading: "Kommentare & Nachrichten"
           status: &comment_states
             pending: Wartend auf Freigabe
             approved: Öffentlich
@@ -214,7 +214,7 @@ de:
           unapprove: Sperren
 
       left_col:
-        comments: Kommentare
+        comments: "Kommentare & Nachrichten"
         stats: Statistik
 
       stats:

@@ -69,6 +69,11 @@ en:
     created: Created.
     saved: Saved.
 
+  notifications:
+    daily_summary:
+      comment: Comments
+      contact_message: Contact Messages
+
   admin:
 
     imports:
@@ -190,7 +195,7 @@ en:
         index:
           apply: Apply
           delete: Delete
-          heading: Comments
+          heading: Comments and Messages
           status: &comment_states
             pending: Pending
             approved: Approved
@@ -214,7 +219,7 @@ en:
           unapprove: Unapprove
 
       left_col:
-        comments: Comments
+        comments: "Comments & Messages"
         stats: Statistics
 
       stats:

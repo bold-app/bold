@@ -114,19 +114,11 @@ module FrontendHelper
   #       = f.input :body
   #       = f.button :submit, 'Send'
   #
-  # Note that the form will only be rendered if the current content has its
-  # `contact_message_receiver` field set (which in turn has to be declared by
-  # the contents template).
-  # This allows for easy disabling of contact forms without changing the
-  # template, and it prevents spambots from blindly posting contact messages to
-  # pages that don't have a form at all.
   def contact_form(options = {}, &block)
     content = (options.delete(:content) || @content).object
     anchor = options.delete(:anchor) || 'new_contact_message'
-    if content.template_field_value?(:contact_message_receiver)
-      @contact_message ||= ContactMessage.new
-      simple_form_for @contact_message, { url: contact_messages_url(content.path, anchor: anchor) }.merge(options), &block
-    end
+    @contact_message ||= ContactMessage.new
+    simple_form_for @contact_message, { url: contact_messages_url(content.path, anchor: anchor) }.merge(options), &block
   end
 
   # renders a time tag for the given datetime object, formatting it according

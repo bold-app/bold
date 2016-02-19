@@ -155,7 +155,7 @@ module BoldHelper
     "#{content.path} - #{content.current_title||t('bold.common.untitled')}"
   end
 
-  def edit_content_link(content, *args)
+  def edit_Content_link(content, *args)
     link_to content.title, edit_content_path(content), *args
   end
 

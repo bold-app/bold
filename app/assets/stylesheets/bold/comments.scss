@@ -18,15 +18,20 @@
  * along with Bold.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+form#new_comment_search {
+  margin-top: 30px;
+}
 #comments, .comments {
   margin-top: 40px;
   article {
     aside {
       float: left;
     }
+    header, section {
+      margin-left: 80px;
+    }
     header {
       padding-top: 0;
-      margin-left: 80px;
       margin-bottom: 20px;
       h1 {
         margin: 0 0 5px 0;

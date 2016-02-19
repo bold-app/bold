@@ -21,10 +21,10 @@ FactoryGirl.define do
   factory :contact_message do
     subject "Hello!"
     body "Lorem Ipsum"
-    content { FactoryGirl.create(:published_page) }
+    content { FactoryGirl.create(:published_page, template: 'contact_page') }
     sender_name { Faker::Name.name }
     sender_email { Faker::Internet.email }
-    receiver_email { Faker::Internet.email }
+    author_ip { Faker::Internet.ip_v4_address }
   end
 
 end

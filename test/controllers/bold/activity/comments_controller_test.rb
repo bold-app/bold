@@ -24,23 +24,23 @@ module Bold::Activity
     setup do
       @post = create :published_post
       @site.update_attribute :post_comments, 'enabled'
-      @comment = create :comment, post: @post, site: @site
+      @comment = create :comment, content: @post, site: @site
     end
 
     test 'should get index' do
       get :index
       assert_response :success
-      assert assigns(:comments).include?(@comment)
+      assert assigns(:postings).include?(@comment)
     end
 
     test 'should filter comments by state' do
       get :index, comment_search: { status: 'pending' }
       assert_response :success
-      assert assigns(:comments).include?(@comment)
+      assert assigns(:postings).include?(@comment)
 
       get :index, comment_search: { status: 'approved' }
       assert_response :success
-      assert assigns(:comments).blank?
+      assert assigns(:postings).blank?
     end
 
     test 'should change state' do
@@ -70,7 +70,7 @@ module Bold::Activity
     end
 
     test 'should destroy comment' do
-      assert_difference 'Comment.count', -1 do
+      assert_difference 'Comment.alive.count', -1 do
         assert_difference 'Memento::Session.count' do
           assert_difference 'Memento::State.count' do
             xhr :delete, :destroy, id: @comment

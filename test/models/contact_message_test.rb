@@ -20,7 +20,38 @@
 require 'test_helper'
 
 class ContactMessageTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  setup do
+    @site = create :site
+    @page = create :published_page, site: @site, template: 'contact_page'
+  end
+
+  test 'should take site from contact_page' do
+    co = create :contact_message, content: @page
+    assert_equal @page.site, co.site
+  end
+
+  test 'should be pending by default' do
+    co = create :contact_message, content: @page
+    assert co.pending?
+  end
+
+  test 'mark spam should delete and enqueue job' do
+    co = create :contact_message, content: @page
+    assert_difference 'ContactMessage.count', -1 do
+      assert_enqueued_with(job: AkismetUpdateJob) do
+        co.mark_as_spam!
+      end
+    end
+  end
+
+  test 'mark ham should change status and enqueue job' do
+    co = create :contact_message, content: @page
+    co.spam!
+    assert_enqueued_with(job: AkismetUpdateJob) do
+      co.mark_as_ham!
+    end
+    co.reload
+    assert co.pending?
+  end
+
 end

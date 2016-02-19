@@ -17,29 +17,46 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-class ContactMessage < ActiveRecord::Base
-  include SiteModel
+class ContactMessage < VisitorPosting
+  DATA_ATTRIBUTES = %i(
+    body
+    sender_email
+    sender_name
+    subject
+  )
 
-  belongs_to :content
-  belongs_to :user
+  DATA_ATTRIBUTES.each do |attribute|
+    store_accessor :data, attribute
+  end
 
-  validates :subject,        presence: true
-  validates :sender_name,    presence: true
-  validates :sender_email,   presence: true
-  validates :body,           presence: true
+  validates :subject,        presence: true, length: { minimum: 2, maximum: 300 }
+  validates :sender_name,    presence: true, length: { minimum: 2, maximum: 100 }
+  validates :sender_email,   presence: true, length: { maximum: 100 }, format: /.+@.+\..{2,}/
+  validates :body,           presence: true, length: { minimum: 2, maximum: 10.kilobytes }
 
-  validates :content,        presence: true
-  validates :receiver_email, presence: true
+  after_create :trigger_spamcheck
 
-  before_validation :find_receiver, on: :create
+  def receiver_email
+    content.author.email
+  end
+
+  def to_s
+    "#{subject} (#{sender_name} #{sender_email})"
+  end
 
   private
 
-  def find_receiver
-    if content && content.template_field_value?(:contact_message_receiver)
-
-      self.receiver_email = content.template_field_value(:contact_message_receiver)
-      self.user = site.users.find_by_email receiver_email
-    end
+  def trigger_spamcheck
+    ContactMessageSpamcheckJob.perform_later(self)
   end
+
+  def additional_akismet_attributes
+    {
+      author:       sender_name,
+      author_email: sender_email,
+      text:         "#{subject}\n#{body}",
+      type:         'contact-form',
+    }
+  end
+
 end

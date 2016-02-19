@@ -3,8 +3,6 @@
     = gravatar_image_tag comment.author_email, 64
 
   %header
-    %small= time_tag comment.comment_date, format: :bold_ymdt
-    %h1= "#{comment.author_name} (#{comment.author_email}#{", #{comment.author_website}" if comment.author_website.present?})"
     %span.pull-right
       - if comment.pending?
         = link_with_icon :ok, t('.approve'), approve_bold_activity_comment_path(comment), remote: true, method: :patch, class: 'btn btn-default btn-sm'
@@ -16,8 +14,13 @@
         = link_with_icon :'usd', t('.spam'), mark_spam_bold_activity_comment_path(comment), remote: true, method: :patch, class: 'btn btn-danger btn-sm'
       = link_with_icon :trash, t('.delete'), bold_activity_comment_path(comment), remote: true, method: :delete, class: 'btn btn-danger btn-sm'
     %p.small
+      = public_content_link comment.content
+      %br
+      %strong= time_tag comment.created_at, format: :bold_ymdt
+      = "#{comment.author_name} (#{comment.author_email}#{", #{comment.author_website}" if comment.author_website.present?})"
+      %br
       = t ".status.#{comment.status}"
 
-  %pre
-    = preserve h comment.body
+  %section
+    = posting_html comment.body
 

@@ -29,7 +29,7 @@ class CommentDecoratorTest < Draper::TestCase
   end
 
   test 'should generate gravatar url' do
-    c = CommentDecorator.decorate create(:comment, post: @post, author_email: 'user@host.com')
+    c = CommentDecorator.decorate create(:comment, content: @post, author_email: 'user@host.com')
 
     assert_equal %{<img width="64" height="64" alt="" class="avatar" src="https://secure.gravatar.com/avatar/10468ad8d146df7dc85e4f8c51ef542e?d=http%3A%2F%2Ftest.host%2Fassets%2Fbold%2Fdefault_avatar-b049fdf65622eaacddd537e45072b28b413672c09b466573427358fb8967a038.png&amp;s=128" />}, c.author_image(size: 64)
   end
@@ -37,12 +37,12 @@ class CommentDecoratorTest < Draper::TestCase
   test 'should sanitize author_website' do
 
     %w(foo.bar www.foo.bar).each do |url|
-      c = CommentDecorator.decorate create(:comment, post: @post, author_website: url)
+      c = CommentDecorator.decorate create(:comment, content: @post, author_website: url)
       assert_equal %{<a rel="nofollow" href="http://#{url}">#{c.author_name}</a>}, c.author
     end
 
     %w(http://foo.bar https://foo.bar).each do |url|
-      c = CommentDecorator.decorate create(:comment, post: @post, author_website: url)
+      c = CommentDecorator.decorate create(:comment, content: @post, author_website: url, author_name: 'Max Muster')
       assert_equal %{<a rel="nofollow" href="#{url}">#{c.author_name}</a>}, c.author
     end
 
@@ -50,9 +50,14 @@ class CommentDecoratorTest < Draper::TestCase
       %{javascript:"alert('bla');"} => 'javascript:&quot;alert(&#39;bla&#39;);&quot;',
       %{" onclick="alert('bla');"} => '&quot; onclick=&quot;alert(&#39;bla&#39;);&quot;'
     }.each do |url, escaped|
-      c = CommentDecorator.decorate create(:comment, post: @post, author_website: url)
+      c = CommentDecorator.decorate create(:comment, content: @post, author_website: url)
       assert_equal %{<a rel="nofollow" href="http://#{escaped}">#{c.author_name}</a>}, c.author
     end
+  end
+
+  test 'should sanitize comment body' do
+    c = CommentDecorator.decorate create(:comment, content: @post, body: %/'';!--"<XSS>=&{()}/)
+    assert_equal "<p>'';!--\"=&amp;{()}</p>\n", c.body_html
   end
 
 end

@@ -1,20 +1,14 @@
 class Notifications < ApplicationMailer
-  def contact_form_received(contact_message)
-    @contact_message = contact_message
-    @site = contact_message.site
-    subject = "[#{contact_message.site.name}] #{contact_message.subject}"
-    mail to: contact_message.receiver_email,
-      subject: subject,
-      reply_to: contact_message.sender_email
+  def daily_summary(user, site)
+    @site = site
+    Bold.with_site(site) do
+      postings = site.visitor_postings.alive.recent
+      if postings.any?
+        @postings = postings.group_by(&:type)
+        subject = "[#{site.name}] Daily Activity (#{I18n.l Time.now.to_date}) - #{postings.count}"
+        mail to: user.email, subject: subject
+      end
+    end
   end
 
-  def comment_received(comment)
-    @comment = comment
-    @site = comment.site
-
-    subject = "[#{@site.name}] #{comment.subject}"
-    mail to: contact_message.receiver_email,
-      subject: subject,
-      reply_to: contact_message.sender_email
-  end
 end

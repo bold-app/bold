@@ -1,4 +1,4 @@
-$('#<%= dom_id @comment %>').replaceWith('<%= escape_javascript render partial: 'bold/activity/comments/comment', object: @comment %>');
+$('#<%= dom_id @object %>').replaceWith('<%= escape_javascript render partial: "bold/activity/comments/#{@object.class.name.underscore}", object: @object %>');
 
 <%= raw flash_message %>
 

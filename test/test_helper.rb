@@ -133,6 +133,10 @@ class BoldIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def current_body
+    Capybara.current_session.driver.response.body
+  end
+
 end
 
 class ThemeIntegrationTest < BoldIntegrationTest

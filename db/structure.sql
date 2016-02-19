@@ -581,6 +581,25 @@ CREATE TABLE users (
 
 
 --
+-- Name: visitor_postings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE visitor_postings (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    type character varying(30) NOT NULL,
+    data hstore DEFAULT ''::hstore NOT NULL,
+    request hstore DEFAULT ''::hstore NOT NULL,
+    author_ip inet NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    content_id uuid NOT NULL,
+    site_id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone
+);
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -768,6 +787,14 @@ ALTER TABLE ONLY tags
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: visitor_postings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY visitor_postings
+    ADD CONSTRAINT visitor_postings_pkey PRIMARY KEY (id);
 
 
 --
@@ -985,6 +1012,20 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 --
 
 CREATE UNIQUE INDEX index_users_on_unlock_token ON users USING btree (unlock_token);
+
+
+--
+-- Name: index_visitor_postings_on_site_id_and_type_and_content_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_visitor_postings_on_site_id_and_type_and_content_id ON visitor_postings USING btree (site_id, type, content_id);
+
+
+--
+-- Name: index_visitor_postings_on_status; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_visitor_postings_on_status ON visitor_postings USING btree (status);
 
 
 --
@@ -1333,4 +1374,10 @@ INSERT INTO schema_migrations (version) VALUES ('20151024100100');
 INSERT INTO schema_migrations (version) VALUES ('20160116081325');
 
 INSERT INTO schema_migrations (version) VALUES ('20160213090357');
+
+INSERT INTO schema_migrations (version) VALUES ('20160216110944');
+
+INSERT INTO schema_migrations (version) VALUES ('20160219060400');
+
+INSERT INTO schema_migrations (version) VALUES ('20160219091840');
 

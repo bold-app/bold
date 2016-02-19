@@ -24,15 +24,15 @@ module Bold
       ::Kramdown::Parser::Kramdown.prepend DisableOptionsExtension
     end
 
+    module_function
+
     def preview_mode?
       !!RequestStore.store[:preview_mode]
     end
-    module_function :preview_mode?
 
     def preview_mode!
       RequestStore.store[:preview_mode] = true
     end
-    module_function :preview_mode!
 
 
     MARKDOWN_OPTIONS = {

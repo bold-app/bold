@@ -1,21 +1,24 @@
 %h2.pull-left= t '.heading'
 
-= form_for @comment_search, url: '#', html: { class: 'form-inline pull-right', role: 'form', method: :get } do |f|
-  = f.select :status, CommentSearch.status_values.map{|s| [t(".status.#{s}"), s]}, { include_blank: t('simple_form.labels.comment_search.state_blank') },  { class: 'form-control input-sm auto-submit' }
+= form_for @comment_search, url: '#', html: { class: 'pull-right', role: 'form', method: :get } do |f|
+  .form-group
+    = f.select :status, CommentSearch.status_values.map{|s| [t(".status.#{s}"), s]}, { include_blank: t('simple_form.labels.comment_search.state_blank') },  { class: 'form-control input-sm auto-submit' }
 
-  = f.label :query, t('simple_form.labels.comment_search.query'), class: 'sr-only'
-  .input-group
-    = f.text_field :query, class: 'input-sm form-control', placeholder: t('simple_form.labels.comment_search.query')
-    .input-group-btn
-      - if @comment_search.query.blank?
-        %button.btn.btn-default.btn-sm{type:"submit"}
-          = icon :search
-      - else
-        = link_to icon(:remove), bold_activity_comments_path(comment_search: { status: @comment_search.status }), class: 'btn btn-sm btn-default'
+  .form-group
+    = f.label :query, t('simple_form.labels.comment_search.query'), class: 'sr-only'
+    .input-group
+      = f.text_field :query, class: 'input-sm form-control', placeholder: t('simple_form.labels.comment_search.query')
+      .input-group-btn
+        - if @comment_search.query.blank?
+          %button.btn.btn-default.btn-sm{type:"submit"}
+            = icon :search
+        - else
+          = link_to icon(:remove), bold_activity_comments_path(comment_search: { status: @comment_search.status }), class: 'btn btn-sm btn-default'
 
 %p.clearfix
 
 .comments
-  = render partial: 'bold/activity/comments/comment', collection: @comments
+  - for p in @postings
+    = render partial: "bold/activity/comments/#{p.class.name.underscore}", object: p
 
-= bold_pagination_for @comments
+= bold_pagination_for @postings

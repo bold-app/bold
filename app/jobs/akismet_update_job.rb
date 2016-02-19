@@ -17,18 +17,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-class Bold::UndoController < BoldController
-  helper "bold/activity/comments"
+class AkismetUpdateJob < ActiveJob::Base
+  queue_as :default
 
-  # roll back the changes recorded in undo session given by params[:id]
-  def create
-    if @undo_session = current_user.undo_sessions.find(params[:id])
-      @undo_results = @undo_session.undo
-      if @undo_results.success?
-        flash.now[:notice] = 'bold.undo.success'
-      else
-        flash.now[:error] = 'bold.undo.failed'
-      end
+  def perform(method, akismet_config, akismet_args)
+    Akismet::Client.open(*akismet_config) do |client|
+      return client.send method, *akismet_args
     end
   end
 end
+

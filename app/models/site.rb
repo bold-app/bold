@@ -38,7 +38,7 @@ class Site < ActiveRecord::Base
   has_many :permalinks
   has_many :extension_configs
   has_many :site_users
-  has_many :comments
+  has_many :visitor_postings
   has_many :navigations, ->{ order(position: :asc) }
   has_many :categories, ->{ order(name: :asc) }
 
@@ -298,6 +298,14 @@ class Site < ActiveRecord::Base
       request_logs.update_all processed: false, device_class: nil
       compute_stats
     end
+  end
+
+  def comments
+    visitor_postings.where type: 'Comment'
+  end
+
+  def contact_messages
+    visitor_postings.where type: 'ContactMessage'
   end
 
   private

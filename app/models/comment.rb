@@ -17,44 +17,28 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-class Comment < ActiveRecord::Base
+class Comment < VisitorPosting
   include Markdown
-  include SiteModel
-  include Spamcheck
 
-  belongs_to :post
+  DATA_ATTRIBUTES = %i(
+    author_name
+    author_email
+    author_website
+    body
+  )
+
+  DATA_ATTRIBUTES.each do |attribute|
+    store_accessor :data, attribute
+  end
 
   validates :author_name, presence: true, length: { minimum: 2, maximum: 100 }
   validates :author_email, presence: true, format: /.+@.+\..{2,}/, length: { maximum: 100 }
   validates :author_website, length: { maximum: 100 }
-  validates :body, presence: true, length: { maximum: 20.kilobytes }
+  validates :body, presence: true, length: { maximum: 10.kilobytes }
+
   validate :check_approval_config, on: :create
 
-  before_validation :init_status, on: :create
-
-  memento_changes :update, :destroy
-
-  enum status: %i(pending approved spam)
-  def init_status
-    self.status ||= :pending
-    self.comment_date ||= Time.zone.now
-  end
-
-  # Manually mark a Comment as 'Not Spam'.
-  # To allow proper undo we wait an hour before doing the actual Akismet update.
-  # Undo will then restore the old state and remove the pending job.
-  def mark_as_ham!
-    pending!
-    report_ham!
-  end
-
-  # Manually mark the comment as Spam.
-  # To allow proper undo we wait an hour before doing the actual Akismet update.
-  # Undo will then restore the comment and remove the pending job.
-  def mark_as_spam!
-    report_spam!
-    self.destroy
-  end
+  after_create :trigger_spamcheck
 
   def auto_approve?
     site.auto_approve_comments?
@@ -64,15 +48,30 @@ class Comment < ActiveRecord::Base
     md_render_text body
   end
 
-  def take_current_site
-    self.site_id ||= post.site_id
+  def to_s
+    "#{author_name} (#{author_email}) on #{content.title}"
   end
-
 
   private
 
+  def trigger_spamcheck
+    CommentApprovalJob.perform_later(self)
+  end
+
+  def additional_akismet_attributes
+    {
+      author: author_name,
+      author_email: author_email,
+      author_url: author_website,
+      type: 'comment',
+      text: body,
+      post_url: content.public_url,
+      post_modified_at: content.post_date.iso8601,
+    }
+  end
+
   def check_approval_config
-    unless site.comments_enabled? && post.published?
+    unless site.comments_enabled? && content.published?
       errors[:base] << 'comments are disabled'
     end
   end

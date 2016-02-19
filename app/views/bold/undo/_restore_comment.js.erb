@@ -1,4 +1,3 @@
-<% if comment = results.map(&:object).detect{|o| Comment === o} %>
-  $('#<%= dom_id comment %>').remove();
-  $('.comment-list').replaceWith('<%= escape_javascript render 'bold/activity/comments/comment_list', comment_list: comment.post.comments %>');
+<% if posting = results.map(&:object).detect{|o| o.is_a?(VisitorPosting)} %>
+  $('#<%= dom_id posting %>').show();
 <% end %>

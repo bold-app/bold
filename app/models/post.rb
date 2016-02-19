@@ -20,7 +20,6 @@
 class Post < Content
   include Teaser
 
-  has_many :comments, dependent: :delete_all
   belongs_to :category
 
   # memento_changes :update, :destroy
@@ -54,10 +53,17 @@ class Post < Content
     end
   end
 
+  def comments
+    Comment.alive.where(content_id: id)
+  end
+
   # approved comments in ascending order
   #
+  # FIXME how to best handle comment count > 100? comment paging in themes?
   def visible_comments(page = 0, limit = 100)
-    comments.approved.order('comment_date ASC').page(page).per(limit)
+      comments.approved.
+      order('created_at ASC').
+      page(page).per(limit)
   end
 
   def auto_approve_comments?
@@ -70,11 +76,10 @@ class Post < Content
   alias commentable? comments_enabled?
 
   def comment!(comment_params, request)
-    comments.build(comment_params).tap do |comment|
+    Comment.new(comment_params).tap do |comment|
+      comment.content = self
       comment.set_request request
-      if comment.save
-        CommentApprovalJob.perform_later(comment)
-      end
+      comment.save
     end
   end
 

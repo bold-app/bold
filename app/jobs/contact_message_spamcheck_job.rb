@@ -17,18 +17,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-class Bold::UndoController < BoldController
-  helper "bold/activity/comments"
+class ContactMessageSpamcheckJob < ActiveJob::Base
+  queue_as :default
 
-  # roll back the changes recorded in undo session given by params[:id]
-  def create
-    if @undo_session = current_user.undo_sessions.find(params[:id])
-      @undo_results = @undo_session.undo
-      if @undo_results.success?
-        flash.now[:notice] = 'bold.undo.success'
+  def perform(contact_message)
+    Bold.with_site(contact_message.site) do
+      case contact_message.spam_check!
+      when :blatant
+        Rails.logger.warn "deleting unseen blatant spam: #{contact_message.sender_name} / #{contact_message.sender_email}\n#{contact_message.subject[0..99]}\n#{contact_message.body[0..99]}"
+        contact_message.destroy
+      when :ham
+        contact_message.approve!
       else
-        flash.now[:error] = 'bold.undo.failed'
+        # spam, no approval
       end
     end
   end
 end
+

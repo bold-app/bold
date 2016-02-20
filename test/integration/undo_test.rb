@@ -73,8 +73,8 @@ class UndoTest < BoldIntegrationTest
   test 'should undo comment actions' do
     login_as @user
     p = create :published_post
-    c = create :comment, post: p, author_name: 'Max Muster', body: 'test comment'
-    date = c.comment_date
+    c = create :comment, content: p, author_name: 'Max Muster', body: 'test comment'
+    date = c.created_at
 
     #
     # undo delete
@@ -84,16 +84,19 @@ class UndoTest < BoldIntegrationTest
     assert has_content? 'test comment'
 
     assert_difference '@user.undo_sessions.count' do
-      assert_difference 'Comment.count', -1 do
-        click_link 'Delete'
-        wait_for_ajax
+      assert_no_difference 'Comment.count' do
+        assert_difference 'Comment.alive.count', -1 do
+          click_link 'Delete'
+          wait_for_ajax
+        end
       end
     end
-    assert_nil Comment.find_by_id c.id
 
-    assert_difference 'Comment.count' do
-      click_link 'Undo'
-      wait_for_ajax
+    assert_no_difference 'Comment.count' do
+      assert_difference 'Comment.alive.count' do
+        click_link 'Undo'
+        wait_for_ajax
+      end
     end
 
     assert restored_comment = Comment.find(c.id)
@@ -112,19 +115,22 @@ class UndoTest < BoldIntegrationTest
 
     assert_difference '@user.undo_sessions.count' do
       assert_difference 'Delayed::Job.count' do
-        assert_difference 'Comment.count', -1 do
-          click_link 'Spam'
-          wait_for_ajax
+        assert_no_difference 'Comment.count' do
+          assert_difference 'Comment.alive.count', -1 do
+            click_link 'Spam'
+            wait_for_ajax
+          end
         end
       end
     end
 
-    assert_nil Comment.find_by_id c.id
-    assert_difference 'Comment.count' do
-      # check removal of the spam report job:
-      assert_difference 'Delayed::Job.count', -1 do
-        click_link 'Undo'
-        wait_for_ajax
+    assert_no_difference 'Comment.count' do
+      assert_difference 'Comment.alive.count' do
+        # check removal of the spam report job:
+        assert_difference 'Delayed::Job.count', -1 do
+          click_link 'Undo'
+          wait_for_ajax
+        end
       end
     end
 
@@ -132,7 +138,7 @@ class UndoTest < BoldIntegrationTest
     assert_equal 'test comment', restored_comment.body
     assert_equal 'Max Muster', restored_comment.author_name
     assert restored_comment.pending?, restored_comment.inspect
-    assert_equal date.to_i, restored_comment.comment_date.to_i
+    assert_equal date.to_i, restored_comment.created_at.to_i
 
     #
     # undo mark as ham

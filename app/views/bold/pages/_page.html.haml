@@ -4,10 +4,14 @@
   .page
     %h4.list-group-item-heading
       = page.title
+      %small
+        - if page.published?
+          - if page.has_draft?
+            = icon :pencil, title: t('.unpublished_changes')
+        - else
+          = icon :lock, title: t('.unpublished')
+
     %p.list-group-item-text
       %small
         = page.slug
-        - if page.published? && page.has_draft?
-          %br/
-          (#{t '.unpublished_changes'})
 

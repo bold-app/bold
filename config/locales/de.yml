@@ -405,9 +405,11 @@ de:
       form:
       index:
         no_content: "Es gibt noch keine Seiten. Klicke das 'plus' icon um loszulegen!"
-        unpublished_changes: Hat unveröffentlichte Änderungen.
         hits_info: Besuche seit Veröffentlichung
 
+      page:
+        unpublished_changes: Hat unveröffentlichte Änderungen.
+        unpublished: Nicht veröffentlicht.
       new:
         h1: Neue Seite
       show:
@@ -425,11 +427,12 @@ de:
       index:
         more: Mehr...
         no_content: "Es gibt noch keine Artikel. Klicke das 'plus' icon um loszulegen!"
-        unpublished_changes: Hat unveröffentlichte Änderungen.
       new:
         h1: Neuer Artikel
       post:
         hits_info: Besuche seit Veröffentlichung
+        unpublished_changes: Hat unveröffentlichte Änderungen.
+        unpublished: Nicht veröffentlicht.
       show:
         created_by: Erstellt von %{author} am %{date}.
         published_by: Veröffentlicht von %{author} am %{date}.

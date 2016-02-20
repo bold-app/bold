@@ -9,11 +9,13 @@
   .post
     %h4.list-group-item-heading
       = post.title
+      %small
+        - if post.published?
+          - if post.has_draft?
+            = icon :pencil, title: t('.unpublished_changes')
+        - else
+          = icon :lock, title: t('.unpublished')
     %p.list-group-item-text
       %small
         = post.tag_list.to_s
-        - if post.published? && post.draft?
-          %br/
-          (#{t '.unpublished_changes'})
-
 

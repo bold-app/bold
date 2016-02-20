@@ -21,15 +21,6 @@ module Bold
   class PagesController < BoldController
     include ContentEditing
 
-#      def create
-#        @content = collection.build page_params
-#        if save_content
-#          redirect_to edit_url, notice: flash_key("content.created")
-#        else
-#          render 'new'
-#        end
-#      end
-
     private
 
     def edit_url(content = @content)

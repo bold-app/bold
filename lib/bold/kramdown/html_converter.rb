@@ -153,7 +153,10 @@ module Bold
         figure_class = ['image', para.attr['class'], el.attr['class'], size].map do |clazz|
           clazz.to_s.split
         end.flatten.uniq.join ' '
-        "#{' '*indent}<figure class=\"#{figure_class}\">#{convert_img el, 0}#{caption}</figure>\n"
+        style = if props = para.attr['style']
+          %{ style="#{props}"}
+        end
+        "#{' '*indent}<figure#{style} class=\"#{figure_class}\">#{convert_img el, 0}#{caption}</figure>\n"
       end
 
       def extract_caption_from_attrs(attr)

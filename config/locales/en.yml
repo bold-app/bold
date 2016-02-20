@@ -412,11 +412,14 @@ en:
       form:
       index:
         no_content: "You don't have any pages yet. Click the plus icon above to create one!"
-        unpublished_changes: Has unpublished changes.
         hits_info: all time visits
 
       new:
         h1: New Page
+
+      page:
+        unpublished_changes: Has unpublished changes
+        unpublished: Not published
       show:
         created_by: Created by %{author} on %{date}.
         published_by: Published by %{author} on %{date}.
@@ -432,11 +435,12 @@ en:
       index:
         more: Load more...
         no_content: "You don't have any posts yet. Click the plus icon above to create one!"
-        unpublished_changes: Has unpublished changes.
       new:
         h1: New Post
       post:
         hits_info: all time visits
+        unpublished_changes: Has unpublished changes
+        unpublished: Not published
       show:
         created_by: Created by %{author} on %{date}.
         published_by: Published by %{author} on %{date}.

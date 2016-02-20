@@ -183,27 +183,6 @@ CREATE TABLE categories (
 
 
 --
--- Name: comments; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE comments (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    body text NOT NULL,
-    author_email character varying(100) NOT NULL,
-    author_name character varying(100) NOT NULL,
-    author_website character varying(100),
-    status integer DEFAULT 0 NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    site_id uuid,
-    request hstore DEFAULT ''::hstore NOT NULL,
-    post_id uuid NOT NULL,
-    author_ip inet NOT NULL,
-    comment_date timestamp without time zone NOT NULL
-);
-
-
---
 -- Name: contact_messages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -630,14 +609,6 @@ ALTER TABLE ONLY categories
 
 
 --
--- Name: comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY comments
-    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
-
-
---
 -- Name: contact_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -798,20 +769,6 @@ ALTER TABLE ONLY visitor_postings
 
 
 --
--- Name: comments_site_id_post_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX comments_site_id_post_id_idx ON comments USING btree (site_id, post_id);
-
-
---
--- Name: comments_status_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX comments_status_idx ON comments USING btree (status);
-
-
---
 -- Name: delayed_jobs_priority; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -865,13 +822,6 @@ CREATE INDEX index_assets_on_site_id ON assets USING btree (site_id);
 --
 
 CREATE INDEX index_categories_on_site_id_and_slug ON categories USING btree (site_id, slug);
-
-
---
--- Name: index_comments_on_status; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_comments_on_status ON comments USING btree (status);
 
 
 --
@@ -1047,22 +997,6 @@ CREATE INDEX request_logs_site_id_resource_type_resource_id_idx ON request_logs 
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
-
-
---
--- Name: comments_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY comments
-    ADD CONSTRAINT comments_post_id_fkey FOREIGN KEY (post_id) REFERENCES contents(id);
-
-
---
--- Name: comments_site_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY comments
-    ADD CONSTRAINT comments_site_id_fkey FOREIGN KEY (site_id) REFERENCES sites(id) ON DELETE CASCADE;
 
 
 --
@@ -1378,6 +1312,8 @@ INSERT INTO schema_migrations (version) VALUES ('20160213090357');
 INSERT INTO schema_migrations (version) VALUES ('20160216110944');
 
 INSERT INTO schema_migrations (version) VALUES ('20160219060400');
+
+INSERT INTO schema_migrations (version) VALUES ('20160219085205');
 
 INSERT INTO schema_migrations (version) VALUES ('20160219091840');
 

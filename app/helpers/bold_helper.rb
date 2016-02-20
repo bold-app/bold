@@ -51,8 +51,8 @@ module BoldHelper
     end
   end
 
-  def icon(name)
-    content_tag :span, '', class: "glyphicon glyphicon-#{name.to_s.gsub /_/, '-'}"
+  def icon(name, options = {})
+    content_tag :span, '', options.merge(class: "glyphicon glyphicon-#{name.to_s.gsub /_/, '-'}")
   end
 
   def link_with_icon(icon_name, text, *args)
@@ -193,4 +193,7 @@ module BoldHelper
     end
   end
 
+  def diff_path(content)
+    Post === content ? diff_bold_post_path(content) : diff_bold_page_path(content)
+  end
 end

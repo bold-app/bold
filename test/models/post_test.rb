@@ -26,6 +26,11 @@ class PostTest < ActiveSupport::TestCase
     @post = create :post, author: @user
   end
 
+  test 'should count words' do
+    @post.body = 'Ruby 1.2 3 user@host.com hello.'
+    assert_equal 5, @post.word_count
+  end
+
   test 'should publish meta data' do
     post = create :post, author: @user, meta_title: 'meta title', meta_description: 'meta desc'
     post.publish!

@@ -395,6 +395,14 @@ en:
         published: Published!
         saved: Saved!
 
+      unpublished_changes: Has unpublished changes
+      unpublished: Not published
+
+      word_count:
+        zero: "(0 words)"
+        one: "(1 word)"
+        other: "(%{count} words)"
+
     extensions:
       no_config: This extension cannot be configured.
 
@@ -417,9 +425,6 @@ en:
       new:
         h1: New Page
 
-      page:
-        unpublished_changes: Has unpublished changes
-        unpublished: Not published
       show:
         created_by: Created by %{author} on %{date}.
         published_by: Published by %{author} on %{date}.
@@ -439,8 +444,6 @@ en:
         h1: New Post
       post:
         hits_info: all time visits
-        unpublished_changes: Has unpublished changes
-        unpublished: Not published
       show:
         created_by: Created by %{author} on %{date}.
         published_by: Published by %{author} on %{date}.

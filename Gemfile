@@ -48,6 +48,7 @@ gem 'teambox-icons-rails', github: 'bold-app/teambox-icons-rails'
 gem 'user_agent_parser', '~> 2.2'
 gem 'valid_email'
 gem 'warden', '~> 1.2'
+gem 'words_counted', '~> 1.0'
 gem 'xmp', github: 'jkraemer/xmp'
 
 

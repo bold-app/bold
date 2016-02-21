@@ -388,6 +388,14 @@ de:
         published: Veröffentlicht!
         saved: Gespeichert!
 
+      unpublished_changes: Hat unveröffentlichte Änderungen.
+      unpublished: Nicht veröffentlicht.
+
+      word_count:
+        zero: "(0 words)"
+        one: "(1 word)"
+        other: "(%{count} words)"
+
     extensions:
       no_config: Diese Erweiterung hat keine weiteren Optionen.
 
@@ -407,9 +415,6 @@ de:
         no_content: "Es gibt noch keine Seiten. Klicke das 'plus' icon um loszulegen!"
         hits_info: Besuche seit Veröffentlichung
 
-      page:
-        unpublished_changes: Hat unveröffentlichte Änderungen.
-        unpublished: Nicht veröffentlicht.
       new:
         h1: Neue Seite
       show:
@@ -431,8 +436,6 @@ de:
         h1: Neuer Artikel
       post:
         hits_info: Besuche seit Veröffentlichung
-        unpublished_changes: Hat unveröffentlichte Änderungen.
-        unpublished: Nicht veröffentlicht.
       show:
         created_by: Erstellt von %{author} am %{date}.
         published_by: Veröffentlicht von %{author} am %{date}.

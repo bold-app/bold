@@ -12,10 +12,11 @@
       %small
         - if post.published?
           - if post.has_draft?
-            = icon :pencil, title: t('.unpublished_changes')
+            = icon :pencil, title: t('bold.content.unpublished_changes')
         - else
-          = icon :lock, title: t('.unpublished')
+          = icon :lock, title: t('bold.content.unpublished')
     %p.list-group-item-text
       %small
         = post.tag_list.to_s
+        = t 'bold.content.word_count', count: post.word_count
 

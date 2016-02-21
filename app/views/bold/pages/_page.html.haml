@@ -7,11 +7,12 @@
       %small
         - if page.published?
           - if page.has_draft?
-            = icon :pencil, title: t('.unpublished_changes')
+            = icon :pencil, title: t('bold.content.unpublished_changes')
         - else
-          = icon :lock, title: t('.unpublished')
+          = icon :lock, title: t('bold.content.unpublished')
 
     %p.list-group-item-text
       %small
         = page.slug
+        = t 'bold.content.word_count', count: page.word_count
 

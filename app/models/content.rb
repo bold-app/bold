@@ -22,6 +22,7 @@ class Content < ActiveRecord::Base
   include HasPermalink
   include Taggable
   include Deletable
+  include TextStats
 
   # once published, content may have staged, not yet published changes:
   include Draftable

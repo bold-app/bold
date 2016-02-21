@@ -73,7 +73,7 @@ class VisitorPosting < ActiveRecord::Base
   # Undo will then restore the comment and remove the pending job.
   def mark_as_spam!
     report_spam!
-    self.destroy
+    self.delete
   end
 
   def spam_check!

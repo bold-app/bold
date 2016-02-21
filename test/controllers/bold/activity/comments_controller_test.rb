@@ -62,9 +62,11 @@ module Bold::Activity
       assert @comment.pending?
 
 
-      assert_difference 'Comment.count', -1 do
-        xhr :patch, :mark_spam, id: @comment
-        assert_response :success
+      assert_no_difference 'Comment.count', -1 do
+        assert_difference 'Comment.alive.count', -1 do
+          xhr :patch, :mark_spam, id: @comment
+          assert_response :success
+        end
       end
 
     end

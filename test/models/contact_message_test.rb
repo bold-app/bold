@@ -35,11 +35,13 @@ class ContactMessageTest < ActiveSupport::TestCase
     assert co.pending?
   end
 
-  test 'mark spam should delete and enqueue job' do
+  test 'mark spam should mark deleted and enqueue job' do
     co = create :contact_message, content: @page
-    assert_difference 'ContactMessage.count', -1 do
-      assert_enqueued_with(job: AkismetUpdateJob) do
-        co.mark_as_spam!
+    assert_no_difference 'ContactMessage.count' do
+      assert_difference 'ContactMessage.alive.count', -1 do
+        assert_enqueued_with(job: AkismetUpdateJob) do
+          co.mark_as_spam!
+        end
       end
     end
   end

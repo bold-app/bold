@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'nokogiri'
-gem 'rails', '~> 4.2.3'
+gem 'rails', '5.0.0.beta2'
 gem 'rails-i18n', '~> 4.0'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
@@ -25,10 +25,18 @@ gem 'carrierwave', '~> 0.10'
 gem 'chronic', github: 'jkraemer/chronic', branch: 'thread_safe'
 gem 'daemons'
 gem 'delayed_job_active_record', '~> 4.0'
-gem 'devise', '~> 3.5'
-gem 'devise_invitable', github: 'bold-app/devise_invitable'
+
+# FIXME revert to ~> 4.0.0 once released
+gem 'devise', '4.0.0.rc1'
+gem 'devise_invitable', github: 'bold-app/devise_invitable', branch: 'bold'
+
 gem 'diffy', '~> 3.0.7'
-gem 'draper', '~> 2.1'
+
+# FIXME check for an officially Rails 5 compatible version of draper
+# gem 'draper', '~> 2.1'
+gem 'draper', github: 'bold-app/draper', branch: 'rails5'
+gem 'activemodel-serializers-xml', github: 'rails/activemodel-serializers-xml'
+
 gem 'exifr', '~> 1.2'
 gem 'http_accept_language', '~> 2.0.5'
 gem 'httparty', '~> 0.13.5'
@@ -41,7 +49,7 @@ gem 'haml-rails', '~> 0.9'
 gem 'kramdown', '~> 1.9.0'
 gem 'request_store', '~> 1.1'
 gem 'safe_shell', '~> 1.0.2'
-gem 'simple_form', '~> 3.1.0'
+gem 'simple_form', '~> 3.2.1'
 gem 'speakingurl-rails', '~> 8.0'
 gem 'stringex', '~> 2.5'
 gem 'teambox-icons-rails', github: 'bold-app/teambox-icons-rails'
@@ -53,7 +61,7 @@ gem 'xmp', github: 'jkraemer/xmp'
 
 
 group :development, :test do
-  gem 'capybara', '~> 2.4.4'
+  gem 'capybara', '~> 2.6.0'
   gem 'capybara-screenshot', '~> 1.0.4'
   gem 'connection_pool', '~> 2.1.1'
   gem 'factory_girl_rails', '~> 4.5'
@@ -64,7 +72,7 @@ group :development, :test do
   gem 'puma'
   gem 'quiet_assets'
   gem 'spring'
-  gem 'yaml_db'
+  #gem 'yaml_db'
 end
 
 group :development do

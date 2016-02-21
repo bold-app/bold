@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     # the constraint hides these routes once at least one site is present.
     constraints Bold::Routes::SetupConstraint.new do
       namespace :setup do
-        root 'users#new'
+        root 'users#new', as: 'root'
         resource :user, only: %i(new create)
         resource :site, only: %i(new create)
       end
@@ -31,7 +31,7 @@ Rails.application.routes.draw do
 
     # backend
     namespace :bold do
-      root 'posts#index'
+      root 'posts#index', as: 'root'
 
       namespace :activity do
         resources :stats
@@ -71,7 +71,7 @@ Rails.application.routes.draw do
 
       # Site Settings
       namespace :settings do
-        root 'settings#edit'
+        root 'settings#edit', as: 'root'
 
         resources :backups, only: %i(index create)
         resources :categories
@@ -106,7 +106,7 @@ Rails.application.routes.draw do
 
     # global admin
     namespace :admin do
-      root 'profiles#edit'
+      root 'profiles#edit', as: 'root'
 
       resource :profile, only: %i(edit update edit_password update_password edit_email update_email) do
         collection do

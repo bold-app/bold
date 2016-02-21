@@ -65,7 +65,7 @@ module HasPermalink
 
   def add_permalink_errors
     if permalink && !permalink.valid?
-      errors[:slug] += permalink.errors[:path]
+      errors.add :slug, permalink.errors[:path]
     end
   end
   private :add_permalink_errors

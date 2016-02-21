@@ -36,8 +36,8 @@ class PhotoProcessingTest < ActiveSupport::TestCase
   end
 
   test 'should store photo data' do
-    assert_equal 2400, @photo.width
-    assert_equal 1800, @photo.height
+    assert_equal '2400', @photo.width
+    assert_equal '1800', @photo.height
     assert_equal 1330563, @photo.file_size
     assert_equal 'image/jpeg', @photo.content_type
   end

@@ -220,7 +220,7 @@ class Site < ActiveRecord::Base
   end
 
   def author_ids
-    content_pages.uniq.pluck(:author_id)
+    content_pages.distinct.pluck(:author_id)
   end
 
   def pages

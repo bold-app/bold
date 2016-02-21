@@ -20,7 +20,8 @@
 class Asset < ActiveRecord::Base
   include SiteModel
   include Rails.application.routes.url_helpers
-  include Taggable
+
+  prepend Taggable
 
   has_many :request_logs, as: :resource
 

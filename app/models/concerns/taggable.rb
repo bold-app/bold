@@ -18,8 +18,6 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 module Taggable
-  extend ActiveSupport::Concern
-  include SiteModel
 
   GLUE = ', '.freeze
 
@@ -30,19 +28,19 @@ module Taggable
     /(\A|,)\s*(?<tag>.*?)\s*(?=,\s*|\z)/
   ]
 
-  included do
-    has_many :taggings, as: :taggable, dependent: :destroy
-    has_many :tags, through: :taggings
+  def self.prepended(clazz)
+    clazz.class_eval do
+      has_many :taggings, as: :taggable, dependent: :destroy
+      has_many :tags, through: :taggings
 
-    scope :tagged_with, ->(name){
-      if Tag === name
-        joins(:tags).where('tags.id = ?'.freeze, name.id)
-      else
-        joins(:tags).where('lower(tags.name) = ?'.freeze, name.to_s.unicode_downcase)
-      end
-    }
-
-    alias_method_chain :changed?, :tags
+      scope :tagged_with, ->(name){
+        if Tag === name
+          joins(:tags).where('tags.id = ?'.freeze, name.id)
+        else
+          joins(:tags).where('lower(tags.name) = ?'.freeze, name.to_s.unicode_downcase)
+        end
+      }
+    end
   end
 
   def tag_list
@@ -68,8 +66,8 @@ module Taggable
     !!@tags_changed
   end
 
-  def changed_with_tags?
-    changed_without_tags? || tags_changed?
+  def changed?
+    super || tags_changed?
   end
 
   # parse a tag string

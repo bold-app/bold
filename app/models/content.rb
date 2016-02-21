@@ -20,12 +20,13 @@
 class Content < ActiveRecord::Base
   include SiteModel
   include HasPermalink
-  include Taggable
   include Deletable
   include TextStats
 
+  prepend Taggable
+
   # once published, content may have staged, not yet published changes:
-  include Draftable
+  prepend Draftable
 
   include Markdown
 

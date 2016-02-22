@@ -29,7 +29,7 @@ class Bold::Settings::ThemesControllerTest < ActionController::TestCase
   end
 
   test "should get edit" do
-    get :edit, id: @site.theme_name
+    get :edit, params: { id: @site.theme_name }
     assert_response :success
     assert_equal @site.extension_configs.themes.last, assigns(:theme_config)
   end
@@ -40,14 +40,21 @@ class Bold::Settings::ThemesControllerTest < ActionController::TestCase
       template :page
       settings defaults: { a_setting: 'default value' }
     end
-    put :enable, id: 'foo'
+    put :enable, params: { id: 'foo' }
     assert_redirected_to edit_bold_settings_theme_path('foo')
     @site.reload
     assert_equal 'foo', @site.theme_name
   end
 
   test "should update theme config" do
-    put :update, id: @site.theme_name, theme_config: { default_post_template: 'page', config: { subtitle: 'fancy subtitle', foo: 'bar' } }
+    put :update,
+      params: {
+        id: @site.theme_name,
+        theme_config: {
+          default_post_template: 'page',
+          config: { subtitle: 'fancy subtitle', foo: 'bar' }
+        }
+      }
     assert_redirected_to bold_settings_themes_path
     @site.reload
     assert_equal 'page', @site.theme_config.default_post_template

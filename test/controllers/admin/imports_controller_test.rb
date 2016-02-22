@@ -27,7 +27,7 @@ class Admin::ImportsControllerTest < ActionController::TestCase
   end
 
   test "should get new" do
-    get :new, site_id: @site.to_param
+    get :new, params: { site_id: @site.to_param }
     assert_response :success
   end
 
@@ -36,7 +36,7 @@ class Admin::ImportsControllerTest < ActionController::TestCase
     assert @site.homepage.body.blank?
     upload = fixture_file_upload 'export.zip'
     assert_difference '@site.contents.size' do
-      post :create, site_id: @site.to_param, site_import: { zipfile: upload }
+      post :create, params: { site_id: @site.to_param, site_import: { zipfile: upload } }
     end
     @site.reload
     assert_equal 'this is the homepage', @site.homepage.body

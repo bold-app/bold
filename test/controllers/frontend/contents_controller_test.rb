@@ -29,7 +29,7 @@ module Frontend
     end
 
     test 'should show page' do
-      get :show, path: @page.path
+      get :show, params: { path: @page.path }
       assert_response :success
       assert_select 'h2', @page.title
     end
@@ -40,44 +40,44 @@ module Frontend
       @post.category_id = cat.id
       @post.publish!
       assert_equal @post, cat.posts.first
-      get :show, path: cat.path
+      get :show, params: { path: cat.path }
       assert_response :success
       assert_select 'h2', /#{cat.name}/
       assert_select 'h3', /#{@post.title}/
     end
 
     test 'should render 404 for unknown path' do
-      get :show, path: 'do-not-find-me'
+      get :show, params: { path: 'do-not-find-me' }
       assert_response :not_found
     end
 
     test 'should render empty archive for year' do
-      get :archive, year: '2011'
+      get :archive, params: { year: '2011' }
       assert_response :success
       assert_select 'h2', "2011"
     end
     test 'should render archive for year' do
-      get :archive, year: '2015'
+      get :archive, params: { year: '2015' }
       assert_response :success
       assert_select 'h2', "2015"
       assert_select 'h3', @post.title
     end
 
     test 'should render empty archive for month' do
-      get :archive, year: '2015', month: '01'
+      get :archive, params: { year: '2015', month: '01' }
       assert_response :success
       assert_select 'h2', "January 2015"
     end
 
     test 'should render archive for month' do
-      get :archive, year: '2015', month: '07'
+      get :archive, params: { year: '2015', month: '07' }
       assert_response :success
       assert_select 'h3', @post.title
       assert_select 'h2', "July 2015"
     end
 
     test 'should render by author listing' do
-      get :author, author: @user.name
+      get :author, params: { author: @user.name }
       assert_response :success
       assert_select 'h2', "Posts by #{@user.name}"
       assert_select 'h3', @post.title
@@ -85,7 +85,7 @@ module Frontend
 
     test 'should render tag listing' do
       assert @post.tag_list =~ /bar/
-      get :show, path: 'bar'
+      get :show, params: { path: 'bar' }
       assert_response :success
       assert_select 'h2', 'Posts tagged bar'
       assert_select 'h3', @post.title
@@ -96,23 +96,23 @@ module Frontend
     end
 
     test 'should render search page' do
-      get :show, path: 'search'
+      get :show, params: { path: 'search' }
       assert_response :success
     end
 
     test 'should render search results' do
-      get :show, path: 'search', q: 'foobar'
+      get :show, params: { path: 'search', q: 'foobar' }
       assert_response :success
       assert_select 'h3', count: 0
 
-      get :show, path: 'search', q: 'bar'
+      get :show, params: { path: 'search', q: 'bar' }
       assert_response :success
       assert_select 'h3', @post.title
     end
 
     test 'should create request log' do
       assert_difference 'RequestLog.count' do
-        get :show, path: @page.path
+        get :show, params: { path: @page.path }
       end
       assert l = RequestLog.order('created_at').last
       assert_equal 200, l.status
@@ -122,7 +122,7 @@ module Frontend
 
     test 'should record 404' do
       assert_difference 'RequestLog.count' do
-        get :show, path: 'foo-bar'
+        get :show, params: { path: 'foo-bar' }
       end
       assert l = RequestLog.order('created_at').last
       assert_equal 404, l.status

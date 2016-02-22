@@ -17,7 +17,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 
-gem 'acts_as_list', '~> 0.7.0'
+gem 'acts_as_list', github: 'bold-app/acts_as_list'
 gem 'akismet', '~> 2.0.0'
 gem 'bootstrap-kaminari-views', '0.0.3'
 gem 'bootstrap-sass', '~> 3.3.4'
@@ -61,14 +61,7 @@ gem 'xmp', github: 'jkraemer/xmp'
 
 
 group :development, :test do
-  gem 'capybara', '~> 2.6.0'
-  gem 'capybara-screenshot', '~> 1.0.4'
-  gem 'connection_pool', '~> 2.1.1'
-  gem 'factory_girl_rails', '~> 4.5'
-  gem 'faker', '~> 1.4'
-  gem 'mocha', '~> 1.1.0'
   gem 'pry-byebug', platforms: :ruby
-  gem 'poltergeist', '~> 1.6.0'
   gem 'puma'
   gem 'quiet_assets'
   gem 'spring'
@@ -77,6 +70,17 @@ end
 
 group :development do
   gem 'web-console', '~> 2.0', platforms: :ruby
+end
+
+group :test do
+  gem 'capybara', '~> 2.6.0'
+  gem 'capybara-screenshot', '~> 1.0.4'
+  gem 'connection_pool', '~> 2.1.1'
+  gem 'factory_girl_rails', '~> 4.5'
+  gem 'faker', '~> 1.4'
+  gem 'mocha', '~> 1.1.0'
+  gem 'poltergeist', '~> 1.6.0'
+  gem 'rails-controller-testing'
 end
 
 # Some default themes

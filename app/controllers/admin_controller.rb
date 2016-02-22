@@ -22,5 +22,5 @@
 class AdminController < BoldController
   layout 'bold_admin'
 
-  before_filter :require_admin!
+  before_action :require_admin!
 end

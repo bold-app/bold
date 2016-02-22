@@ -12,6 +12,9 @@ module Bold
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    config.action_controller.include_all_helpers = false
+
     config.paths.add 'lib', eager_load: true
+
   end
 end

@@ -32,14 +32,14 @@ class Bold::Settings::CategoriesControllerTest < ActionController::TestCase
 
   test 'should create category and init slug' do
     assert_difference '@site.categories.count' do
-      post :create, category: { name: 'Neue Kategorie' }
+      post :create, params: { category: { name: 'Neue Kategorie' } }
     end
     assert_redirected_to bold_settings_categories_url
     assert @site.categories.find_by_slug('neue-kategorie')
   end
 
   test 'should update category' do
-    patch :update, id: @cat.id, category: { name: 'new name', slug: 'foobar' }
+    patch :update, params: { id: @cat.id, category: { name: 'new name', slug: 'foobar' } }
     assert_redirected_to bold_settings_categories_url
     @cat.reload
     assert_equal 'new name', @cat.name
@@ -48,7 +48,7 @@ class Bold::Settings::CategoriesControllerTest < ActionController::TestCase
 
   test 'should delete category' do
     assert_difference '@site.categories.count', -1 do
-      delete :destroy, id: @cat.to_param
+      delete :destroy, params: { id: @cat.to_param }
     end
   end
 

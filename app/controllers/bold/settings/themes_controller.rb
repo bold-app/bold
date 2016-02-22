@@ -18,8 +18,8 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 class Bold::Settings::ThemesController < Bold::SettingsController
-  skip_before_filter :check_site_config
-  before_filter :check_for_current_theme, only: %i(edit update)
+  skip_before_action :check_site_config
+  before_action :check_for_current_theme, only: %i(edit update)
 
   helper 'bold/settings'
 
@@ -43,7 +43,7 @@ class Bold::Settings::ThemesController < Bold::SettingsController
 
   def update
     find_theme_config
-    @theme_config.attributes = theme_config_params
+    @theme_config.config.update theme_config_params
     if @theme_config.save
       redirect_to bold_settings_themes_path, notice: :saved
     else
@@ -63,9 +63,12 @@ class Bold::Settings::ThemesController < Bold::SettingsController
 
   def theme_config_params
     params[:theme_config].permit(
-      :default_page_template, :default_post_template,
-      config: params[:theme_config][:config].try(:keys)
-    )
+      :default_page_template, :default_post_template
+    ).to_h.tap do |p|
+      if params[:theme_config][:config]
+        p.update params[:theme_config][:config].to_unsafe_hash
+      end
+    end
   end
 
   def find_theme_config

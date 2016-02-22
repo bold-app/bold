@@ -18,17 +18,18 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 module DecoratedAssignments
-  extend ActiveSupport::Concern
 
-  included do
-    class_attribute :things_to_decorate, instance_accessor: false
-    self.things_to_decorate = []
-    alias_method_chain :render, :decorated_assignments
+  def self.prepended(clazz)
+    clazz.class_eval do
+      extend ClassMethods
+      class_attribute :things_to_decorate, instance_accessor: false
+      self.things_to_decorate = []
+    end
   end
 
-  def render_with_decorated_assignments(*args)
+  def render(*args)
     decorate_things
-    render_without_decorated_assignments(*args)
+    super
   end
 
   def decorate_things

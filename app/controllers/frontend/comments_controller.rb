@@ -37,7 +37,9 @@ class Frontend::CommentsController < FrontendController
   private
 
   def comment_params
-    params[:comment].permit :author_name, :author_email, :author_website, :body
+    if p = params[:comment]
+      p.permit :author_name, :author_email, :author_website, :body
+    end
   end
 
 end

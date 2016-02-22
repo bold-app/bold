@@ -27,7 +27,7 @@ class Bold::Settings::NavigationsController < Bold::SettingsController
   end
 
   def create
-    @navigation = Navigation.new navigation_params, site: current_site
+    @navigation = current_site.navigations.build navigation_params
     if @navigation.save
       @navigation.move_to_bottom
       flash.now[:notice] = 'bold.navigation.created'
@@ -57,7 +57,7 @@ class Bold::Settings::NavigationsController < Bold::SettingsController
     # jquery sortable is zero based, while with acts_as_list the first index
     # is 1:
     @navigation.insert_at params[:new_position].to_i + 1
-    render nothing: true
+    head :ok
   end
 
   private

@@ -45,24 +45,24 @@ module Admin
       assert_access_denied
 
       sign_in :user, user
-      post :create, user: {}
+      post :create, params: { user: {} }
       assert_access_denied
 
       sign_in :user, user
-      delete :destroy, id: @admin.id
+      delete :destroy, params: { id: @admin.id }
       assert_access_denied
     end
 
     test "should get index" do
       site = create :site
       user = create_invited_user site
-      get :index, {}, { current_site_id: @site.id }
+      get :index, session: { current_site_id: @site.id }
       assert_response :success
       assert_select 'td', /^#{user.email}/
     end
 
     test "should get new" do
-      xhr :get, :new
+      get :new, xhr: true
       assert_response :success
       assert_select 'h4', /Invite user/
     end
@@ -70,7 +70,7 @@ module Admin
     test 'should invite user' do
       site = create :site
       assert_enqueued_jobs 1 do
-        xhr :post, :create, { invitation: { email: Faker::Internet.email, role: 'manager', site_id: site.id } }, { current_site_id: @site.id }
+        post :create, xhr: true, params: { invitation: { email: Faker::Internet.email, role: 'manager', site_id: site.id } }, session: { current_site_id: @site.id }
       end
     end
 
@@ -78,7 +78,7 @@ module Admin
       site = create :site
       user = create_invited_user site
       assert_enqueued_jobs 1 do
-        patch :update, { id: user.to_param }, { current_site_id: @site.id }
+        patch :update, params: { id: user.to_param }, session: { current_site_id: @site.id }
       end
       assert_redirected_to admin_invitations_url
     end

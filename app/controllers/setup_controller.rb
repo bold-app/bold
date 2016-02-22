@@ -21,5 +21,5 @@ class SetupController < BoldController
   layout 'bold_public'
   helper :bold
 
-  skip_before_filter :require_site
+  skip_before_action :require_site
 end

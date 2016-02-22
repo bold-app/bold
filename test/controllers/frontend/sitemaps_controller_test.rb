@@ -30,7 +30,7 @@ module Frontend
     end
 
     test 'should show sitemap' do
-      get :show, format: :xml
+      get :show, params: { format: :xml }
       assert_response :success
       assert @response.body !~ /#{Regexp.escape @unpub.slug}</
       assert_select 'loc', @page.public_url

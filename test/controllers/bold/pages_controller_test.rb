@@ -43,34 +43,34 @@ module Bold
     end
 
     test "should get edit" do
-      get :edit, id: @page.id
+      get :edit, params: { id: @page.id }
       assert_response :success
       assert_equal @page, assigns(:content)
     end
 
     test 'should handle empty post' do
       assert_no_difference 'Page.count' do
-        post :create, content: { title: '' }, publish: '1'
+        post :create, params: { content: { title: '' }, publish: '1' }
       end
       assert_response :success
     end
 
     test 'should publish new page' do
       assert_difference 'Page.count' do
-        post :create, content: { title: 'this is a new page' }, publish: '1'
+        post :create, params: { content: { title: 'this is a new page' }, publish: '1' }
       end
       assert_redirected_to edit_bold_page_path(Page.order('created_at DESC').first)
     end
 
     test 'should update and publish page' do
-      put :update, id: @page.id, content: { title: 'new title' }, publish: '1'
+      put :update, params: { id: @page.id, content: { title: 'new title' }, publish: '1' }
       assert_redirected_to edit_bold_page_path(@page)
       @page.reload
       assert_equal 'new title', @page.title
     end
 
     test 'should save page' do
-      put :update, id: @page.id, content: { title: 'new title' }
+      put :update, params: { id: @page.id, content: { title: 'new title' } }
       assert_redirected_to edit_bold_page_path(@page)
       @page.reload
       assert_equal 'new title', @page.title
@@ -79,7 +79,7 @@ module Bold
     test 'should save page draft for published page' do
       @page.publish!
       assert old_title = @page.title
-      put :update, id: @page.id, content: { title: 'new title' }
+      put :update, params: { id: @page.id, content: { title: 'new title' } }
       assert_redirected_to edit_bold_page_path(@page)
       @page.reload
       assert_equal old_title, @page.title
@@ -90,7 +90,7 @@ module Bold
     test 'should delete page' do
       assert_difference 'Page.alive.count', -1 do
         assert_no_difference 'Page.count' do
-          delete :destroy, id: @page.id
+          delete :destroy, params: { id: @page.id }
         end
       end
     end

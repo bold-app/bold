@@ -35,7 +35,7 @@ class Setup::UsersControllerTest < ActionController::TestCase
   end
 
   test 'should re-render new when validation failed' do
-    post :create, user: { name: 'joe' }
+    post :create, params: { user: { name: 'joe' } }
     assert_response :success
   end
 
@@ -49,10 +49,10 @@ class Setup::UsersControllerTest < ActionController::TestCase
     User.delete_all
     pwd = Faker::Internet.password(8,20)
     assert_difference 'User.count' do
-      post :create, user: {
+      post :create, params: { user: {
         name: Faker::Name.name, email: Faker::Internet.email,
         password: pwd, password_confirmation: pwd
-      }
+      } }
     end
     assert_redirected_to new_setup_site_path
   end

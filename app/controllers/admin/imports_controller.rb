@@ -20,8 +20,8 @@
 module Admin
   class ImportsController < AdminController
 
-    before_filter :require_admin!
-    before_filter :find_site
+    before_action :require_admin!
+    before_action :find_site
 
     def new
       @site_import = SiteImport.new

@@ -47,11 +47,11 @@ module Admin
       assert_access_denied
 
       sign_in :user, user
-      post :create, site: {}
+      post :create, params: { site: {} }
       assert_access_denied
 
       sign_in :user, user
-      delete :destroy, id: @site.id
+      delete :destroy, params: { id: @site.id }
       assert_access_denied
 
       sign_in :user, user
@@ -67,7 +67,7 @@ module Admin
     end
 
     test 'should select site' do
-      get :select, id: @site.to_param
+      get :select, params: { id: @site.to_param }
       assert_redirected_to '/bold'
     end
 
@@ -85,14 +85,14 @@ module Admin
     end
 
     test "should get edit" do
-      get :edit, id: @site.id
+      get :edit, params: { id: @site.id }
       assert_response :success
       assert_equal @site, assigns(:site)
     end
 
     test 'should create site' do
       assert_difference 'Site.count' do
-        post :create, site: { name: 'new site', hostname: 'newsite.com', alias_string: 'alias1.de, alias3.com', theme_name: 'test' }
+        post :create, params: { site: { name: 'new site', hostname: 'newsite.com', alias_string: 'alias1.de, alias3.com', theme_name: 'test' } }
       end
       assert_redirected_to '/admin/sites'
       assert s = Site.where(hostname: 'newsite.com').first

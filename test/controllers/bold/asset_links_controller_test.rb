@@ -28,7 +28,7 @@ module Bold
     end
 
     test 'should show image picker for new link' do
-      xhr :get, :new, content_id: @page.id
+      get :new, xhr: true, params: { content_id: @page.id }
       assert_response :success
     end
 

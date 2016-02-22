@@ -33,7 +33,7 @@ class Bold::Settings::PluginsController < Bold::SettingsController
 
   def update
     @plugin_config = find_plugin_config
-    @plugin_config.config.update plugin_params[:config]
+    @plugin_config.config.update plugin_config
     if @plugin_config.save
       redirect_to bold_settings_plugins_path
     else
@@ -65,11 +65,11 @@ class Bold::Settings::PluginsController < Bold::SettingsController
     current_site.plugin_config params[:id]
   end
 
-  def plugin_params
-    if params[:plugin_config]
-      params[:plugin_config].permit config: params[:plugin_config][:config].try(:keys)
+  def plugin_config
+    if params[:plugin_config] and params[:plugin_config][:config]
+      params[:plugin_config].fetch(:config).to_unsafe_hash
     else
-      { config: {} }
+      { }
     end
   end
 end

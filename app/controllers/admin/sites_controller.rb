@@ -20,10 +20,10 @@
 module Admin
   class SitesController < AdminController
 
-    skip_before_filter :require_site, only: :select
-    before_filter :require_admin!, except: :select
+    skip_before_action :require_site, only: :select
+    before_action :require_admin!, except: :select
 
-    before_filter :find_site, only: %w(show edit update destroy)
+    before_action :find_site, only: %w(show edit update destroy)
 
     def index
       load_sites

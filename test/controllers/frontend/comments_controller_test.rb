@@ -28,7 +28,7 @@ module Frontend
     end
 
     test 'should validate comment' do
-      post :create, path: @post.path, comment: {}
+      post :create, params: { path: @post.path, comment: {} }
       assert_response :success
       assert assigns(:comment).errors.present?
       assert_select '.has-error', /blank/
@@ -36,9 +36,11 @@ module Frontend
 
     test 'should create comment' do
       assert_difference 'Comment.count' do
-        post :create, path: @post.path, comment: { author_name: Faker::Name.name,
-                                                   author_email: Faker::Internet.email,
-                                                   body: Faker::Lorem.paragraph }
+        post :create, params: {
+          path: @post.path, comment: { author_name: Faker::Name.name,
+                                       author_email: Faker::Internet.email,
+                                       body: Faker::Lorem.paragraph }
+        }
       end
       assert_redirected_to content_url(@post.path)
     end

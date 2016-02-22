@@ -37,7 +37,7 @@ module Bold
       end
 
       test "should render invite form" do
-        xhr :get, :new
+        get :new, xhr: true
         assert_response :success
         assert assigns(:invitation)
       end
@@ -45,7 +45,7 @@ module Bold
       test "should invite user" do
         assert_difference 'SiteUser.count' do
           assert_difference 'User.count' do
-            xhr :post, :create, invitation: { email: 'user23@host.com', role: 'editor' }
+            post :create, xhr: true, params: { invitation: { email: 'user23@host.com', role: 'editor' } }
           end
         end
 
@@ -63,7 +63,7 @@ module Bold
         assert u = User.find_by_email('resend.please@host.com')
 
         assert_enqueued_jobs 1 do
-          put :resend_invitation, id: u.id
+          put :resend_invitation, params: { id: u.id }
         end
 
         assert_redirected_to bold_settings_site_users_path
@@ -76,7 +76,7 @@ module Bold
 
         assert_difference 'User.count', -1 do
           assert_difference 'SiteUser.count', -1 do
-            delete :revoke_invitation, id: u.id
+            delete :revoke_invitation, params: { id: u.id }
           end
         end
         assert_redirected_to bold_settings_site_users_path
@@ -86,7 +86,7 @@ module Bold
         assert_no_difference 'User.count' do
           assert_no_difference 'SiteUser.count' do
             assert_raise(ActiveRecord::RecordNotFound) do
-              delete :revoke_invitation, id: @user.id
+              delete :revoke_invitation, params: { id: @user.id }
             end
           end
         end

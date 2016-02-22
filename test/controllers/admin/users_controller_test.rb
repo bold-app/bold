@@ -41,15 +41,15 @@ module Admin
       assert_access_denied
 
       sign_in :user, user
-      get :edit, id: @admin.id
+      get :edit, params: { id: @admin.id }
       assert_access_denied
 
       sign_in :user, user
-      patch :update, id: @admin.id, user: {}
+      patch :update, params: { id: @admin.id, user: {} }
       assert_access_denied
 
       sign_in :user, user
-      delete :destroy, id: @admin.id
+      delete :destroy, params: { id: @admin.id }
       assert_access_denied
     end
 
@@ -69,21 +69,21 @@ module Admin
 
     test "should get show" do
       user = create :user
-      get :show, id: user.id
+      get :show, params: { id: user.id }
       assert_response :success
       assert_equal user, assigns(:user)
     end
 
     test "should get edit" do
       user = create :user
-      xhr :get, :edit, id: user.to_param
+      get :edit, xhr: true, params: { id: user.to_param }
       assert_response :success
       assert_equal user, assigns(:user)
     end
 
     test 'should update user' do
       user = create :user
-      xhr :put, :update, id: user.to_param, user: { name: 'new name'}
+      put :update, xhr: true, params: { id: user.to_param, user: { name: 'new name'} }
       assert_response :success
       user.reload
       assert_equal 'new name', user.name
@@ -91,7 +91,7 @@ module Admin
 
     test "should lock user" do
       user = create :confirmed_user
-      put :lock, id: user.to_param
+      put :lock, params: { id: user.to_param }
       assert_redirected_to admin_user_path(user)
       user.reload
       assert user.access_locked?
@@ -99,7 +99,7 @@ module Admin
 
     test "should unlock user" do
       user = create :locked_user
-      put :unlock, id: user.to_param
+      put :unlock, params: { id: user.to_param }
       assert_redirected_to admin_user_path(user)
       user.reload
       assert !user.access_locked?
@@ -109,7 +109,7 @@ module Admin
       user = create :confirmed_user, password: 'secret123', password_confirmation: 'secret123'
       assert user.valid_password?('secret123')
       assert_enqueued_jobs 1 do
-        put :reset_password, id: user.to_param
+        put :reset_password, params: { id: user.to_param }
       end
       assert_redirected_to admin_user_path(user)
       user.reload
@@ -117,19 +117,19 @@ module Admin
     end
 
     test 'should deny actions on current user' do
-      put :lock, id: @admin.to_param
+      put :lock, params: { id: @admin.to_param }
       assert_redirected_to admin_user_path(@admin)
       @admin.reload
       assert !@admin.access_locked?
 
       assert_no_enqueued_jobs do
-        put :reset_password, id: @admin.to_param
+        put :reset_password, params: { id: @admin.to_param }
       end
       assert_redirected_to admin_user_path(@admin)
       @admin.reload
       assert @admin.valid_password?('secret.1')
 
-      delete :destroy, id: @admin.to_param
+      delete :destroy, params: { id: @admin.to_param }
       assert_redirected_to admin_user_path(@admin)
       assert_equal 1, User.where(id: @admin.id).count
     end

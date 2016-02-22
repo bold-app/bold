@@ -27,14 +27,14 @@ module Frontend
     end
 
     test 'should show asset' do
-      get :show, id: @asset.to_param
+      get :show, params: { id: @asset.to_param }
       assert_response :success
       assert disp = @response.headers['Content-Disposition']
       assert_equal "inline; filename=\"#{@asset.filename}\"", disp
     end
 
     test 'should download asset' do
-      get :download, id: @asset.to_param, filename: 'foo.pdf'
+      get :download, params: { id: @asset.to_param, filename: 'foo.pdf' }
       assert_response :success
       assert disp = @response.headers['Content-Disposition']
       assert_equal "attachment; filename=\"#{@asset.filename}\"", disp
@@ -42,7 +42,7 @@ module Frontend
 
     test 'should create request log for asset' do
       assert_difference 'RequestLog.count' do
-        get :show, id: @asset.to_param
+        get :show, params: { id: @asset.to_param }
       end
       assert l = RequestLog.order('created_at').last
       assert_equal 200, l.status

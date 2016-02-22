@@ -19,7 +19,7 @@
 #
 module Admin
   class SiteUsersController < AdminController
-    before_filter :find_user
+    before_action :find_user
     decorate_assigned :user, with: 'Bold::UserDecorator'
     decorate_assigned :site_user, with: 'Bold::SiteUserDecorator'
 

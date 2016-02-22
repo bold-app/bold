@@ -27,7 +27,7 @@ class FrontendController < BaseController
 
   layout :determine_layout
 
-  prepend_before_filter :set_site
+  prepend_before_action :set_site
   around_action :use_site_time_zone
   after_action  :log_request
 

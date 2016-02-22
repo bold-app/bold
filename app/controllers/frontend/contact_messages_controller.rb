@@ -35,7 +35,9 @@ class Frontend::ContactMessagesController < FrontendController
   private
 
   def contact_message_params
-    params[:contact_message].permit :sender_name, :sender_email, :subject, :body
+    if p = params[:contact_message]
+      p.permit :sender_name, :sender_email, :subject, :body
+    end
   end
 
 end

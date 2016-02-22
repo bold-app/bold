@@ -19,8 +19,8 @@
 #
 class Setup::UsersController < SetupController
 
-  skip_before_filter :authenticate_user!
-  before_filter :check_if_any_users
+  skip_before_action :authenticate_user!
+  before_action :check_if_any_users
 
   def new
     @user = User.new

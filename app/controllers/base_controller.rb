@@ -32,7 +32,7 @@ class BaseController < ApplicationController
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  include DecoratedAssignments
+  prepend DecoratedAssignments
   include Bold::Hooks::Helper
   helper Bold::Hooks::ViewHelper
 
@@ -64,7 +64,7 @@ class BaseController < ApplicationController
   end
 
   def handle_missing_file(*args)
-    render nothing: true, status: :not_found
+    head :not_found
   end
 
 end

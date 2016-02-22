@@ -33,7 +33,7 @@ module Admin
     end
 
     test 'should update profile' do
-      put :update, user: { name: 'John Doe III', time_zone_name: 'Berlin' }
+      put :update, params: { user: { name: 'John Doe III', time_zone_name: 'Berlin' } }
       assert_redirected_to edit_admin_profile_path
       @user.reload
       assert_equal 'John Doe III', @user.name
@@ -47,14 +47,14 @@ module Admin
     end
 
     test 'should require old password to update password' do
-      put :update_password, user: { current_password: 'wrong', password: 'newpassw', password_confirmation: 'newpassw' }
+      put :update_password, params: { user: { current_password: 'wrong', password: 'newpassw', password_confirmation: 'newpassw' } }
       assert_response :success
       @user.reload
       assert @user.valid_password?('secret.1')
     end
 
     test 'should update password' do
-      put :update_password, user: { current_password: 'secret.1', password: 'newpassw', password_confirmation: 'newpassw' }
+      put :update_password, params: { user: { current_password: 'secret.1', password: 'newpassw', password_confirmation: 'newpassw' } }
       assert_redirected_to edit_password_admin_profile_path
       @user.reload
       assert @user.valid_password?('newpassw')
@@ -68,7 +68,7 @@ module Admin
 
     test 'should require password to update email' do
       oldmail = @user.email
-      put :update_email, user: { current_password: 'wrong', email: 'newmail@host.com' }
+      put :update_email, params: { user: { current_password: 'wrong', email: 'newmail@host.com' } }
       assert_response :success
       @user.reload
       assert_nil @user.unconfirmed_email
@@ -77,7 +77,7 @@ module Admin
 
     test 'should update email' do
       oldmail = @user.email
-      put :update_email, user: { current_password: 'secret.1', email: 'newmail@host.com' }
+      put :update_email, params: { user: { current_password: 'secret.1', email: 'newmail@host.com' } }
       assert_redirected_to edit_email_admin_profile_path
       @user.reload
       assert_equal 'newmail@host.com', @user.unconfirmed_email

@@ -18,7 +18,6 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 class Bold::Settings::CategoriesController < Bold::SettingsController
-
   helper 'bold/settings'
 
   def index

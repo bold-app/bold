@@ -54,7 +54,7 @@ class Setup::SitesControllerTest < ActionController::TestCase
   test 'should create site' do
     sign_in :user, @user
     assert_difference 'Site.count' do
-      post :create, site: { name: 'foo', theme_name: 'test', hostname: 'example.com' }
+      post :create, params: { site: { name: 'foo', theme_name: 'test', hostname: 'example.com' } }
     end
     assert site = Site.where(hostname: 'example.com').first
     assert_redirected_to "/admin/sites/#{site.id}/select"

@@ -27,7 +27,7 @@ module Frontend
     end
 
     test 'should validate message' do
-      post :create, path: @page.path, contact_message: {}
+      post :create, params: { path: @page.path, contact_message: {} }
       assert_response :success
       assert assigns(:contact_message).errors.present?
       assert_select '.has-error', /blank/
@@ -35,11 +35,13 @@ module Frontend
 
     test 'should create message' do
       assert_difference 'ContactMessage.count' do
-        post :create, path: @page.path,
+        post :create, params: {
+          path: @page.path,
           contact_message: { sender_name: Faker::Name.name,
                              sender_email: Faker::Internet.email,
                              subject: 'test test',
                              body: Faker::Lorem.paragraph }
+        }
       end
       assert_redirected_to content_url(@page.path)
     end

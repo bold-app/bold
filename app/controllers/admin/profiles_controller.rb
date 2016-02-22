@@ -19,7 +19,7 @@
 #
 module Admin
   class ProfilesController < AdminController
-    skip_before_filter :require_admin!
+    skip_before_action :require_admin!
     before_action :set_user
 
     def edit

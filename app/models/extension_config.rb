@@ -40,18 +40,18 @@ class ExtensionConfig < ActiveRecord::Base
     end
   end
 
+  def config=(cfg)
+    if cfg
+      cfg.stringify_keys!
+      config.update cfg
+    else
+      config.clear
+    end
+  end
+
   def respond_to?(method, *args)
     method.to_s.match(CONFIG_MATCHER) or super
   end
-
-  def attributes=(new_attributes)
-    new_attributes = new_attributes.dup
-    if new_config = new_attributes.delete(:config)
-      self.config.update new_config.stringify_keys
-    end
-    super new_attributes
-  end
-
 
   private
   # implemented in sub classes

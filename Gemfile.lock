@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/bold-app/acts_as_list.git
+  revision: 448a30e7d621c33571c64eef6fe926009fcf32ae
+  specs:
+    acts_as_list (0.7.2)
+      activerecord (>= 3.0)
+
+GIT
   remote: git://github.com/bold-app/bold-theme-bootstrap.git
   revision: 2edc83c27373411b71cbf133a99c89d5ff446c19
   specs:
@@ -18,7 +25,7 @@ GIT
 
 GIT
   remote: git://github.com/bold-app/devise_invitable.git
-  revision: ed79649ac3d7660a8bee86485a87d304d64220d6
+  revision: 3e1505cd820303f606218a712c5f274c39ef76c7
   branch: bold
   specs:
     devise_invitable (1.5.5)
@@ -27,7 +34,7 @@ GIT
 
 GIT
   remote: git://github.com/bold-app/draper.git
-  revision: a788c38eab4ae2605c9db1c4d19e3d3b87babf26
+  revision: ac29d070554538733653d4ac10774b2443107afe
   branch: rails5
   specs:
     draper (2.1.0)
@@ -133,8 +140,6 @@ GEM
       method_source
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    acts_as_list (0.7.2)
-      activerecord (>= 3.0)
     addressable (2.4.0)
     akismet (2.0.0)
     arel (7.0.0)
@@ -243,7 +248,7 @@ GEM
       mime-types (>= 1.16, < 3)
     metaclass (0.0.4)
     method_source (0.8.2)
-    mime-types (2.99)
+    mime-types (2.99.1)
     mini_magick (3.8.1)
       subexec (~> 0.2.1)
     mini_portile2 (2.0.0)
@@ -289,6 +294,10 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 5.0.0.beta2)
       sprockets-rails (>= 2.0.0)
+    rails-controller-testing (0.1.0)
+      actionpack (~> 5.x)
+      actionview (~> 5.x)
+      activesupport (~> 5.x)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
     rails-dom-testing (1.0.7)
@@ -380,7 +389,7 @@ PLATFORMS
 DEPENDENCIES
   activemodel-serializers-xml!
   activerecord-jdbcpostgresql-adapter
-  acts_as_list (~> 0.7.0)
+  acts_as_list!
   akismet (~> 2.0.0)
   bold-theme-bootstrap!
   bold-theme-casper!
@@ -421,6 +430,7 @@ DEPENDENCIES
   puma
   quiet_assets
   rails (= 5.0.0.beta2)
+  rails-controller-testing
   rails-i18n (~> 4.0)
   request_store (~> 1.1)
   safe_shell (~> 1.0.2)

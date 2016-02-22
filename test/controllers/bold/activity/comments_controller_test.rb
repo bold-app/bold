@@ -34,29 +34,29 @@ module Bold::Activity
     end
 
     test 'should filter comments by state' do
-      get :index, comment_search: { status: 'pending' }
+      get :index, params: { comment_search: { status: 'pending' } }
       assert_response :success
       assert assigns(:postings).include?(@comment)
 
-      get :index, comment_search: { status: 'approved' }
+      get :index, params: { comment_search: { status: 'approved' } }
       assert_response :success
       assert assigns(:postings).blank?
     end
 
     test 'should change state' do
-      xhr :patch, :unapprove, id: @comment
+      patch :unapprove, xhr: true, params: { id: @comment }
       assert_response :success
       @comment.reload
       assert @comment.pending?
 
-      xhr :patch, :approve, id: @comment
+      patch :approve, xhr: true, params: { id: @comment }
       assert_response :success
       @comment.reload
       assert @comment.approved?
 
       @comment.spam!
 
-      xhr :patch, :mark_ham, id: @comment
+      patch :mark_ham, xhr: true, params: { id: @comment }
       assert_response :success
       @comment.reload
       assert @comment.pending?
@@ -64,7 +64,7 @@ module Bold::Activity
 
       assert_no_difference 'Comment.count', -1 do
         assert_difference 'Comment.alive.count', -1 do
-          xhr :patch, :mark_spam, id: @comment
+          patch :mark_spam, xhr: true, params: { id: @comment }
           assert_response :success
         end
       end
@@ -75,7 +75,7 @@ module Bold::Activity
       assert_difference 'Comment.alive.count', -1 do
         assert_difference 'Memento::Session.count' do
           assert_difference 'Memento::State.count' do
-            xhr :delete, :destroy, id: @comment
+            delete :destroy, xhr: true, params: { id: @comment }
           end
         end
       end

@@ -34,7 +34,7 @@ module Bold
     end
 
     test 'should show post' do
-      get :show, id: @post.id
+      get :show, params: { id: @post.id }
       assert_response :success
       assert_select 'h2', @post.title
     end
@@ -50,27 +50,27 @@ module Bold
     end
 
     test "should get edit" do
-      get :edit, id: @post.id
+      get :edit, params: { id: @post.id }
       assert_response :success
       assert_equal @post, assigns(:content)
       assert_select 'input[value=bar]'
     end
 
     test 'should show template changer' do
-      xhr :get, :change_template, id: @post.id
+      get :change_template, xhr: true, params: { id: @post.id }
       assert_response :success
       assert_equal @post, assigns(:content)
     end
 
     test 'should change template' do
-      patch :update_template, id: @post.id, content: { template: 'page' }
+      patch :update_template, params: { id: @post.id, content: { template: 'page' } }
       assert_redirected_to edit_bold_post_url(@post)
       @post.reload
       assert_equal 'page', @post.template
     end
 
     test 'should update and publish post' do
-      put :update, id: @post.id, content: { title: 'new title', body: 'whatever', post_date_str: 'tomorrow morning' }, publish: 1
+      put :update, params: { id: @post.id, content: { title: 'new title', body: 'whatever', post_date_str: 'tomorrow morning' }, publish: 1 }
       assert_redirected_to edit_bold_post_path(@post)
       @post.reload
       assert @post.post_date > Time.now
@@ -80,7 +80,7 @@ module Bold
     test 'should create draft for published post' do
       @post.publish!
       old_title = @post.title
-      put :update, id: @post.id, content: { title: 'new title' }
+      put :update, params: { id: @post.id, content: { title: 'new title' } }
       assert_redirected_to edit_bold_post_path(@post)
       @post.reload
       assert_equal old_title, @post.title
@@ -89,7 +89,7 @@ module Bold
     end
 
     test 'should update unpublished post without creating a draft' do
-      put :update, id: @post.id, content: { title: 'new title', tag_list: 'foo', template_field_values: { test: 'some value' } }
+      put :update, params: { id: @post.id, content: { title: 'new title', tag_list: 'foo', template_field_values: { test: 'some value' } } }
       assert_redirected_to edit_bold_post_path(@post)
       @post.reload
       assert_equal 'new title', @post.title
@@ -100,7 +100,7 @@ module Bold
     test 'should save tags to draft' do
       @post.publish!
       assert_no_difference 'Tag.count' do
-        put :update, id: @post.id, content: { tag_list: 'foo,bar' }
+        put :update, params: { id: @post.id, content: { tag_list: 'foo,bar' } }
       end
       assert_redirected_to edit_bold_post_path(@post)
       @post.reload
@@ -112,7 +112,7 @@ module Bold
 
     test 'should save template vars to draft' do
       @post.publish!
-      put :update, id: @post.id, content: { template_field_values: { test: 'foo' } }
+      put :update, params: { id: @post.id, content: { template_field_values: { test: 'foo' } } }
       assert_redirected_to edit_bold_post_path(@post)
       @post.reload
       assert_equal 'bar', @post.template_field_value('test')
@@ -124,7 +124,7 @@ module Bold
       @post.publish!
       @post.body = 'new content here'
       assert @post.save
-      xhr :get, :diff, id: @post.id
+      get :diff, xhr: true, params: { id: @post.id }
       assert diff = assigns(:diff)
       assert diff.present?
     end
@@ -134,7 +134,7 @@ module Bold
       @post.body = 'new content here'
       assert @post.save
       assert_difference 'Draft.count', -1 do
-        delete :delete_draft, id: @post.id
+        delete :delete_draft, params: { id: @post.id }
       end
       assert_redirected_to edit_bold_post_path(@post)
     end
@@ -142,7 +142,7 @@ module Bold
     test 'should destroy post' do
       assert_difference 'Post.alive.count', -1 do
         assert_no_difference 'Post.count' do
-          delete :destroy, id: @post.id
+          delete :destroy, params: { id: @post.id }
         end
       end
       assert_redirected_to bold_root_path
@@ -151,7 +151,7 @@ module Bold
     test 'should unpublish post' do
       @post.publish!
       assert_no_difference 'Post.count' do
-        delete :destroy, id: @post.id
+        delete :destroy, params: { id: @post.id }
         assert_redirected_to edit_bold_post_url(@post)
       end
     end

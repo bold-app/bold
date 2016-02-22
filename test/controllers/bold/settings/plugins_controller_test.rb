@@ -39,7 +39,7 @@ class Bold::Settings::PluginsControllerTest < ActionController::TestCase
   end
 
   test "should get edit" do
-    get :edit, id: 'dummy'
+    get :edit, params: { id: 'dummy' }
     assert_response :success
     assert plugin_config = assigns(:plugin_config)
     assert_equal 'dummy', plugin_config.name
@@ -47,7 +47,7 @@ class Bold::Settings::PluginsControllerTest < ActionController::TestCase
 
   test 'should update config' do
     @site.enable_plugin! 'dummy'
-    put :update, id: 'dummy', plugin_config: { config: { 'foo' => 'bar' } }
+    put :update, params: { id: 'dummy', plugin_config: { config: { 'foo' => 'bar' } } }
     assert_redirected_to bold_settings_plugins_path
     cfg = @site.plugin_config 'dummy'
     assert_equal 'bar', cfg.config['foo']
@@ -55,21 +55,21 @@ class Bold::Settings::PluginsControllerTest < ActionController::TestCase
 
   test 'should activate plugin' do
     assert_nil @site.plugins.detect{|p| p.name == 'dummy'}
-    put :enable, id: 'dummy'
+    put :enable, params: { id: 'dummy' }
     assert_redirected_to edit_bold_settings_plugin_path('dummy')
     assert @site.plugins.detect{|p| p.name == 'dummy'}
   end
 
   test 'should handle invalid plugin' do
     assert_raise(Bold::PluginNotFound) do
-      put :enable, id: 'foo'
+      put :enable, params: { id: 'foo' }
     end
   end
 
   test 'should deactivate plugin' do
     @site.enable_plugin! 'dummy'
     assert @site.plugins.detect{|p| p.name == 'dummy'}
-    delete :destroy, id: 'dummy'
+    delete :destroy, params: { id: 'dummy' }
     assert_redirected_to bold_settings_plugins_path
     assert_nil @site.plugins.detect{|p| p.name == 'dummy'}
   end

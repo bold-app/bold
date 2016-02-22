@@ -35,19 +35,19 @@ module Bold
     end
 
     test 'should get edit' do
-      xhr :get, :edit, id: @photo.id
+      get :edit, xhr: true, params: { id: @photo.id }
       assert_response :success
     end
 
     test 'should send photo data' do
-      get :show, id: @photo.id
+      get :show, params: { id: @photo.id }
       assert_response :success
       assert_equal @photo, assigns(:asset)
     end
 
     test 'should destroy photo' do
       assert_difference 'Asset.count', -1 do
-        delete :destroy, id: @photo.id
+        delete :destroy, params: { id: @photo.id }
       end
       assert_redirected_to bold_assets_path
       assert_equal 0, Asset.where(id: @photo.id).count
@@ -56,7 +56,7 @@ module Bold
     test 'should bulk destroy photos' do
       p = create :asset
       assert_difference 'Asset.count', -2 do
-        delete :bulk_destroy, ids: [@photo.id, p.id].join(','), format: :js
+        delete :bulk_destroy, params: { ids: [@photo.id, p.id].join(','), format: :js }
       end
       assert_response :success
       assert_equal 0, Asset.where(id: [@photo.id, p.id]).count

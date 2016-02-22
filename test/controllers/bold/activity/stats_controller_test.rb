@@ -30,7 +30,7 @@ class Bold::Activity::StatsControllerTest < ActionController::TestCase
   end
 
   test 'should show month' do
-    get :index, stats: { time_frame: 'month' }
+    get :index, params: { stats: { time_frame: 'month' } }
     assert_response :success
     assert_select 'h2', /Statistics/
   end

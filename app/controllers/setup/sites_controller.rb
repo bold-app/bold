@@ -19,8 +19,8 @@
 #
 class Setup::SitesController < SetupController
 
-  before_filter :require_admin!
-  before_filter :check_if_any_sites
+  before_action :require_admin!
+  before_action :check_if_any_sites
 
   def new
     @site = Site.new( name: request.host, hostname: request.host )

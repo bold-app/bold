@@ -31,7 +31,7 @@ Capybara.always_include_port = true
 
 # http://docs.travis-ci.com/user/common-build-problems/
 TIMEOUT = ENV['TRAVIS'] ? 10 : 3
-Capybara.default_wait_time = TIMEOUT
+Capybara.default_max_wait_time = TIMEOUT
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app, timeout: TIMEOUT)
 end

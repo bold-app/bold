@@ -20,7 +20,7 @@
 module Admin
   class UsersController < AdminController
 
-    before_filter :deny_current_user, only: %i(lock reset_password destroy unlock)
+    before_action :deny_current_user, only: %i(lock reset_password destroy unlock)
     decorate_assigned :user, :users, with: 'Bold::UserDecorator'
 
     def index

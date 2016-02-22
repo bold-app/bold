@@ -30,19 +30,19 @@ module Admin
     end
 
     test 'should get new' do
-      xhr :get, :new, user_id: @user.id
+      get :new, xhr: true, params: { user_id: @user.id }
       assert_response :success
     end
 
     test 'should get edit' do
-      xhr :get, :edit, user_id: @user.id, id: @site_user.id
+      get :edit, xhr: true, params: { user_id: @user.id, id: @site_user.id }
       assert_response :success
     end
 
     test 'should create site_user' do
       other_site = create :site
       assert_difference 'SiteUser.count' do
-        xhr :post, :create, { user_id: @user.id, site_user: { site_id: other_site.id, manager: false }}, { current_site_id: @site.id }
+        post :create, xhr: true, params: { user_id: @user.id, site_user: { site_id: other_site.id, manager: false }}, session: { current_site_id: @site.id }
       end
       @user.reload
       assert @user.site_user?(other_site)
@@ -50,14 +50,14 @@ module Admin
 
     test 'should update site_user' do
       assert !@user.site_admin?(@site_user.site)
-      xhr :patch, :update, user_id: @user.id, id: @site_user.id, site_user: { manager: true }
+      patch :update, xhr: true, params: { user_id: @user.id, id: @site_user.id, site_user: { manager: true } }
       @user.reload
       assert @user.site_admin?(@site_user.site)
     end
 
     test 'should require login' do
       sign_out :user
-      xhr :get, :new, user_id: @user.id
+      get :new, xhr: true, params: {  user_id: @user.id }
       assert_response 401
     end
 
@@ -65,23 +65,23 @@ module Admin
       user = create(:confirmed_user)
 
       sign_in :user, user
-      xhr :get, :new, user_id: @user.id
+      get :new, xhr: true, params: { user_id: @user.id }
       assert_access_denied
 
       sign_in :user, user
-      xhr :post, :create, user_id: @user.id, site_user: {}
+      post :create, xhr: true, params: { user_id: @user.id, site_user: {} }
       assert_access_denied
 
       sign_in :user, user
-      xhr :get, :edit, user_id: @user.id, id: @site_user.id
+      get :edit, xhr: true, params: { user_id: @user.id, id: @site_user.id }
       assert_access_denied
 
       sign_in :user, user
-      xhr :patch, :update, user_id: @user.id, id: @site_user.id, site_user: {}
+      patch :update, xhr: true, params: { user_id: @user.id, id: @site_user.id, site_user: {} }
       assert_access_denied
 
       sign_in :user, user
-      delete :destroy, user_id: @user.id, id: @site_user.id
+      delete :destroy, params: { user_id: @user.id, id: @site_user.id }
       assert_access_denied
     end
 

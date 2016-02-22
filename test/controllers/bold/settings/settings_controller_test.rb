@@ -29,7 +29,7 @@ class Bold::Settings::SettingsControllerTest < ActionController::TestCase
   end
 
   test "should update site" do
-    patch :update, site: { name: 'new name', url_scheme: 'http', hostname: 'somewhere.de' }
+    patch :update, params: { site: { name: 'new name', url_scheme: 'http', hostname: 'somewhere.de' } }
     assert_redirected_to bold_settings_root_path
     @site.reload
     assert_equal 'new name', @site.name

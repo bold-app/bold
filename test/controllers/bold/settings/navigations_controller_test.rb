@@ -33,7 +33,7 @@ class Bold::Settings::NavigationsControllerTest < ActionController::TestCase
   end
 
   test 'should update nav' do
-    xhr :patch, :update, id: @nav.id, navigation: { name: 'new', url: 'foobar' }
+    patch :update, xhr: true, params: { id: @nav.id, navigation: { name: 'new', url: 'foobar' } }
     assert_response :success
     @nav.reload
     assert_equal 'new', @nav.name
@@ -42,14 +42,14 @@ class Bold::Settings::NavigationsControllerTest < ActionController::TestCase
 
   test 'should create nav' do
     assert_difference '@site.navigations.count' do
-      xhr :post, :create, navigation: { name: 'Bold', url: 'http://bold-app.org/' }
+      post :create, xhr: true, params: { navigation: { name: 'Bold', url: 'http://bold-app.org/' } }
     end
     assert_response :success
   end
 
   test 'should delete nav' do
     assert_difference '@site.navigations.count', -1 do
-      xhr :delete, :destroy, id: @nav.to_param
+      delete :destroy, xhr: true, params: { id: @nav.to_param }
     end
   end
 
@@ -60,7 +60,7 @@ class Bold::Settings::NavigationsControllerTest < ActionController::TestCase
     @nav.reload
     refute @nav.last?
     assert_equal @nav.position + 1, nav2.position
-    xhr :put, :sort, id: nav2.id, new_position: @nav.position - 1
+    put :sort, xhr: true, params: { id: nav2.id, new_position: @nav.position - 1 }
     @nav.reload
     nav2.reload
     assert @nav.last?

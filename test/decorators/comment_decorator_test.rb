@@ -37,8 +37,8 @@ class CommentDecoratorTest < Draper::TestCase
   test 'should sanitize author_website' do
 
     %w(foo.bar www.foo.bar).each do |url|
-      c = CommentDecorator.decorate create(:comment, content: @post, author_website: url)
-      assert_equal %{<a rel="nofollow" href="http://#{url}">#{c.author_name}</a>}, c.author
+      c = CommentDecorator.decorate create(:comment, content: @post, author_website: url, author_name: 'Jane Doe')
+      assert_equal %{<a rel="nofollow" href="http://#{url}">Jane Doe</a>}, c.author
     end
 
     %w(http://foo.bar https://foo.bar).each do |url|
@@ -50,8 +50,8 @@ class CommentDecoratorTest < Draper::TestCase
       %{javascript:"alert('bla');"} => 'javascript:&quot;alert(&#39;bla&#39;);&quot;',
       %{" onclick="alert('bla');"} => '&quot; onclick=&quot;alert(&#39;bla&#39;);&quot;'
     }.each do |url, escaped|
-      c = CommentDecorator.decorate create(:comment, content: @post, author_website: url)
-      assert_equal %{<a rel="nofollow" href="http://#{escaped}">#{c.author_name}</a>}, c.author
+      c = CommentDecorator.decorate create(:comment, content: @post, author_website: url, author_name: 'John Doe')
+      assert_equal %{<a rel="nofollow" href="http://#{escaped}">John Doe</a>}, c.author
     end
   end
 

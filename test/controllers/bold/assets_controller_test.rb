@@ -35,6 +35,11 @@ module Bold
     end
 
     test 'should get edit' do
+      get :edit, params: { id: @photo.id }
+      assert_response :success
+    end
+
+    test 'should get edit xhr' do
       get :edit, xhr: true, params: { id: @photo.id }
       assert_response :success
     end

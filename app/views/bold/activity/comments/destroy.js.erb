@@ -1,4 +1,6 @@
 $('#<%= dom_id @object %>').hide();
-$('#comments h2').html('<%= t 'bold.posts.show.comments', count: @object.content.comments.count %>');
+<% if @object.content.respond_to? :comments %>
+  $('#comments h2').html('<%= t 'bold.posts.show.comments', count: @object.content.comments.count %>');
+<% end %>
 
 <%= raw flash_message %>

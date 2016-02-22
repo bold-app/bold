@@ -25,6 +25,8 @@ module Bold::Activity
       @post = create :published_post
       @site.update_attribute :post_comments, 'enabled'
       @comment = create :comment, content: @post, site: @site
+      @contact_page = create :published_page, template: 'contact_page'
+      @contact_msg = create :contact_message, content: @contact_page
     end
 
     test 'should get index' do
@@ -36,11 +38,11 @@ module Bold::Activity
     test 'should filter comments by state' do
       get :index, params: { comment_search: { status: 'pending' } }
       assert_response :success
-      assert assigns(:postings).include?(@comment)
+      assert_select "article#comment_#{@comment.id} p", /#{@comment.author_email}/
 
       get :index, params: { comment_search: { status: 'approved' } }
       assert_response :success
-      assert assigns(:postings).blank?
+      assert_select "article#comment_#{@comment.id}", count: 0
     end
 
     test 'should change state' do
@@ -71,11 +73,25 @@ module Bold::Activity
 
     end
 
-    test 'should destroy comment' do
-      assert_difference 'Comment.alive.count', -1 do
-        assert_difference 'Memento::Session.count' do
-          assert_difference 'Memento::State.count' do
-            delete :destroy, xhr: true, params: { id: @comment }
+    test 'should delete contact_message' do
+      assert_no_difference 'ContactMessage.count' do
+        assert_difference 'ContactMessage.alive.count', -1 do
+          assert_difference 'Memento::Session.count' do
+            assert_difference 'Memento::State.count' do
+              delete :destroy, xhr: true, params: { id: @contact_msg }
+            end
+          end
+        end
+      end
+    end
+
+    test 'should delete comment' do
+      assert_no_difference 'Comment.count' do
+        assert_difference 'Comment.alive.count', -1 do
+          assert_difference 'Memento::Session.count' do
+            assert_difference 'Memento::State.count' do
+              delete :destroy, xhr: true, params: { id: @comment }
+            end
           end
         end
       end

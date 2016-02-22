@@ -19,28 +19,22 @@
 #
 # capybara setup
 #
-# use screenshot_and_save_page in integration tests to capture the current
-# page. screenshot saving only works with poltergeist, the default driver just
-# saves the html.
-
 require 'capybara/rails'
-require 'capybara/poltergeist'
 
-# makes poltergeist integration tests with varyig domains work: (need to add any test domains to etc/hosts as well, pointing to localhost)
-Capybara.always_include_port = true
+begin
+  require 'capybara/poltergeist'
 
-# http://docs.travis-ci.com/user/common-build-problems/
-TIMEOUT = ENV['TRAVIS'] ? 10 : 3
-Capybara.default_max_wait_time = TIMEOUT
-Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, timeout: TIMEOUT)
+  # makes poltergeist integration tests with varyig domains work: (need to add any test domains to etc/hosts as well, pointing to localhost)
+  Capybara.always_include_port = true
+
+  # http://docs.travis-ci.com/user/common-build-problems/
+  TIMEOUT = ENV['TRAVIS'] ? 10 : 3
+  Capybara.default_max_wait_time = TIMEOUT
+  Capybara.register_driver :poltergeist do |app|
+    Capybara::Poltergeist::Driver.new(app, timeout: TIMEOUT)
+  end
+
+  Capybara.javascript_driver = :poltergeist
+
+rescue LoadError
 end
-
-Capybara.javascript_driver = :poltergeist
-
-
-require 'capybara-screenshot/minitest'
-Capybara::Screenshot.register_filename_prefix_formatter(:minitest) do |fault|
-  fault.location.first.match(/^test\/integration\/(.+:\d+)/)[1].gsub /[^\w]/, '_'
-end
-`rm -fr #{Rails.root.join 'tmp/capybara'}/*`

@@ -94,14 +94,21 @@ class BoldIntegrationTest < ActionDispatch::IntegrationTest
   def teardown
   end
 
-  def login_as(user, pass = 'secret.1')
+  def login_as(user, pass = 'secret.1', site: nil)
     visit '/users/sign_in'
     fill_in 'Email address', with: user.email
     fill_in 'Password', with: pass
     click_button 'Sign in'
     assert !has_content?('Sign in')
     @current_user = user
-    assert_equal '/bold', current_path
+    if user.sites.many?
+      assert_equal '/admin/sites/select', current_path
+      if site
+        click_link site.name
+      end
+    else
+      assert_equal '/bold', current_path
+    end
   end
 
   def logout

@@ -53,7 +53,6 @@ class MultiSiteTest < BoldIntegrationTest
   test 'should render 404 for unknown host name' do
     set_host 'foo.bar'
     visit '/'
-    screenshot_and_save_page
     assert has_content? 'Page not found'
   end
 

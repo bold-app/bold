@@ -1,0 +1,20 @@
+.row
+  = render 'bold/settings/left_col'
+
+  .col-xs-12.col-sm-9.right-col
+    .row
+      .col-sm-9.col-sm-offset-1.col-md-6
+        %h2
+          = link_with_icon 'menu-left', t('.back'), bold_settings_site_users_path, class: 'btn btn-default btn-sm back'
+          = t'.heading'
+
+
+        = simple_form_for @invitation, url: bold_settings_site_users_path do |f|
+          = f.input :email
+          = f.input :role, collection: @invitation.role_values, include_blank: false
+          .form-actions
+            = f.button :submit, t('.invite'), class: 'btn-primary'
+
+
+
+

@@ -1,0 +1,6 @@
+instance_eval IO.read Pathname.new(__FILE__).dirname.join('Gemfile')
+
+group :test do
+  gem 'capybara-screenshot', '~> 1.0.4'
+  gem 'poltergeist', '~> 1.6.0'
+end

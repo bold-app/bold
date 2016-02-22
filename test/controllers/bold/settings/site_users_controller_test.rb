@@ -37,17 +37,21 @@ module Bold
       end
 
       test "should render invite form" do
-        get :new, xhr: true
+        get :new
         assert_response :success
-        assert assigns(:invitation)
+        assert_select 'h2', /Invite a new user/
+        assert_select 'label', /Email/
+        assert_select 'label', /Role/
       end
 
       test "should invite user" do
         assert_difference 'SiteUser.count' do
           assert_difference 'User.count' do
-            post :create, xhr: true, params: { invitation: { email: 'user23@host.com', role: 'editor' } }
+            post :create, params: { invitation: { email: 'user23@host.com', role: 'editor' } }
           end
         end
+
+        assert_redirected_to bold_settings_site_users_path
 
         assert u = User.find_by_email('user23@host.com')
         assert_equal @user, u.invited_by

@@ -102,7 +102,13 @@ class BoldController < BaseController
 
   def find_current_site
     find_current_site_for_user ||
-      (user_signed_in? && current_user.sites.one? && current_user.sites.first) # Site.for_hostname(request.host)
+      (
+        user_signed_in? &&
+        (
+          (current_user.sites.one? && current_user.sites.first) ||
+          (current_user.admin? && Site.count == 1 && Site.first)
+        )
+      )
   end
 
   def require_site

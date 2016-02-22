@@ -21,20 +21,15 @@ require 'test_helper'
 
 class AuthenticationTest < BoldIntegrationTest
 
-  setup do
-    Capybara.current_driver = Capybara.javascript_driver
-    @user = create :confirmed_admin
-    @site1 = create :site, name: 'another site'
-  end
-
-  teardown do
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
-  end
-
   test 'should send password reset link' do
     visit '/bold'
-    screenshot_and_save_page
+
+    click_on 'Forgot your password?'
+    fill_in 'Email address', with: 'foo'
+    assert_no_enqueued_jobs do
+      click_on 'Send me reset password instructions'
+    end
+
     click_on 'Forgot your password?'
     fill_in 'Email address', with: @user.email
     assert_enqueued_jobs 1 do
@@ -43,7 +38,7 @@ class AuthenticationTest < BoldIntegrationTest
   end
 
   test 'should invite new user' do
-    login_as @user
+    login_as @admin
     visit '/bold'
     click_link 'Settings'
     click_link 'Users'
@@ -51,9 +46,8 @@ class AuthenticationTest < BoldIntegrationTest
     fill_in 'invitation_email', with: 'new_user@test.com'
     assert_enqueued_jobs 1 do
       click_on 'Send invitation'
-      wait_for_ajax
     end
-    assert token = enqueued_jobs.last[:args].last
+    assert token = enqueued_jobs.last[:args][-2]
 
     assert u = User.find_by_email('new_user@test.com')
     assert_equal 1, u.site_users.size

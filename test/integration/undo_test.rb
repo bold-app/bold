@@ -22,21 +22,25 @@ require 'test_helper'
 class UndoTest < BoldIntegrationTest
 
   setup do
-    Capybara.current_driver = Capybara.javascript_driver
-    @user = create :confirmed_user
-    @site.update_attributes post_comments: 'enabled', akismet_key: '28736d172cca'
+    unless defined? Poltergeist
+      Capybara.current_driver = Capybara.javascript_driver
+      @user = create :confirmed_user
+      @site.update_attributes post_comments: 'enabled', akismet_key: '28736d172cca'
 
-    ActiveJob::Base.queue_adapter = :delayed_job
+      ActiveJob::Base.queue_adapter = :delayed_job
+    end
   end
 
   teardown do
-    ActiveJob::Base.queue_adapter = :test
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
+    unless defined? Poltergeist
+      ActiveJob::Base.queue_adapter = :test
+      Capybara.reset_sessions!
+      Capybara.use_default_driver
+    end
   end
 
-
   test 'should remove and restore draft' do
+    skip unless defined? Poltergeist
     @post = create :published_post, title: 'Content title', body: 'Lorem ipsum ContentEditingTest', site: @site
     @post.body = 'This is the updated content.'
     assert_difference 'Draft.count' do
@@ -71,6 +75,7 @@ class UndoTest < BoldIntegrationTest
 
 
   test 'should undo comment actions' do
+    skip unless defined? Poltergeist
     login_as @user
     p = create :published_post
     c = create :comment, content: p, author_name: 'Max Muster', body: 'test comment'

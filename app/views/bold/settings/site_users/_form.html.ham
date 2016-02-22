@@ -1,0 +1,6 @@
+    = simple_form_for @invitation, remote: true, url: bold_settings_site_users_path do |f|
+      .modal-body
+
+        = f.input :email
+        = f.input :role, collection: @invitation.role_values, include_blank: false
+

@@ -50,7 +50,6 @@ class SettingsTest < BoldIntegrationTest
   test 'should allow editing of theme config' do
     login_as @site_admin
     visit '/bold/settings'
-    screenshot_and_save_page
     click_on 'Themes'
     click_link(@site.theme_name)
     assert has_content? 'presets'

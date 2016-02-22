@@ -12,7 +12,7 @@ gem 'pg', '~> 0.18.2', platforms: :ruby
 gem "activerecord-jdbcpostgresql-adapter", platforms: :jruby
 
 gem 'jquery-rails', '~> 4.0.4'
-gem 'turbolinks'
+# gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
@@ -42,7 +42,8 @@ gem 'http_accept_language', '~> 2.0.5'
 gem 'httparty', '~> 0.13.5'
 gem 'i18n_language_select', github: 'bold-app/i18n_language_select'
 gem 'jquery-fileupload-rails', github: 'bold-app/jquery-fileupload-rails'
-gem 'kaminari', '~> 0.16'
+#gem 'kaminari', '~> 0.16'
+gem 'kaminari', github: 'amatsuda/kaminari'
 gem 'memento', '~> 0.4.3', github: 'bold-app/memento'
 gem 'mini_magick', '~> 3.0'
 gem 'haml-rails', '~> 0.9'
@@ -74,12 +75,10 @@ end
 
 group :test do
   gem 'capybara', '~> 2.6.0'
-  gem 'capybara-screenshot', '~> 1.0.4'
   gem 'connection_pool', '~> 2.1.1'
   gem 'factory_girl_rails', '~> 4.5'
   gem 'faker', '~> 1.4'
   gem 'mocha', '~> 1.1.0'
-  gem 'poltergeist', '~> 1.6.0'
   gem 'rails-controller-testing'
 end
 
@@ -88,6 +87,6 @@ gem 'bold-theme-casper', github: 'bold-app/bold-theme-casper'
 gem 'bold-theme-lean', github: 'bold-app/bold-theme-lean'
 gem 'bold-theme-bootstrap', github: 'bold-app/bold-theme-bootstrap'
 
-local = File.join(File.dirname(__FILE__), "Gemfile.local")
-instance_eval File.read(local) if File.exists?(local)
+local = Pathname.new(__FILE__).dirname.join('Gemfile.local')
+instance_eval IO.read local if File.readable? local
 

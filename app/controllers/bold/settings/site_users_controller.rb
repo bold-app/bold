@@ -37,7 +37,7 @@ module Bold
       def create
         @invitation = Invitation.new invitation_params
         if @invitation.create
-          index
+          redirect_to bold_settings_site_users_path
         else
           render 'new'
         end

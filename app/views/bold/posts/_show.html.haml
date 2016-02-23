@@ -15,7 +15,7 @@
 
 %article
   %h2= link_to_if content.published?, content.title, content.public_url
-  = content.body_html
+  ~ content.body_html
 
   - if content.comments?
     %section#comments

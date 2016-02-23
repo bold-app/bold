@@ -13,6 +13,6 @@
   = link_with_icon :pencil, t('.edit'), edit_bold_page_path(content), class: 'pull-right btn btn-default btn-sm'
 
 %article
-  %h2= content.title_html
-  = content.body_html
+  %h2= content.title
+  ~ content.body_html
 

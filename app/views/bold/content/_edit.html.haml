@@ -25,7 +25,7 @@
               = link_to icon(:fullscreen), '#', id: 'zen-mode', title: t('.toolbar.zenmode'), tabindex: 999
 
 
-        = f.text_area :body, class: 'ace', data: { container: 'editor', vimmode: current_user.vim_mode? }
+        ~ f.text_area :body, class: 'ace', data: { container: 'editor', vimmode: current_user.vim_mode? }
         #editor
       - else
         %p= t'.info_no_body', template: @content.template

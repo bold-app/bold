@@ -23,6 +23,7 @@ gem 'bootstrap-kaminari-views', '0.0.3'
 gem 'bootstrap-sass', '~> 3.3.4'
 gem 'carrierwave', '~> 0.10'
 gem 'chronic', github: 'jkraemer/chronic', branch: 'thread_safe'
+gem 'coderay', '~> 1.1.1'
 gem 'daemons'
 gem 'delayed_job_active_record', '~> 4.0'
 

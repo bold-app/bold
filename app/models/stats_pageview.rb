@@ -29,6 +29,9 @@ class StatsPageview < ActiveRecord::Base
     self.date     ||= timestamp.to_date
   end
 
+  validates :site, presence: true
+  validates :content, presence: true
+
   scope :since, ->(date){ where 'date >= ?', date }
   scope :until, ->(date){ where 'date <= ?', date }
 
@@ -46,28 +49,30 @@ class StatsPageview < ActiveRecord::Base
           begin
             transaction do
               log.set_device_class!
-              build_for_log(log, site: site)&.save! unless log.bot?
+              if !log.bot? and pv = build_for_log(log, site: site) and !pv.save
+                Rails.logger.error "error processing request log #{log.id}: #{pv.errors.inspect}"
+              end
               log.update_column :processed, true
             end
-          rescue
-            Rails.logger.error "error processing request log #{log.id}: #{$!}"
           end
         end
       end
     end
   end
 
+  # returns nil if the log's resource isn't present or isn't a Content
   def self.build_for_log(request_log, site: request_log.site)
-    return nil unless request_log.resource_type == 'Content'
-    visit = StatsVisit.find_or_create_for_log(request_log)
-    new(
-      site: site,
-      visitor_id: request_log.visitor_id,
-      timestamp: request_log.created_at,
-      content_id: request_log.resource_id,
-      request_log: request_log,
-      stats_visit: visit
-    )
+    if request_log.resource_type == 'Content' and request_log.resource.present?
+      visit = StatsVisit.find_or_create_for_log(request_log)
+      new(
+        site: site,
+        visitor_id: request_log.visitor_id,
+        timestamp: request_log.created_at,
+        content_id: request_log.resource_id,
+        request_log: request_log,
+        stats_visit: visit
+      )
+    end
   end
 
 end

@@ -58,9 +58,7 @@ class FrontendController < BaseController
     @content = content
     options[:status] ||= :ok
     options[:template] = content.get_template.file
-    respond_to do |format|
-      format.html { render options }
-    end
+    render options
     @content = original_content
   end
 

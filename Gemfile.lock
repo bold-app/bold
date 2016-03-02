@@ -41,7 +41,7 @@ GIT
 
 GIT
   remote: git://github.com/bold-app/bold-theme-lean.git
-  revision: f9415d7b4da1005c37e914b355e825b2537a4f3f
+  revision: 7b0c56423d6b23de8281bb9f07df80610d832233
   specs:
     bold-theme-lean (0.1.0)
 

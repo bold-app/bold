@@ -14,6 +14,20 @@ GIT
       activerecord (>= 3.0)
 
 GIT
+  remote: git://github.com/bold-app/bold-atom_feed.git
+  revision: 454454d449855e22489687ca86532b026e2448cb
+  specs:
+    bold-atom_feed (0.1.0)
+      draper (~> 2.1)
+      liquid (~> 3.0)
+
+GIT
+  remote: git://github.com/bold-app/bold-piwik.git
+  revision: 319c740c0b55ff0e50ca4357feea1f1392822c15
+  specs:
+    bold-piwik (0.1.0)
+
+GIT
   remote: git://github.com/bold-app/bold-theme-bootstrap.git
   revision: 2edc83c27373411b71cbf133a99c89d5ff446c19
   specs:
@@ -239,6 +253,7 @@ GEM
     json (1.8.3)
     kramdown (1.9.0)
     libv8 (3.16.14.13)
+    liquid (3.0.6)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -381,6 +396,8 @@ DEPENDENCIES
   activerecord-jdbcpostgresql-adapter
   acts_as_list!
   akismet (~> 2.0.0)
+  bold-atom_feed!
+  bold-piwik!
   bold-theme-bootstrap!
   bold-theme-casper!
   bold-theme-lean!

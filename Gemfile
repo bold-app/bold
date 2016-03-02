@@ -88,6 +88,11 @@ gem 'bold-theme-casper', github: 'bold-app/bold-theme-casper'
 gem 'bold-theme-lean', github: 'bold-app/bold-theme-lean'
 gem 'bold-theme-bootstrap', github: 'bold-app/bold-theme-bootstrap'
 
+# plugins
+gem 'bold-atom_feed', github: 'bold-app/bold-atom_feed'
+gem 'bold-piwik', github: 'bold-app/bold-piwik'
+
+
 local = Pathname.new(__FILE__).dirname.join('Gemfile.local')
 instance_eval IO.read local if File.readable? local
 

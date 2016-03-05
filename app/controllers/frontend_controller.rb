@@ -57,8 +57,13 @@ class FrontendController < BaseController
     original_content = @content
     @content = content
     options[:status] ||= :ok
-    options[:template] = content.get_template.file
-    render options
+    respond_to do |format|
+      format.html do
+        options[:template] = content.get_template.file
+        render options
+      end
+      format.any { head options[:status] }
+    end
     @content = original_content
   end
 
@@ -120,9 +125,14 @@ class FrontendController < BaseController
     # we enforce rendering of html even if it was an image or something else
     # that wasn't found.
     if site = Bold.current_site and page = site.notfound_page
-      render_content page, status: :not_found, formats: :html
+      render_content page, status: :not_found
     else
-      render 'errors/404', layout: 'error', status: 404, formats: :html
+      respond_to do |format|
+        format.html {
+          render 'errors/404', layout: 'error', status: 404, formats: :html
+        }
+        format.any { head status: :not_found }
+      end
     end
     log_request
   end

@@ -46,9 +46,27 @@ module Frontend
       assert_select 'h3', /#{@post.title}/
     end
 
-    test 'should render 404 for unknown path' do
+    test 'should render 404 for unknown paths' do
       get :show, params: { path: 'do-not-find-me' }
       assert_response :not_found
+      get :show, params: { path: 'do-not-find-me.txt' }
+      assert_response :not_found
+      get :show, params: { path: 'do-not-find-me.jpg' }
+      assert_response :not_found
+      get :show, params: { path: 'do-not-find-me.xml' }
+      assert_response :not_found
+    end
+
+    test 'should render nothing and 404 for invalid path with other content types' do
+      @request.headers["Accept"] = "application/xml"
+      get :show, params: { path: 'do-not-find-me.xml' }
+      assert_response :not_found
+      assert_equal '', @response.body
+
+      @request.headers["Accept"] = "text/plain"
+      get :show, params: { path: 'do-not-find-me.txt' }
+      assert_response :not_found
+      assert_equal '', @response.body
     end
 
     test 'should render empty archive for year' do

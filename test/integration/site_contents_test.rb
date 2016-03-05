@@ -35,11 +35,6 @@ class SiteContentsTest < BoldIntegrationTest
     assert has_content? 'site css'
   end
 
-  test 'should render 404 for unknown formats' do
-    visit '/site.txt'
-    assert has_content? 'not found'
-  end
-
 end
 
 

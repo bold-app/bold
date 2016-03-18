@@ -31,6 +31,8 @@ class Frontend::ContentsController < FrontendController
         category
       when Tag
         tag
+      else
+        not_found
       end
     else
       not_found

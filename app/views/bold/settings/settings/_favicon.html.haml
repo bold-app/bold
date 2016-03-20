@@ -11,12 +11,12 @@
           .col-xs-12
             %p
               = t'.no_possible_icons'
-              = link_to t('.upload'), new_bold_asset_path , class: 'btn btn-default'
+              = link_to t('.upload'), new_bold_site_asset_path(current_site) , class: 'btn btn-default'
         - else
           - for asset in @assets
             .col-xs-2
               .thumbnail
-                = link_to asset_tag(asset, :bold_thumb), bold_settings_settings_path(site: { favicon_id: asset.id }), method: :put, title: asset.filename
+                = link_to asset_tag(asset, :bold_thumb), bold_site_settings_settings_path(current_site, site: { favicon_id: asset.id }), method: :put, title: asset.filename
                 .caption
                   = asset.filename
                   - if asset.title.present?

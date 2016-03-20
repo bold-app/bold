@@ -21,7 +21,7 @@ require 'test_helper'
 
 class CategoryTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
   end
 
   test 'should have permalink' do

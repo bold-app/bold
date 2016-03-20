@@ -76,6 +76,11 @@ class User < ActiveRecord::Base
     role(site) != :none
   end
 
+  def available_sites
+    admin? ? Site.all : self.sites
+  end
+
+
   # true if this user is a global administrator or manager of the given site
   def site_admin?(site = Site.current)
     admin? || %i(manager admin).include?(role(site))

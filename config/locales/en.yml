@@ -100,34 +100,6 @@ en:
         heading: Invite user
         invite: Send invitation
 
-    profiles:
-      edit:
-        author_page_id_info: Have your name linked to a page where you describe yourself. Some themes may also provide a special template for this kind of page.
-        auto_locale: Automatic
-        button: Update Profile
-        heading: Your Profile
-        meta_author_name_plh: Defaults to Name from above if empty
-        meta_author_name_hint: "Will be used to populate the 'author' meta tag."
-        meta_google_plus_hint: "Will be used for the 'link rel=author' meta tag."
-        time_zone_name_info: The backend will display all times relative to the time zone you select here.
-        twitter_hint: "For Twitter Card meta data."
-        vim_hint: "Vim is an advanced text editor. Check the box to have the Bold text editor emulate it's keybindings."
-      edit_email:
-        button: Update Email Address
-        current_password_hint: Please enter your current password to confirm this change.
-        currently_waiting: Currently waiting for confirmation of %{email}.
-        heading: Update Email Address
-        info: A confirmation message will be sent to your new email address.
-      edit_password:
-        button: Change Password
-        current_password_hint: Please enter your current password to confirm this change.
-        heading: Change Password
-
-      left_col:
-        profile: Your Profile
-        email: Update Email Address
-        password: Change Password
-
     sites:
       edit:
         confirm_delete: "Really delete site %{name} and all its contents?"
@@ -149,9 +121,6 @@ en:
         heading: New site
         label_hostname: Primary hostname
         submit: Create
-
-      select:
-        h2: Select a site
 
     site_users:
       index:
@@ -294,7 +263,7 @@ en:
         activities: Activity
         admin: Administration
         assets: Files
-        back: "Return to %{site}"
+        back: "Back"
         change_site: Switch site
         new_post: New post
         pages: Pages
@@ -560,6 +529,38 @@ en:
           info: Click any theme below to activate and configure it. Theme settings will be persisted for each theme separately so you do not lose them when switching back and forth between themes.
         theme:
           by: "by %{author}"
+
+    profiles:
+      edit:
+        author_page_id_info: Have your name linked to a page where you describe yourself. Some themes may also provide a special template for this kind of page.
+        auto_locale: Automatic
+        button: Update Profile
+        heading: Your Profile
+        meta_author_name_plh: Defaults to Name from above if empty
+        meta_author_name_hint: "Will be used to populate the 'author' meta tag."
+        meta_google_plus_hint: "Will be used for the 'link rel=author' meta tag."
+        time_zone_name_info: The backend will display all times relative to the time zone you select here.
+        twitter_hint: "For Twitter Card meta data."
+        vim_hint: "Vim is an advanced text editor. Check the box to have the Bold text editor emulate it's keybindings."
+      edit_email:
+        button: Update Email Address
+        current_password_hint: Please enter your current password to confirm this change.
+        currently_waiting: Currently waiting for confirmation of %{email}.
+        heading: Update Email Address
+        info: A confirmation message will be sent to your new email address.
+      edit_password:
+        button: Change Password
+        current_password_hint: Please enter your current password to confirm this change.
+        heading: Change Password
+
+      left_col:
+        profile: Your Profile
+        email: Update Email Address
+        password: Change Password
+
+    sites:
+      index:
+        heading: Select a site
 
   layouts:
     admin:

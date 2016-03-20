@@ -23,11 +23,6 @@ FactoryGirl.define do
     name { Faker::Name.name }
     password 'secret.1'
     password_confirmation 'secret.1'
-    after(:create) do |u, ev|
-      if site = Site.current
-        u.site_users.create! site: site
-      end
-    end
 
     factory :confirmed_user do
       after(:create) do |u, ev|

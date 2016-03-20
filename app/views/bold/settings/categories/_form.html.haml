@@ -7,7 +7,7 @@
       = label_tag :asset_id do
         = t('.asset')
         %span.small
-          = link_with_icon :picture, t('.select_image'), new_bold_asset_link_path(rel: 'category_asset_id'), remote: true, tabindex: 4
+          = link_with_icon :picture, t('.select_image'), new_bold_site_asset_link_path(current_site)(rel: 'category_asset_id'), remote: true, tabindex: 4
           = link_with_icon :remove, t('.remove_image'), '#', rel: 'category_asset_id', class: 'clear', style:('display: none;' if f.object.asset.nil?), tabindex: 5
       = hidden_field_tag 'category[asset_id]', f.object.asset_id, id: 'category_asset_id'
       %p#category_asset_id_preview

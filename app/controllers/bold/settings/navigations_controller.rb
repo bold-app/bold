@@ -18,8 +18,10 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 class Bold::Settings::NavigationsController < Bold::SettingsController
-
   helper 'bold/settings'
+
+  prepend_before_action :find_navigation, only: %i(update destroy sort)
+  site_object :navigation
 
   def index
     @navigations = current_site.navigations
@@ -35,13 +37,11 @@ class Bold::Settings::NavigationsController < Bold::SettingsController
   end
 
   def update
-    @navigation = current_site.navigations.find params[:id]
     @navigation.update_attributes navigation_params
     flash.now[:notice] = 'bold.navigation.updated'
   end
 
   def destroy
-    @navigation = current_site.navigations.find params[:id]
     Navigation.transaction do
       memento(undo_template: 'restore_navigation') do
         # prevent 'holes' in position list to make the client-side JS simpler
@@ -53,7 +53,6 @@ class Bold::Settings::NavigationsController < Bold::SettingsController
   end
 
   def sort
-    @navigation = current_site.navigations.find params[:id]
     # jquery sortable is zero based, while with acts_as_list the first index
     # is 1:
     @navigation.insert_at params[:new_position].to_i + 1
@@ -61,6 +60,10 @@ class Bold::Settings::NavigationsController < Bold::SettingsController
   end
 
   private
+
+  def find_navigation
+    @navigation = Navigation.find params[:id]
+  end
 
   def navigation_params
     params[:navigation].permit :name, :url

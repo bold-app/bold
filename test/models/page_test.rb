@@ -244,8 +244,7 @@ class PageTest < ActiveSupport::TestCase
     assert_nil Page[page.slug]
     page.publish!
     assert_equal page, Page[page.slug]
-    assert other_site = create(:site)
-    assert_equal other_site, Site.current
+    Bold.current_site = create(:site)
     assert_nil Page[page.slug]
   end
 end

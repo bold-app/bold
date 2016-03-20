@@ -21,7 +21,7 @@ require 'test_helper'
 
 class PermalinkTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
   end
 
   test 'should allow slashes in path components' do

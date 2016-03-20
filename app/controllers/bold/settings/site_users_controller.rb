@@ -37,7 +37,7 @@ module Bold
       def create
         @invitation = Invitation.new invitation_params
         if @invitation.create
-          redirect_to bold_settings_site_users_path
+          redirect_to bold_site_settings_site_users_path(current_site)
         else
           render 'new'
         end
@@ -46,7 +46,7 @@ module Bold
       def resend_invitation
         @user = find_invited_user
         @user.invite! current_user
-        redirect_to bold_settings_site_users_path
+        redirect_to bold_site_settings_site_users_path(current_site)
       end
 
       def revoke_invitation
@@ -57,7 +57,7 @@ module Bold
         else
           @user.destroy
         end
-        redirect_to bold_settings_site_users_path
+        redirect_to bold_site_settings_site_users_path(current_site)
       end
 
       private

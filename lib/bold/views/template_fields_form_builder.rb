@@ -61,7 +61,7 @@ module Bold
           out = ''.html_safe
           out << template.label_tag(name, options[:label] || name.to_s.humanize)
           out << template.content_tag(:p, class: 'small') do
-            template.link_with_icon(:picture, I18n.t('bold.asset_links.form_builder.click_to_select'), template.new_bold_asset_link_path(rel: id), remote: true) + '&nbsp;'.html_safe +
+            template.link_with_icon(:picture, I18n.t('bold.asset_links.form_builder.click_to_select'), template.new_bold_site_asset_link_path(Bold.current_site, rel: id), remote: true) + '&nbsp;'.html_safe +
             template.link_to(template.icon(:remove) + ' ' +  I18n.t('bold.asset_links.form_builder.remove_image'), '#', rel: id, class: 'clear', style:('display: none;' if img.nil?))
           end
           out << hidden_field(name.to_s, value: value)

@@ -18,7 +18,7 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 module Bold
-  class PostsController < BoldController
+  class PostsController < SiteController
     include ContentEditing
     helper "bold/activity/comments"
 
@@ -28,6 +28,10 @@ module Bold
     end
 
     private
+
+    def find_content
+      @content = Post.alive.find params[:id]
+    end
 
     def edit_url(content = @content)
       edit_bold_post_path(content)

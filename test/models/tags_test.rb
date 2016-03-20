@@ -21,7 +21,7 @@ require 'test_helper'
 
 class TagsTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
     create :published_post, site: @site, tag_list: 'one, two, three'
     create :published_post, site: @site, title: 'post two', tag_list: 'two, three, bar'
     create :published_post, site: @site, title: 'post three', tag_list: 'one, three, foo'

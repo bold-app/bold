@@ -20,10 +20,9 @@
 module Admin
   class SitesController < AdminController
 
-    skip_before_action :require_site, only: :select
-    before_action :require_admin!, except: :select
+    before_action :require_admin!
+    before_action :find_site, only: %i(edit update show destroy)
 
-    before_action :find_site, only: %w(show edit update destroy)
 
     def index
       load_sites
@@ -53,17 +52,6 @@ module Admin
     #  - separate 'export' model?
     def show
       send_file @site.export!(Rails.root.join('exports'))
-    end
-
-    def select
-      if params[:id].present?
-        @site = current_user.sites.find params[:id]
-        session[:current_site_id] = @site.id
-        redirect_to bold_root_path
-      else
-        @sites = current_user.sites.order('name asc')
-        render layout: 'bold_public'
-      end
     end
 
     def update

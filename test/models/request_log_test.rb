@@ -59,7 +59,7 @@ class RequestLogTest < ActiveSupport::TestCase
   ]
 
   setup do
-    @site = create :site, theme_name: 'test'
+    Bold::current_site = @site = create :site, theme_name: 'test'
     @lang = 'de-DE,en-US;q=0.7,en;q=0.3'
   end
 

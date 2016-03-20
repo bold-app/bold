@@ -21,7 +21,7 @@ require 'test_helper'
 
 class StatsVisitTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
   end
 
   test 'should decide wether to add to an existing visit or start a new one' do

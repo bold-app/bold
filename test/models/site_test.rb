@@ -23,6 +23,7 @@ class SiteTest < ActiveSupport::TestCase
 
   setup do
     @site = create :site, theme_name: 'test', url_scheme: 'https', hostname: 'test.host'
+    Bold::current_site = @site
 
     register_plugin :dummy do
       name 'Test plugin'

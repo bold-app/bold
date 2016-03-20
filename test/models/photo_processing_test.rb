@@ -23,7 +23,7 @@ class PhotoProcessingTest < ActiveSupport::TestCase
 
   setup do
     AssetUploader.enable_processing = true
-    @site = create :site
+    Bold::current_site = @site = create :site
     @photo = create(:asset)
   end
 

@@ -24,13 +24,13 @@ class Bold::Activity::StatsControllerTest < ActionController::TestCase
   end
 
   test "should get index" do
-    get :index
+    get :index, params: { site_id: @site }
     assert_response :success
     assert_select 'h2', /Statistics/
   end
 
   test 'should show month' do
-    get :index, params: { stats: { time_frame: 'month' } }
+    get :index, params: { site_id: @site, stats: { time_frame: 'month' } }
     assert_response :success
     assert_select 'h2', /Statistics/
   end

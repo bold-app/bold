@@ -28,7 +28,7 @@ module Bold
       end
 
       test "should get index" do
-        get :index
+        get :index, params: { site_id: @site }
         assert_response :success
         assert assigns(:active_users).any?
         assert_select '.left-col a.active', 'Users'
@@ -37,7 +37,7 @@ module Bold
       end
 
       test "should render invite form" do
-        get :new
+        get :new, params: { site_id: @site }
         assert_response :success
         assert_select 'h2', /Invite a new user/
         assert_select 'label', /Email/
@@ -47,11 +47,11 @@ module Bold
       test "should invite user" do
         assert_difference 'SiteUser.count' do
           assert_difference 'User.count' do
-            post :create, params: { invitation: { email: 'user23@host.com', role: 'editor' } }
+            post :create, params: { site_id: @site, invitation: { email: 'user23@host.com', role: 'editor' } }
           end
         end
 
-        assert_redirected_to bold_settings_site_users_path
+        assert_redirected_to bold_site_settings_site_users_path(@site)
 
         assert u = User.find_by_email('user23@host.com')
         assert_equal @user, u.invited_by
@@ -67,10 +67,10 @@ module Bold
         assert u = User.find_by_email('resend.please@host.com')
 
         assert_enqueued_jobs 1 do
-          put :resend_invitation, params: { id: u.id }
+          put :resend_invitation, params: { site_id: @site, id: u.id }
         end
 
-        assert_redirected_to bold_settings_site_users_path
+        assert_redirected_to bold_site_settings_site_users_path(@site)
       end
 
       test 'should revoke invitation' do
@@ -80,17 +80,17 @@ module Bold
 
         assert_difference 'User.count', -1 do
           assert_difference 'SiteUser.count', -1 do
-            delete :revoke_invitation, params: { id: u.id }
+            delete :revoke_invitation, params: { site_id: @site, id: u.id }
           end
         end
-        assert_redirected_to bold_settings_site_users_path
+        assert_redirected_to bold_site_settings_site_users_path(@site)
       end
 
       test 'should not destroy not invited user' do
         assert_no_difference 'User.count' do
           assert_no_difference 'SiteUser.count' do
             assert_raise(ActiveRecord::RecordNotFound) do
-              delete :revoke_invitation, params: { id: @user.id }
+              delete :revoke_invitation, params: { site_id: @site, id: @user.id }
             end
           end
         end

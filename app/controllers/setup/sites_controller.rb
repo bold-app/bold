@@ -29,7 +29,7 @@ class Setup::SitesController < SetupController
   def create
     @site = Site.new site_params
     if @site.save
-      redirect_to select_admin_site_path(@site)
+      redirect_to bold_site_path(@site)
     else
       render 'new'
     end
@@ -43,7 +43,7 @@ class Setup::SitesController < SetupController
 
   def check_if_any_sites
     if Site.any?
-      redirect_to select_admin_sites_url and return false
+      redirect_to bold_sites_url and return false
     end
   end
 

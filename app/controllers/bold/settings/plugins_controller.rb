@@ -22,6 +22,7 @@ class Bold::Settings::PluginsController < Bold::SettingsController
   helper 'bold/settings'
 
   decorate_assigned :plugins, with: 'Bold::ExtensionDecorator'
+
   def index
     @plugins = Bold::Plugin.all.values.sort{ |a,b| a.name.downcase <=> b.name.downcase }
   end
@@ -35,7 +36,7 @@ class Bold::Settings::PluginsController < Bold::SettingsController
     @plugin_config = find_plugin_config
     @plugin_config.config.update plugin_config
     if @plugin_config.save
-      redirect_to bold_settings_plugins_path
+      redirect_to bold_site_settings_plugins_path(current_site)
     else
       render 'edit'
     end
@@ -44,14 +45,14 @@ class Bold::Settings::PluginsController < Bold::SettingsController
   def enable
     @plugin = find_plugin
     current_site.enable_plugin!(@plugin.id)
-    redirect_to edit_bold_settings_plugin_path(@plugin.id),
+    redirect_to edit_bold_site_settings_plugin_path(current_site, @plugin.id),
       notice: I18n.t('flash.bold.plugin.enabled', name: @plugin.name)
   end
 
   def destroy
     @plugin = find_plugin
     current_site.disable_plugin! @plugin.id
-    redirect_to bold_settings_plugins_path,
+    redirect_to bold_site_settings_plugins_path(current_site),
       alert: I18n.t('flash.bold.plugin.disabled', name: @plugin.name)
   end
 

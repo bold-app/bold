@@ -63,9 +63,10 @@ class MultiSiteTest < BoldIntegrationTest
     fill_in 'Email address', with: @user.email
     fill_in 'Password', with: 'secret.1'
     click_button 'Sign in'
-    assert_equal '/admin/sites/select', current_path
-    click_on @site2.name
     assert_equal '/bold', current_path
+    first(:link, @site2.name).click
+    assert_equal "/bold/sites/#{@site2.id}", current_path
+    click_on 'Posts'
     assert  has_content?  'hello from site 2'
     assert  !has_content?('hello from site 1')
   end
@@ -78,7 +79,7 @@ class MultiSiteTest < BoldIntegrationTest
     fill_in 'Password', with: 'secret.1'
     click_button 'Sign in'
     assert !has_content?('Sign in')
-    assert_equal '/admin/sites/select', current_path
+    assert_equal '/bold', current_path
     assert has_content? 'Select a site'
   end
 

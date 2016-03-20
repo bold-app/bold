@@ -29,7 +29,7 @@ module Admin
 
     test 'should require login' do
       sign_out :user
-      get :index
+      get :index, params: { site_id: @site }
       assert_redirected_to '/users/sign_in'
     end
 
@@ -56,13 +56,13 @@ module Admin
     test "should get index" do
       site = create :site
       user = create_invited_user site
-      get :index, session: { current_site_id: @site.id }
+      get :index, params: { site_id: @site }
       assert_response :success
       assert_select 'td', /^#{user.email}/
     end
 
     test "should get new" do
-      get :new, xhr: true
+      get :new, params: { site_id: @site }, xhr: true
       assert_response :success
       assert_select 'h4', /Invite user/
     end
@@ -70,7 +70,7 @@ module Admin
     test 'should invite user' do
       site = create :site
       assert_enqueued_jobs 1 do
-        post :create, xhr: true, params: { invitation: { email: Faker::Internet.email, role: 'manager', site_id: site.id } }, session: { current_site_id: @site.id }
+        post :create, xhr: true, params: { site_id: @site, invitation: { email: Faker::Internet.email, role: 'manager', site_id: site.id } }, session: { current_site_id: @site.id }
       end
     end
 
@@ -78,7 +78,7 @@ module Admin
       site = create :site
       user = create_invited_user site
       assert_enqueued_jobs 1 do
-        patch :update, params: { id: user.to_param }, session: { current_site_id: @site.id }
+        patch :update, params: { id: user.to_param, site_id: @site.id }
       end
       assert_redirected_to admin_invitations_url
     end

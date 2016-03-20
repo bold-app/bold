@@ -4,8 +4,8 @@
 .row
   #list-col.col-sm-5.col-xs-12.independent-scroll.left-col
     %header
-      = link_to icon(:plus), new_bold_page_path, id: 'new-page', class: 'pull-right btn btn-success btn-sm'
-      = form_for @content_search, url: bold_pages_path, html: { class: 'form-inline', role: 'search', method: :get } do |f|
+      = link_to icon(:plus), new_bold_site_page_path(current_site), id: 'new-page', class: 'pull-right btn btn-success btn-sm'
+      = form_for @content_search, url: bold_site_pages_path(current_site), html: { class: 'form-inline', role: 'search', method: :get } do |f|
         = f.label :query, t('simple_form.labels.content_search.query'), class: 'sr-only'
         .input-group
           = f.text_field :query, class: 'input-sm form-control', placeholder: t('simple_form.labels.content_search.query')
@@ -14,7 +14,7 @@
               %button.btn.btn-default.btn-sm{type:"submit"}
                 = icon :search
             - else
-              = link_to icon(:remove), bold_pages_path, class: 'btn btn-sm btn-default'
+              = link_to icon(:remove), bold_site_pages_path(current_site), class: 'btn btn-sm btn-default'
 
     - if @contents.present?
       .list-group.pages

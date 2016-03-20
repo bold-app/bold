@@ -95,34 +95,6 @@ de:
         heading: Invite user
         invite: Send invitation
 
-    profiles:
-      edit:
-        author_page_id_info: Dein Name bei deinen Posts wird auf diese Seite verlinken.
-        auto_locale: Automatisch
-        button: Profil aktualisieren
-        heading: Profil
-        meta_author_name_plh: Der Name von oben wird verwendet falls dieses Feld leer ist.
-        meta_author_name_hint: "Für das 'author' Metatag."
-        meta_google_plus_hint: "Für das 'link rel=author' Metatag."
-        time_zone_name_info: Das Backend wird alle Zeitangaben relativ zu dieser Zeitzone anzeigen.
-        twitter_hint: "Für Twitter Card Metadaten."
-        vim_hint: "Vim ist ein fortgeschrittener Texteditor. Diese Option aktiviert Vim-ähnliches Verhalten im Bold Texteditor."
-      edit_email:
-        button: Update Email Address
-        current_password_hint: Please enter your current password to confirm this change.
-        currently_waiting: Currently waiting for confirmation of %{email}.
-        heading: Update Email Address
-        info: A confirmation message will be sent to your new email address.
-      edit_password:
-        button: Change Password
-        current_password_hint: Please enter your current password to confirm this change.
-        heading: Change Password
-
-      left_col:
-        profile: Dein Profil
-        email: Email-Addresse ändern
-        password: Passwort ändern
-
     sites:
       edit:
         confirm_delete: "Really delete site %{name} and all its contents?"
@@ -289,7 +261,7 @@ de:
         activities: Aktivität
         admin: Administration
         assets: Dateien
-        back: "Zurück zu %{site}"
+        back: "Zurück"
         change_site: Seite wechseln
         new_post: Neuer Artikel
         pages: Seiten
@@ -553,6 +525,34 @@ de:
           info: Ein Thema anklicken um es für diese Website zu konfigurieren. Die Theme-spezifischen Einstellungen bleiben über Theme-Wechsel hinweg erhalten.
         theme:
           by: "von %{author}"
+
+    profiles:
+      edit:
+        author_page_id_info: Dein Name bei deinen Posts wird auf diese Seite verlinken.
+        auto_locale: Automatisch
+        button: Profil aktualisieren
+        heading: Profil
+        meta_author_name_plh: Der Name von oben wird verwendet falls dieses Feld leer ist.
+        meta_author_name_hint: "Für das 'author' Metatag."
+        meta_google_plus_hint: "Für das 'link rel=author' Metatag."
+        time_zone_name_info: Das Backend wird alle Zeitangaben relativ zu dieser Zeitzone anzeigen.
+        twitter_hint: "Für Twitter Card Metadaten."
+        vim_hint: "Vim ist ein fortgeschrittener Texteditor. Diese Option aktiviert Vim-ähnliches Verhalten im Bold Texteditor."
+      edit_email:
+        button: Update Email Address
+        current_password_hint: Please enter your current password to confirm this change.
+        currently_waiting: Currently waiting for confirmation of %{email}.
+        heading: Update Email Address
+        info: A confirmation message will be sent to your new email address.
+      edit_password:
+        button: Change Password
+        current_password_hint: Please enter your current password to confirm this change.
+        heading: Change Password
+
+      left_col:
+        profile: Dein Profil
+        email: Email-Addresse ändern
+        password: Passwort ändern
 
   layouts:
     admin:

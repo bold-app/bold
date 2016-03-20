@@ -27,7 +27,7 @@ module Bold
     end
 
     test "should get index" do
-      get :index
+      get :index, params: { site_id: @site.id }
       assert_response :success
       assert pages = assigns(:contents)
       assert pages.include?(@page)
@@ -35,7 +35,7 @@ module Bold
 
     test "should get new" do
       assert_no_difference 'Page.count' do
-        get :new
+        get :new, params: { site_id: @site.id }
       end
       assert_response :success
       assert page = assigns(:content)
@@ -50,14 +50,14 @@ module Bold
 
     test 'should handle empty post' do
       assert_no_difference 'Page.count' do
-        post :create, params: { content: { title: '' }, publish: '1' }
+        post :create, params: { site_id: @site.id, content: { title: '' }, publish: '1' }
       end
       assert_response :success
     end
 
     test 'should publish new page' do
       assert_difference 'Page.count' do
-        post :create, params: { content: { title: 'this is a new page' }, publish: '1' }
+        post :create, params: { site_id: @site.id, content: { title: 'this is a new page' }, publish: '1' }
       end
       assert_redirected_to edit_bold_page_path(Page.order('created_at DESC').first)
     end

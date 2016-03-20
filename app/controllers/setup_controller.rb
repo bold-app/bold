@@ -18,8 +18,7 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 class SetupController < BoldController
-  layout 'bold_public'
+  layout 'public'
   helper :bold
 
-  skip_before_action :require_site
 end

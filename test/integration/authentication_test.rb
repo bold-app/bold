@@ -39,7 +39,8 @@ class AuthenticationTest < BoldIntegrationTest
 
   test 'should invite new user' do
     login_as @admin
-    visit '/bold'
+    assert_equal '/bold', current_path
+    first(:link, @site.name).click
     click_link 'Settings'
     click_link 'Users'
     click_link 'new-user'
@@ -67,7 +68,7 @@ class AuthenticationTest < BoldIntegrationTest
     fill_in 'Email address', with: 'new_user@test.com'
     fill_in 'Password', with: 'password'
     click_button 'Sign in'
-    assert_equal '/bold', current_path
+    assert_equal "/bold/sites/#{@site.id}", current_path
     assert has_content?('Pages')
     assert has_content?('Posts')
     assert !has_content?('Settings')

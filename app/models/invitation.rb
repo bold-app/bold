@@ -25,6 +25,7 @@ class Invitation
   validates :site_id, presence: true
   validates :email, presence: true, format: Devise.email_regexp
   validates :role, presence: true, inclusion: SiteUser::ROLES.map(&:to_s)
+  validate :check_presence
 
   def role_values
     SiteUser::ROLES.map{|r| [I18n.t("bold.common.roles.#{r}"), r]}
@@ -37,9 +38,11 @@ class Invitation
   def create
     return false unless valid?
     site = Site.find site_id
-    if user = User.invite!({email: email}, Bold::current_user)
+    if user = User.invite!({email: email}, Bold.current_user)
       site_user = user.site_users.build site_id: site.id, manager: (role == 'manager')
       site_user.save
+    else
+      false
     end
   end
 
@@ -47,4 +50,15 @@ class Invitation
     self.site_id = Site.current.id if site_id.blank?
     super
   end
+
+  private
+
+  def check_presence
+    if user = User.find_by_email(email)
+      if user.site_users.where(site_id: site_id).any?
+        errors[:site_id] << 'user is already a member of that site'
+      end
+    end
+  end
+
 end

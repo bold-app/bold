@@ -35,8 +35,7 @@ class BackendNavigationTest < BoldIntegrationTest
   test 'logout should log out' do
     login_as @user
     visit '/bold'
-    assert has_content? @site.name
-    assert has_link? 'Posts'
+    assert has_link? @site.name
     logout
     assert_equal '/users/sign_in', current_path
   end
@@ -50,11 +49,11 @@ class BackendNavigationTest < BoldIntegrationTest
       assert has_content? @site.name
     end
     click_on 'Pages'
-    assert_equal '/bold/pages', current_path
+    assert_equal "/bold/sites/#{@site.id}/pages", current_path
     click_on 'Posts'
-    assert_equal '/bold/posts', current_path
+    assert_equal "/bold/sites/#{@site.id}/posts", current_path
 
-    visit '/bold/settings'
+    visit "/bold/sites/#{@site.id}/settings"
     assert_equal '/users/sign_in', current_path
   end
 
@@ -68,11 +67,11 @@ class BackendNavigationTest < BoldIntegrationTest
       assert has_link? 'Sign out'
     end
     click_on 'Pages'
-    assert_equal '/bold/pages', current_path
+    assert_equal "/bold/sites/#{@site.id}/pages", current_path
     click_on 'Posts'
-    assert_equal '/bold/posts', current_path
+    assert_equal "/bold/sites/#{@site.id}/posts", current_path
     click_on 'Settings'
-    assert_equal '/bold/settings', current_path
+    assert_equal "/bold/sites/#{@site.id}/settings", current_path
   end
 
 end

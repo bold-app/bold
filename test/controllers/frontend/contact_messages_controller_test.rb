@@ -23,7 +23,7 @@ module Frontend
   class ContactMessagesControllerTest < ActionController::TestCase
 
     setup do
-      @page = create :published_page, template: 'contact_page'
+      @page = create :published_page, template: 'contact_page', site: @site
     end
 
     test 'should validate message' do

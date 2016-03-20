@@ -24,7 +24,7 @@
           = bold_pagination_for @assets, remote: true
 
         #imagepicker-sidebar.col-xs-12.col-sm-3.col-md-2
-          = form_for Asset.new, url: bold_assets_path, html: { multipart: true, id: 'fileupload' } do |f|
+          = form_for Asset.new, url: bold_site_assets_path(current_site), html: { multipart: true, id: 'fileupload' } do |f|
             %span.btn.btn-sm.btn-primary.btn-file
               %span= t('.upload')
               = f.file_field :file, :multiple => true

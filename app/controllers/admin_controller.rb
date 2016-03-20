@@ -20,7 +20,14 @@
 # Base class for all /admin controllers
 #
 class AdminController < BoldController
-  layout 'bold_admin'
+  prepend_before_action :require_admin!
 
-  before_action :require_admin!
+  private
+
+  # overridden to not scope by user - admins may access all sites anyway
+  def find_current_site
+    if id = (params[:site_id] || site_object&.site_id)
+      Site.find_by_id id
+    end
+  end
 end

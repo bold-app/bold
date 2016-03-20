@@ -32,7 +32,7 @@ class Bold::Settings::ThemesController < Bold::SettingsController
   def enable
     @theme = find_theme
     current_site.enable_theme!(@theme.id)
-    redirect_to edit_bold_settings_theme_path(@theme.id),
+    redirect_to edit_bold_site_settings_theme_path(current_site, @theme.id),
       notice: I18n.t('flash.bold.theme_changed', name: @theme.name)
   end
 
@@ -45,7 +45,7 @@ class Bold::Settings::ThemesController < Bold::SettingsController
     find_theme_config
     @theme_config.config.update theme_config_params
     if @theme_config.save
-      redirect_to bold_settings_themes_path, notice: :saved
+      redirect_to bold_site_settings_themes_path(current_site), notice: :saved
     else
       render 'edit'
     end

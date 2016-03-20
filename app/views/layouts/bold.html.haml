@@ -14,17 +14,16 @@
             %span.icon-bar
 
           - if show_sites_menu?
-            = link_to current_site.name, current_site.external_url, class: 'navbar-brand visible-xs-inline'
             %ul.nav.navbar-nav.hidden-xs
               %li{:class => "dropdown"}
-                %a.dropdown-toggle{"data-hover" => "dropdown", "data-toggle" => "dropdown", :href => current_site.external_url, :class => 'navbar-brand' }
-                  = current_site.name
+                %a.dropdown-toggle.navbar-brand{"data-hover" => "dropdown", "data-toggle" => "dropdown" }
+                  = image_tag 'bold/logo.png', alt: 'bold logo', style: 'display: inline; height: 25px;'
                   %span.caret
                 %ul.dropdown-menu{:role => "menu"}
-                  - for site in Site.other_sites
-                    %li= link_to site.name, select_admin_site_path(site)
-          - else
-            = link_to current_site.name, current_site.external_url, class: 'navbar-brand'
+                  - for site in current_user.available_sites
+                    %li= link_to site.name, bold_site_path(site)
+          - elsif site = current_user.sites.first
+            = link_to site.name, bold_site_path(site), class: 'navbar-brand'
 
         .navbar-right.hidden-xs
           %ul.nav.navbar-nav
@@ -33,30 +32,19 @@
                 = gravatar_image_tag User.current.email, 26
                 %span.caret
               %ul.dropdown-menu{role: 'menu'}
-                %li= link_to t('bold.common.nav.profile'), edit_admin_profile_path
-                - if current_user.admin?
-                  %li= link_to t('bold.common.nav.admin'), admin_sites_path
+                %li= link_with_icon :user, t('bold.common.nav.profile'), edit_bold_profile_path
                 %li.divider{role: 'presentation'}
-                %li= link_to t('bold.common.nav.signout'), destroy_user_session_path, method: :delete
+                %li= link_with_icon :off, t('bold.common.nav.signout'), destroy_user_session_path, method: :delete
 
-        - call_hook :view_layouts_backend_navbar
+        - call_hook :view_layouts_bold_navbar
 
         .navbar-collapse.collapse
           %ul.nav.navbar-nav
-            = nav_link (icon(:plus)+'&nbsp;'.html_safe+ t('bold.common.nav.new_post')), new_bold_post_path, action: 'new', controller: 'bold/posts'
-            = nav_link :posts, bold_posts_path, action: '(index|edit|update)', controller: 'bold/posts'
-
-            = nav_link :pages, bold_pages_path, controller: 'bold/pages'
-            = nav_link :assets, bold_assets_path, controller: 'bold/assets'
-            - if current_user.site_admin?
-              = nav_link :settings, bold_settings_root_path, controller: 'bold/settings/(settings|plugins|themes|site_users|backups|navigations|categories)'
-            = nav_link :activities, bold_activity_comments_path, controller: 'bold/comments', badge: (Comment.pending.count if Comment.pending.any?)
-
-            %li= link_to t('bold.common.nav.profile'), edit_admin_profile_path, class: 'visible-xs-block'
+            = nav_link :profile, edit_bold_profile_path, controller: 'bold/profiles'
             - if current_user.admin?
-              %li= link_to t('bold.common.nav.admin'), admin_sites_path, class: 'visible-xs-block'
-            - if show_sites_menu?
-              %li= link_to t('bold.common.nav.change_site'), select_admin_sites_path, class: 'visible-xs-block'
+              = nav_link :sites, admin_sites_path, controller: 'admin/sites'
+              = nav_link :users, admin_users_path, controller: 'admin/(invitations|users)'
+
             %li= link_to t('bold.common.nav.signout'), destroy_user_session_path, method: :delete, class: 'visible-xs-block'
 
     .container-fluid{class: yield(:container_class)}

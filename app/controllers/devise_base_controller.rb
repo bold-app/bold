@@ -19,7 +19,7 @@
 #
 # base class for all Devise controllers
 class DeviseBaseController < ApplicationController
-  layout 'bold_public'
+  layout 'public'
   helper :bold
 
   include Bold::I18n::AutoLocale

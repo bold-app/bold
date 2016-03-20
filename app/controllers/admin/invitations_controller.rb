@@ -35,6 +35,10 @@ module Admin
       @invitation = Invitation.new invitation_params
       if @invitation.create
         flash.now[:notice] = t('flash.admin.user_invited', email: @invitation.email)
+        respond_to do |format|
+          format.js {}
+          format.html { redirect_to admin_invitations_path }
+        end
       else
         render 'new'
       end

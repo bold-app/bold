@@ -21,7 +21,7 @@ require 'test_helper'
 
 class Bold::Settings::ThemesControllerTest < ActionController::TestCase
   test "should get index" do
-    get :index
+    get :index, params: { site_id: @site }
     assert_response :success
     assert assigns(:themes).any?
     assert_select '.left-col a.active', 'Themes'
@@ -29,7 +29,7 @@ class Bold::Settings::ThemesControllerTest < ActionController::TestCase
   end
 
   test "should get edit" do
-    get :edit, params: { id: @site.theme_name }
+    get :edit, params: { site_id: @site, id: @site.theme_name }
     assert_response :success
     assert_equal @site.extension_configs.themes.last, assigns(:theme_config)
   end
@@ -40,8 +40,8 @@ class Bold::Settings::ThemesControllerTest < ActionController::TestCase
       template :page
       settings defaults: { a_setting: 'default value' }
     end
-    put :enable, params: { id: 'foo' }
-    assert_redirected_to edit_bold_settings_theme_path('foo')
+    put :enable, params: { site_id: @site, id: 'foo' }
+    assert_redirected_to edit_bold_site_settings_theme_path(@site, 'foo')
     @site.reload
     assert_equal 'foo', @site.theme_name
   end
@@ -49,13 +49,14 @@ class Bold::Settings::ThemesControllerTest < ActionController::TestCase
   test "should update theme config" do
     put :update,
       params: {
+        site_id: @site,
         id: @site.theme_name,
         theme_config: {
           default_post_template: 'page',
           config: { subtitle: 'fancy subtitle', foo: 'bar' }
         }
       }
-    assert_redirected_to bold_settings_themes_path
+    assert_redirected_to bold_site_settings_themes_path(@site)
     @site.reload
     assert_equal 'page', @site.theme_config.default_post_template
     assert_equal 'fancy subtitle', @site.theme_config.config['subtitle']

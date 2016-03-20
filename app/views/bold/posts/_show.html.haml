@@ -1,6 +1,6 @@
 - content.load_draft!
 %header.clearfix
-  = link_with_icon :menu_left, t('.back'), bold_posts_path, class: 'pull-left btn btn-default btn-sm back-to-list-group visible-xs-inline'
+  = link_with_icon :menu_left, t('.back'), bold_site_posts_path(current_site), class: 'pull-left btn btn-default btn-sm back-to-list-group visible-xs-inline'
   %p.pull-left
     %small
       - if content.author

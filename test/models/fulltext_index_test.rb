@@ -21,7 +21,7 @@ require 'test_helper'
 
 class FulltextIndexTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
     Bold::Search.disable_indexing do
       @post = create :post
     end

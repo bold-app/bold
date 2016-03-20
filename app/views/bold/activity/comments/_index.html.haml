@@ -13,7 +13,7 @@
           %button.btn.btn-default.btn-sm{type:"submit"}
             = icon :search
         - else
-          = link_to icon(:remove), bold_activity_comments_path(comment_search: { status: @comment_search.status }), class: 'btn btn-sm btn-default'
+          = link_to icon(:remove), bold_site_activity_comments_path(current_site, comment_search: { status: @comment_search.status }), class: 'btn btn-sm btn-default'
 
 %p.clearfix
 

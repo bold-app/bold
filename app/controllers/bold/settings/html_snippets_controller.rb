@@ -19,10 +19,14 @@
 #
 class Bold::Settings::HtmlSnippetsController < Bold::Settings::SettingsController
 
+  def edit
+    @site = current_site
+  end
+
   def update
     @site = current_site
     if @site.update_attributes(site_params)
-      redirect_to edit_bold_settings_html_snippet_path, notice: :saved
+      redirect_to edit_bold_site_settings_html_snippet_path(@site), notice: :saved
     else
       render 'edit'
     end

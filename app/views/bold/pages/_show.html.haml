@@ -1,5 +1,5 @@
 %header.clearfix
-  = link_with_icon :menu_left, t('.back'), bold_pages_path, class: 'pull-left btn btn-default btn-sm back-to-list-group visible-xs-inline'
+  = link_with_icon :menu_left, t('.back'), bold_site_pages_path(current_site), class: 'pull-left btn btn-default btn-sm back-to-list-group visible-xs-inline'
   %p.pull-left
     %small
       - if content.author

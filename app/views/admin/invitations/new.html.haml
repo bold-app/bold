@@ -1,0 +1,15 @@
+.row
+  = render 'admin/users/left_col'
+
+  .col-xs-12.col-sm-7.col-md-6.col-sm-offset-1.right-col
+
+    %h2= t'.heading'
+
+    = simple_form_for @invitation, url: admin_invitations_path do |f|
+
+      = f.input :email
+      = f.input :site_id, collection: @invitation.site_values, include_blank: false
+      = f.input :role, collection: @invitation.role_values, include_blank: false
+
+      .buttons
+        = button '.invite'

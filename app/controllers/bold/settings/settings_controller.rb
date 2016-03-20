@@ -28,7 +28,7 @@ class Bold::Settings::SettingsController < Bold::SettingsController
   def update
     @site = current_site
     if @site.update_attributes(site_params)
-      redirect_to bold_settings_root_path, notice: :saved
+      redirect_to bold_site_settings_root_path(@site), notice: :saved
     else
       render 'edit'
     end

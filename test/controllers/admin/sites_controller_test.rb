@@ -33,7 +33,7 @@ module Admin
       assert_redirected_to '/users/sign_in'
     end
 
-    test 'should require admin except for select' do
+    test 'should require admin' do
       user = create(:confirmed_user)
       @site.add_user! user
       assert user.site_user?(@site)
@@ -53,22 +53,6 @@ module Admin
       sign_in :user, user
       delete :destroy, params: { id: @site.id }
       assert_access_denied
-
-      sign_in :user, user
-      get :select
-      assert_response :success
-    end
-
-    test "should get select" do
-      get :select
-      assert_response :success
-      assert sites = assigns(:sites)
-      assert_equal @site, sites.first
-    end
-
-    test 'should select site' do
-      get :select, params: { id: @site.to_param }
-      assert_redirected_to '/bold'
     end
 
     test "should get index" do

@@ -23,7 +23,6 @@ class Setup::SitesControllerTest < ActionController::TestCase
 
   setup do
     sign_out @user if @user
-    request.session[:current_site_id] = nil
     Site.delete_all
     Bold::current_site = nil
     Bold::current_user = nil
@@ -57,16 +56,16 @@ class Setup::SitesControllerTest < ActionController::TestCase
       post :create, params: { site: { name: 'foo', theme_name: 'test', hostname: 'example.com' } }
     end
     assert site = Site.where(hostname: 'example.com').first
-    assert_redirected_to "/admin/sites/#{site.id}/select"
+    assert_redirected_to "/bold/sites/#{site.id}"
   end
 
   test 'should not run when site exists' do
     sign_in :user, @user
     create :site
     get :new
-    assert_redirected_to '/admin/sites/select'
+    assert_redirected_to '/bold/sites'
     post :create
-    assert_redirected_to '/admin/sites/select'
+    assert_redirected_to '/bold/sites'
   end
 
 end

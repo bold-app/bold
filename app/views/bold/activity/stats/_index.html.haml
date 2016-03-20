@@ -2,7 +2,7 @@
   =t '.heading'
   %span.small #{l(@stats.start_date)} - #{l(@stats.end_date)}
 
-= form_for @stats, url: bold_activity_stats_path, html: { class: 'form-inline pull-right' }, method: :get do |f|
+= form_for @stats, url: bold_site_activity_stats_path(current_site), html: { class: 'form-inline pull-right' }, method: :get do |f|
   = f.select :time_frame, Stats::TIME_FRAMES.keys.map{|k| [t(".#{k}"), k]}, {}, class: 'form-control input-sm auto-submit'
 
 .row

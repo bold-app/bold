@@ -22,7 +22,7 @@ require 'test_helper'
 class ImageScalerTest < ActiveSupport::TestCase
   setup do
     AssetUploader.enable_processing = true
-    @site = create :site
+    Bold::current_site = @site = create :site
     @asset = create :asset
     @scaler = Bold::ImageScaler.new @asset
   end

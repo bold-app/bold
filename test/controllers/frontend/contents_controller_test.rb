@@ -23,8 +23,8 @@ module Frontend
   class ContentsControllerTest < ActionController::TestCase
 
     setup do
-      @page = create :published_page
-      @post = create :published_post, post_date: Time.local(2015, 07, 2),
+      @page = create :published_page, site: @site
+      @post = create :published_post, site: @site, post_date: Time.local(2015, 07, 2),
         tag_list: 'foo, bar', author: @user
     end
 
@@ -35,7 +35,7 @@ module Frontend
     end
 
     test 'should show category' do
-      assert cat = create(:category, name: 'New Category')
+      assert cat = create(:category, name: 'New Category', site: @site)
       assert cat.persisted?
       @post.category_id = cat.id
       @post.publish!

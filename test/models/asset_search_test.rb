@@ -21,7 +21,7 @@ require 'test_helper'
 
 class AssetSearchTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
     @asset = create :asset
   end
 

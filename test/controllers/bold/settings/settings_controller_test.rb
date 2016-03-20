@@ -22,15 +22,15 @@ require 'test_helper'
 class Bold::Settings::SettingsControllerTest < ActionController::TestCase
 
   test "should get edit and render site config" do
-    get :edit
+    get :edit, params: { site_id: @site.id }
     assert_response :success
     assert_select '.right-col h2', 'General'
     assert_select '.left-col a.active', 'General'
   end
 
   test "should update site" do
-    patch :update, params: { site: { name: 'new name', url_scheme: 'http', hostname: 'somewhere.de' } }
-    assert_redirected_to bold_settings_root_path
+    patch :update, params: { site_id: @site.id, site: { name: 'new name', url_scheme: 'http', hostname: 'somewhere.de' } }
+    assert_redirected_to bold_site_settings_root_path(@site)
     @site.reload
     assert_equal 'new name', @site.name
     assert_equal 'http://somewhere.de/', @site.external_url

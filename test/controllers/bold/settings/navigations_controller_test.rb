@@ -21,12 +21,12 @@ require 'test_helper'
 
 class Bold::Settings::NavigationsControllerTest < ActionController::TestCase
   setup do
-    @nav = create :navigation, name: 'Test', url: 'http://foo.bar/'
+    @nav = create :navigation, name: 'Test', url: 'http://foo.bar/', site: @site
     @nav.move_to_bottom
   end
 
   test 'should render index' do
-    get :index
+    get :index, params: { site_id: @site }
     assert_response :success
     assert_select 'input[value=Home]'
     assert_select 'input[value=Test]'
@@ -42,7 +42,7 @@ class Bold::Settings::NavigationsControllerTest < ActionController::TestCase
 
   test 'should create nav' do
     assert_difference '@site.navigations.count' do
-      post :create, xhr: true, params: { navigation: { name: 'Bold', url: 'http://bold-app.org/' } }
+      post :create, xhr: true, params: { site_id: @site, navigation: { name: 'Bold', url: 'http://bold-app.org/' } }
     end
     assert_response :success
   end
@@ -54,13 +54,13 @@ class Bold::Settings::NavigationsControllerTest < ActionController::TestCase
   end
 
   test 'should reorder navs' do
-    nav2 = create :navigation, name: 'Another', url: '/'
+    nav2 = create :navigation, name: 'Another', url: '/', site: @site
     nav2.move_to_bottom
     assert nav2.last?
     @nav.reload
     refute @nav.last?
     assert_equal @nav.position + 1, nav2.position
-    put :sort, xhr: true, params: { id: nav2.id, new_position: @nav.position - 1 }
+    put :sort, xhr: true, params: {site_id: @site, id: nav2.id, new_position: @nav.position - 1 }
     @nav.reload
     nav2.reload
     assert @nav.last?

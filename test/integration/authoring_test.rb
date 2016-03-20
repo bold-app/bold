@@ -22,20 +22,20 @@ require 'test_helper'
 class AuthoringTest < BoldIntegrationTest
 
   setup do
-    @user = create :confirmed_user
-    @site1 = create :site, hostname: 'site1.de', name: 'Site one'
   end
 
   test 'new post' do
-    set_host 'site1.de'
     login_as @user
-    visit '/bold/posts/new'
+    click_link 'Posts'
+    within '.left-col header' do
+      click_link 'new-post'
+    end
+    assert_equal "/bold/sites/#{@site.id}/posts/new", current_path
   end
 
   test 'page template change' do
-    set_host 'site1.de'
     login_as @user
-    visit '/bold/pages'
+    click_link 'Pages'
     within '.left-col header' do
       click_link 'new-page'
     end

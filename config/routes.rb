@@ -31,82 +31,8 @@ Rails.application.routes.draw do
 
     # backend
     namespace :bold do
-      root 'posts#index', as: 'root'
 
-      namespace :activity do
-        resources :stats
-        # resources :contact_messages, only: %i(index destroy)
-        resources :comments, only: %i(index destroy) do
-          member do
-            patch :restore, :mark_spam, :mark_ham, :approve, :unapprove
-          end
-        end
-      end
-
-      resources :asset_links, only: :new
-
-      resources :assets do
-        collection do
-          get :gallery
-          delete :bulk_destroy
-        end
-        member do
-          post :pick
-        end
-      end
-      resources :pages do
-        member do
-          get :diff, :change_template
-          patch :update_template
-          delete :delete_draft
-        end
-      end
-      resources :posts do
-        member do
-          get :diff, :change_template
-          patch :update_template
-          delete :delete_draft
-        end
-      end
-
-      # Site Settings
-      namespace :settings do
-        root 'settings#edit', as: 'root'
-
-        resources :backups, only: %i(index create)
-        resources :categories
-        resources :navigations, only: %i(index create update destroy) do
-          collection{ put :sort }
-        end
-        resources :plugins, only: %i(index edit update enable destroy) do
-          member{ put :enable }
-        end
-        resource :settings, only: %i(edit update favicon set_favicon) do
-          member do
-            get :favicon
-            get :logo
-          end
-        end
-        resource :html_snippet, only: %i(edit update)
-
-        resources :site_users do
-          member do
-            put :resend_invitation
-            delete :revoke_invitation
-          end
-        end
-
-        resources :themes, only: %i(index edit update enable) do
-          member{ put :enable }
-        end
-      end
-
-      post 'undo/:id' => 'undo#create', as: :undo
-    end
-
-    # global admin
-    namespace :admin do
-      root 'profiles#edit', as: 'root'
+      root to: 'sites#index', as: :root
 
       resource :profile, only: %i(edit update edit_password update_password edit_email update_email) do
         collection do
@@ -115,9 +41,87 @@ Rails.application.routes.draw do
         end
       end
 
+
+      resources :sites, only: %i(show index)  do
+
+        namespace :activity do
+          resources :stats
+          # resources :contact_messages, only: %i(index destroy)
+          resources :comments, shallow: true, only: %i(index destroy) do
+            member do
+              patch :restore, :mark_spam, :mark_ham, :approve, :unapprove
+            end
+          end
+        end
+
+        resources :asset_links, only: :new
+
+        resources :assets, shallow: true do
+          collection do
+            get :gallery
+            delete :bulk_destroy
+          end
+          member do
+            post :pick
+          end
+        end
+        resources :pages, shallow: true do
+          member do
+            get :diff, :change_template
+            patch :update_template
+            delete :delete_draft
+          end
+        end
+        resources :posts, shallow: true do
+          member do
+            get :diff, :change_template
+            patch :update_template
+            delete :delete_draft
+          end
+        end
+
+        # Site Settings
+        namespace :settings do
+          root 'settings#edit', as: 'root'
+
+          resources :backups, only: %i(index create)
+          resources :categories, shallow: true
+          resources :navigations, shallow: true, only: %i(index create update destroy) do
+            collection{ put :sort }
+          end
+          resources :plugins, only: %i(index edit update enable destroy) do
+            member{ put :enable }
+          end
+          resource :settings, only: %i(edit update favicon set_favicon) do
+            member do
+              get :favicon
+              get :logo
+            end
+          end
+          resource :html_snippet, only: %i(edit update)
+
+          resources :site_users do
+            member do
+              put :resend_invitation
+              delete :revoke_invitation
+            end
+          end
+
+          resources :themes, only: %i(index edit update enable) do
+            member{ put :enable }
+          end
+        end
+
+        post 'undo/:id' => 'undo#create', as: :undo
+      end
+
+    end
+
+
+    # global admin
+    namespace :admin do
+
       resources :sites do
-        collection { get :select }
-        member { get :select }
         resource :import, only: %i(new create)
       end
 

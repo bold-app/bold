@@ -11,7 +11,7 @@
           .col-xs-12
             %p
               = t'.no_possible_files'
-              = link_to t('.upload'), new_bold_asset_path , class: 'btn btn-default'
+              = link_to t('.upload'), new_bold_site_asset_path(current_site) , class: 'btn btn-default'
         - else
           - for asset in @assets
             .col-xs-2

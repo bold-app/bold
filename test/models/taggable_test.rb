@@ -21,7 +21,7 @@ require 'test_helper'
 
 class TaggableTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
     @post = create :post, site: @site
   end
 

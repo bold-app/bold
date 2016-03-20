@@ -21,26 +21,26 @@ require 'test_helper'
 
 class Bold::Settings::CategoriesControllerTest < ActionController::TestCase
   setup do
-    @cat = create :category, name: 'Test Category'
+    @cat = create :category, name: 'Test Category', site: @site
   end
 
   test 'should render index' do
-    get :index
+    get :index, params: { site_id: @site.id }
     assert_response :success
     assert_select 'h4', /Test Category/
   end
 
   test 'should create category and init slug' do
     assert_difference '@site.categories.count' do
-      post :create, params: { category: { name: 'Neue Kategorie' } }
+      post :create, params: { site_id: @site.id, category: { name: 'Neue Kategorie' } }
     end
-    assert_redirected_to bold_settings_categories_url
+    assert_redirected_to bold_site_settings_categories_url(@site)
     assert @site.categories.find_by_slug('neue-kategorie')
   end
 
   test 'should update category' do
     patch :update, params: { id: @cat.id, category: { name: 'new name', slug: 'foobar' } }
-    assert_redirected_to bold_settings_categories_url
+    assert_redirected_to bold_site_settings_categories_url(@site)
     @cat.reload
     assert_equal 'new name', @cat.name
     assert_equal 'foobar', @cat.slug

@@ -18,8 +18,9 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 module Bold::Activity
-  class CommentsController < BoldController
-    before_action :set_object, except: :index
+  class CommentsController < SiteController
+    prepend_before_action :set_object, except: :index
+    site_object :object
 
     def index
       @comment_search = CommentSearch.new search_params
@@ -64,7 +65,7 @@ module Bold::Activity
     private
 
     def set_object
-      @object = current_site.visitor_postings.alive.find params[:id]
+      @object = VisitorPosting.alive.find params[:id]
     end
 
     def search_params

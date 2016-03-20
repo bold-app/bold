@@ -31,7 +31,7 @@ class Bold::Settings::PluginsControllerTest < ActionController::TestCase
   end
 
   test "should get index" do
-    get :index
+    get :index, params: { site_id: @site }
     assert_response :success
     assert assigns(:plugins).any?
     assert_select '.left-col a.active', 'Plugins'
@@ -39,7 +39,7 @@ class Bold::Settings::PluginsControllerTest < ActionController::TestCase
   end
 
   test "should get edit" do
-    get :edit, params: { id: 'dummy' }
+    get :edit, params: { site_id: @site, id: 'dummy' }
     assert_response :success
     assert plugin_config = assigns(:plugin_config)
     assert_equal 'dummy', plugin_config.name
@@ -47,30 +47,30 @@ class Bold::Settings::PluginsControllerTest < ActionController::TestCase
 
   test 'should update config' do
     @site.enable_plugin! 'dummy'
-    put :update, params: { id: 'dummy', plugin_config: { config: { 'foo' => 'bar' } } }
-    assert_redirected_to bold_settings_plugins_path
+    put :update, params: { site_id: @site, id: 'dummy', plugin_config: { config: { 'foo' => 'bar' } } }
+    assert_redirected_to bold_site_settings_plugins_path(@site)
     cfg = @site.plugin_config 'dummy'
     assert_equal 'bar', cfg.config['foo']
   end
 
   test 'should activate plugin' do
     assert_nil @site.plugins.detect{|p| p.name == 'dummy'}
-    put :enable, params: { id: 'dummy' }
-    assert_redirected_to edit_bold_settings_plugin_path('dummy')
+    put :enable, params: { site_id: @site, id: 'dummy' }
+    assert_redirected_to edit_bold_site_settings_plugin_path(@site, 'dummy')
     assert @site.plugins.detect{|p| p.name == 'dummy'}
   end
 
   test 'should handle invalid plugin' do
     assert_raise(Bold::PluginNotFound) do
-      put :enable, params: { id: 'foo' }
+      put :enable, params: { site_id: @site, id: 'foo' }
     end
   end
 
   test 'should deactivate plugin' do
     @site.enable_plugin! 'dummy'
     assert @site.plugins.detect{|p| p.name == 'dummy'}
-    delete :destroy, params: { id: 'dummy' }
-    assert_redirected_to bold_settings_plugins_path
+    delete :destroy, params: { site_id: @site, id: 'dummy' }
+    assert_redirected_to bold_site_settings_plugins_path(@site)
     assert_nil @site.plugins.detect{|p| p.name == 'dummy'}
   end
 end

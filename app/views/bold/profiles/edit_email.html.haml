@@ -1,5 +1,5 @@
 .row
-  = render 'admin/profiles/left_col'
+  = render 'left_col'
 
   .col-xs-12.col-sm-7.col-sm-offset-1.col-md-6.right-col
 
@@ -10,7 +10,7 @@
     - else
       %p= t'.info'
 
-    = simple_form_for @user, url: update_email_admin_profile_path, method: :put do |f|
+    = simple_form_for @user, url: update_email_bold_profile_path, method: :put do |f|
       = f.input :email
 
 

@@ -23,7 +23,7 @@ module Frontend
   class AssetsControllerTest < ActionController::TestCase
 
     setup do
-      @asset = create :asset
+      @asset = create :asset, site: @site
     end
 
     test 'should show asset' do

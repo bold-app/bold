@@ -18,7 +18,7 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 module Bold::Activity
-  class StatsController < BoldController
+  class StatsController < SiteController
 
     def index
       args = stats_params

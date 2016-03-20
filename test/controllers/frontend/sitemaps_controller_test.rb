@@ -23,10 +23,10 @@ module Frontend
   class SitemapsControllerTest < ActionController::TestCase
 
     setup do
-      @page = create :published_page
-      @category = create :category
-      @post = create :published_post, tag_list: 'foo', category_id: @category.id
-      @unpub = create :post, title: 'not published'
+      @page = create :published_page, site: @site
+      @category = create :category, site: @site
+      @post = create :published_post, site: @site, tag_list: 'foo', category_id: @category.id
+      @unpub = create :post, site: @site, title: 'not published'
     end
 
     test 'should show sitemap' do

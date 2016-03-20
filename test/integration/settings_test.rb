@@ -28,19 +28,19 @@ class SettingsTest < BoldIntegrationTest
   end
 
   test 'should require sign in' do
-    visit '/bold/settings'
+    visit "/bold/sites/#{@site.id}/settings"
     assert_equal '/users/sign_in', current_path
   end
 
   test 'should not allow access for editor' do
     login_as @user
-    visit '/bold/settings'
+    visit "/bold/sites/#{@site.id}/settings"
     assert_equal '/users/sign_in', current_path
   end
 
   test 'should allow editing of site settings' do
     login_as @site_admin
-    visit '/bold/settings'
+    visit "/bold/sites/#{@site.id}/settings"
     fill_in 'Site name', with: 'New site name'
     click_on 'Save'
     @site.reload
@@ -49,7 +49,7 @@ class SettingsTest < BoldIntegrationTest
 
   test 'should allow editing of theme config' do
     login_as @site_admin
-    visit '/bold/settings'
+    visit "/bold/sites/#{@site.id}/settings"
     click_on 'Themes'
     click_link(@site.theme_name)
     assert has_content? 'presets'

@@ -20,18 +20,19 @@
 class Bold::Settings::CategoriesController < Bold::SettingsController
   helper 'bold/settings'
 
+  prepend_before_action :find_category, only: %i(edit update destroy)
+  site_object :category
+
   def index
     @categories = current_site.categories
   end
 
   def edit
-    @category = find_category
   end
 
   def update
-    @category = find_category
     if @category.update_attributes(category_params)
-      redirect_to bold_settings_categories_path
+      redirect_to bold_site_settings_categories_path(current_site)
     else
       render 'edit'
     end
@@ -44,23 +45,22 @@ class Bold::Settings::CategoriesController < Bold::SettingsController
   def create
     @category = current_site.categories.build category_params
     if @category.save
-      redirect_to bold_settings_categories_path
+      redirect_to bold_site_settings_categories_path(current_site)
     else
       render 'new'
     end
   end
 
   def destroy
-    @category = find_category
     memento(undo_template: 'restore_category') { @category.destroy }
-    redirect_to bold_settings_categories_path, notice: 'bold.category.deleted'
+    redirect_to bold_site_settings_categories_path(current_site), notice: 'bold.category.deleted'
   end
 
 
   private
 
   def find_category
-    current_site.categories.find params[:id]
+    @category = Category.find params[:id]
   end
 
   def category_params

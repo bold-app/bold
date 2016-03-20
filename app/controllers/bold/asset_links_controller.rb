@@ -18,7 +18,7 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 module Bold
-  class AssetLinksController < BoldController
+  class AssetLinksController < SiteController
     helper 'bold/assets'
 
     decorate_assigned :assets, with: 'Bold::AssetsDecorator'

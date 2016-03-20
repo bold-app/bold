@@ -2,24 +2,22 @@
   .col-sm-10.col-sm-offset-1.col-md-9.col-lg-8
 
     %h2
-      = link_with_icon 'trash', t('.disable'), bold_settings_plugin_path(@plugin), method: :delete, class: 'pull-right btn btn-danger btn-sm'
-      = link_with_icon 'menu-left', t('.back'), bold_settings_plugins_path, class: 'btn btn-default btn-sm back'
+      = link_with_icon 'trash', t('.disable'), bold_site_settings_plugin_path(current_site, @plugin), method: :delete, class: 'pull-right btn btn-danger btn-sm'
+      = link_with_icon 'menu-left', t('.back'), bold_site_settings_plugins_path(current_site), class: 'btn btn-default btn-sm back'
       = @plugin.name
       %small= @plugin.version if @plugin.version.present?
 
-    %p
-      %small
-        = render 'bold/settings/extension_author', ext: @plugin
-        %br/
-        = link_to @plugin.url, @plugin.url if @plugin.url.present?
-
     %p= @plugin.description
+    = render 'bold/settings/extension_author', ext: @plugin
+    - if @plugin.url.present?
+      %p= link_to @plugin.url, @plugin.url
+
 
 
     - if @plugin.configurable?
 
       %br/
-      = dynamic_configuration_form_for @plugin_config, url: bold_settings_plugin_path(@plugin), method: :put do |f|
+      = dynamic_configuration_form_for @plugin_config, url: bold_site_settings_plugin_path(current_site, @plugin), method: :put do |f|
 
         = render_extension_config @plugin, locals: { f: f, plugin_config: @plugin_config }
 

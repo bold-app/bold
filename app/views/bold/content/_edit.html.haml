@@ -19,7 +19,7 @@
 
             %span.group
               = link_to icon(:link), '#', id: 'link', title: t('.toolbar.link'), tabindex: 999
-              = link_to icon(:picture), new_bold_asset_link_path, remote: true, id: 'picture', title: t('.toolbar.image'), tabindex: 999
+              = link_to icon(:picture), new_bold_site_asset_link_path(current_site), remote: true, id: 'picture', title: t('.toolbar.image'), tabindex: 999
 
             %span.group
               = link_to icon(:fullscreen), '#', id: 'zen-mode', title: t('.toolbar.zenmode'), tabindex: 999

@@ -18,17 +18,17 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 module Bold
-  class PagesController < BoldController
+  class PagesController < SiteController
     include ContentEditing
 
     private
 
     def edit_url(content = @content)
-      if content.persisted?
-        edit_bold_page_path(content)
-      else
-        new_bold_page_path
-      end
+      edit_bold_page_path(content)
+    end
+
+    def find_content
+      @content = Page.alive.find params[:id]
     end
 
     def collection

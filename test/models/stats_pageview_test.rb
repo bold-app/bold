@@ -22,7 +22,7 @@ require 'test_helper'
 class StatsPageviewTest < ActiveSupport::TestCase
 
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
   end
 
   test 'should build from request log' do

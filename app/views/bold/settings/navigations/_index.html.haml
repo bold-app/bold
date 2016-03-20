@@ -3,7 +3,7 @@
 
     %h2= t'.heading'
 
-    .sortable.navigations-list{data:{ url: sort_bold_settings_navigations_path }}
+    .sortable.navigations-list{data:{ url: sort_bold_site_settings_navigations_path(current_site) }}
       = render partial: 'navigation', collection: @navigations
 
     = render 'navigation', navigation: @navigation

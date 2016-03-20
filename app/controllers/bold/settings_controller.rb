@@ -17,6 +17,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-class Bold::SettingsController < BoldController
+class Bold::SettingsController < SiteController
   before_action :require_site_admin!
 end

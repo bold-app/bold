@@ -21,7 +21,7 @@ require 'test_helper'
 
 class Bold::Settings::BackupsControllerTest < ActionController::TestCase
   test "should get index" do
-    get :index
+    get :index, params: { site_id: @site }
     assert_response :success
     assert_select '.right-col h2', 'Backup'
     assert_select '.left-col a.active', 'Backup'

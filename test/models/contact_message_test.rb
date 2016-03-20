@@ -21,7 +21,7 @@ require 'test_helper'
 
 class ContactMessageTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
     @page = create :published_page, site: @site, template: 'contact_page'
   end
 

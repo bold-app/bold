@@ -22,13 +22,13 @@ require 'test_helper'
 module Bold
   class AssetLinksControllerTest < ActionController::TestCase
     setup do
-      @page = create :page
-      @asset = create :asset
+      @page = create :page, site: @site
+      @asset = create :asset, site: @site
       assert @user.site_user?(@site)
     end
 
     test 'should show image picker for new link' do
-      get :new, xhr: true, params: { content_id: @page.id }
+      get :new, xhr: true, params: { site_id: @site.id, content_id: @page.id }
       assert_response :success
     end
 

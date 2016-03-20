@@ -22,7 +22,7 @@ require 'test_helper'
 class RpcPingJobTest < ActiveJob::TestCase
   test "should generate markup for post" do
     site = create :site
-    post = create :published_post
+    post = create :published_post, site: site
     job = RpcPingJob.new
     assert xml = job.send(:payload, post)
     assert_match /#{site.name}/, xml

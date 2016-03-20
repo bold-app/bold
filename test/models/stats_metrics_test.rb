@@ -23,7 +23,7 @@ class StatsMetricsTest < ActiveSupport::TestCase
 
   setup do
     Time.zone = 'UTC'
-    @site = create :site, time_zone_name: 'UTC'
+    Bold::current_site = @site = create :site, time_zone_name: 'UTC'
 
     @post = create :post
     today = Time.zone.today

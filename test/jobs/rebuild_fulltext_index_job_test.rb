@@ -22,7 +22,7 @@ require 'test_helper'
 class RebuildFulltextIndexJobTest < ActiveJob::TestCase
   setup do
     @site = create :site
-    @post = create :post
+    @post = create :post, site: @site
   end
 
   test 'should rebuild the index' do

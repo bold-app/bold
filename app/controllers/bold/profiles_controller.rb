@@ -17,9 +17,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-module Admin
-  class ProfilesController < AdminController
-    skip_before_action :require_admin!
+module Bold
+  class ProfilesController < BoldController
     before_action :set_user
 
     def edit
@@ -33,7 +32,7 @@ module Admin
 
     def update
       if @user.update_without_password params[:user].permit(:name, :meta_author_name, :meta_google_plus, :twitter_handle, :time_zone_name, :backend_locale, :author_page_id, :vim_mode)
-        redirect_to edit_admin_profile_path, notice: 'admin.profile_saved'
+        redirect_to edit_bold_profile_path, notice: 'admin.profile_saved'
       else
         render 'edit'
       end
@@ -41,7 +40,7 @@ module Admin
 
     def update_email
       if @user.update_with_password params[:user].permit(:email, :current_password)
-        redirect_to edit_email_admin_profile_path, notice: 'admin.email_changed'
+        redirect_to edit_email_bold_profile_path, notice: 'admin.email_changed'
       else
         render 'edit_email'
       end
@@ -49,7 +48,7 @@ module Admin
 
     def update_password
       if @user.update_with_password params[:user].permit(:password, :password_confirmation, :current_password)
-        redirect_to edit_password_admin_profile_path, notice: 'admin.password_changed'
+        redirect_to edit_password_bold_profile_path, notice: 'admin.password_changed'
       else
         render 'edit_password'
       end

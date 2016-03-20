@@ -21,7 +21,7 @@ require 'test_helper'
 
 class ContentSearchTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
     @category = create :category, name: 'Some Category'
     @post = Post.create template: 'post', title: 'search test title', body: 'This is the body TEXT', tag_list: 'a tag, bar', category: @category
   end

@@ -30,7 +30,7 @@ class FulltextIndex < ActiveRecord::Base
   after_save :create_tsv
 
   before_create do |r|
-    r.site_id ||= Site.current.id
+    r.site_id ||= searchable.site_id
   end
 
   # map weight identifiers (a-d) to textual content

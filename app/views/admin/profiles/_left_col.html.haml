@@ -1,7 +1,0 @@
-.col-xs-12.col-sm-3.left-col
-
-  .list-group
-    = link_to t('.profile'), edit_admin_profile_path, class: "list-group-item#{' active' if params[:action] =~ /^(edit|update)$/}"
-    = link_to t('.email'), edit_email_admin_profile_path, class: "list-group-item#{' active' if  params[:action] =~ /(edit_email|update_email)/}"
-    = link_to t('.password'), edit_password_admin_profile_path, class: "list-group-item#{' active' if  params[:action] =~ /(edit_password|update_password)/}"
-

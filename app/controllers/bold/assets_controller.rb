@@ -18,8 +18,14 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 module Bold
-  class AssetsController < BoldController
+  class AssetsController < SiteController
     rescue_from ActionController::MissingFile, with: :handle_missing_file
+
+    prepend_before_action :find_asset, only: %i(pick edit update show destroy)
+    site_object :asset
+
+    decorate_assigned :asset, with: 'Bold::AssetDecorator'
+
 
     def index
       @asset_search = AssetSearch.new asset_search_params
@@ -28,20 +34,16 @@ module Bold
     end
 
     def pick
-      @asset = find_asset
     end
 
     def edit
-      @asset = find_asset
     end
 
     def update
-      @asset = find_asset
       @success = @asset.update_attributes(asset_params)
     end
 
     def show
-      @asset = find_asset
       @asset.ensure_version! params[:version]
       send_file @asset.diskfile_path(params[:version]), disposition: :inline
     end
@@ -65,10 +67,10 @@ module Bold
     end
 
     def destroy
-      (@asset = find_asset).destroy
+      @asset.destroy
       respond_to do |format|
         format.json { render json: true }
-        format.html { redirect_to bold_assets_path }
+        format.html { redirect_to bold_site_assets_path(current_site) }
       end
     end
 
@@ -84,7 +86,7 @@ module Bold
     end
 
     def find_asset
-      Bold::AssetDecorator.decorate current_site.assets.find(params[:id])
+      @asset = Asset.find params[:id]
     end
 
     def asset_params

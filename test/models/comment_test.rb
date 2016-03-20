@@ -21,7 +21,7 @@ require 'test_helper'
 
 class CommentTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
     @post = create :published_post
     configure 'enabled'
   end

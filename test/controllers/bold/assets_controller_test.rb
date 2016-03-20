@@ -22,13 +22,13 @@ require 'test_helper'
 module Bold
   class AssetsControllerTest < ActionController::TestCase
     setup do
-      @photo = create :asset
-      @text = create :textfile
-      @page = create :page
+      @photo = create :asset, site: @site
+      @text = create :textfile, site: @site
+      @page = create :page, site: @site
     end
 
     test 'should show index' do
-      get :index
+      get :index, params: { site_id: @site.id }
       assert_response :success
       assert_equal 2, assigns(:assets).size
       assert_equal @text, assigns(:assets).first
@@ -54,14 +54,14 @@ module Bold
       assert_difference 'Asset.count', -1 do
         delete :destroy, params: { id: @photo.id }
       end
-      assert_redirected_to bold_assets_path
+      assert_redirected_to bold_site_assets_path(@site)
       assert_equal 0, Asset.where(id: @photo.id).count
     end
 
     test 'should bulk destroy photos' do
-      p = create :asset
+      p = create :asset, site: @site
       assert_difference 'Asset.count', -2 do
-        delete :bulk_destroy, params: { ids: [@photo.id, p.id].join(','), format: :js }
+        delete :bulk_destroy, params: {site_id: @site, ids: [@photo.id, p.id].join(','), format: :js }
       end
       assert_response :success
       assert_equal 0, Asset.where(id: [@photo.id, p.id]).count

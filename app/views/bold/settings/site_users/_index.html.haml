@@ -2,7 +2,7 @@
   .col-sm-9.col-sm-offset-1.col-md-8
 
     %h2
-      = link_to icon(:plus), new_bold_settings_site_user_path, class: 'btn btn-sm btn-success pull-right', title: t('.new_user'), id: 'new-user'
+      = link_to icon(:plus), new_bold_site_settings_site_user_path(current_site), class: 'btn btn-sm btn-success pull-right', title: t('.new_user'), id: 'new-user'
       = t'.heading'
 
     - if @invited_users.any?
@@ -21,9 +21,9 @@
                     = l_date_time user.invitation_sent_at
               %td.right
                 %small
-                  = link_to t('.resend'), resend_invitation_bold_settings_site_user_path(user.id), method: :put
+                  = link_to t('.resend'), resend_invitation_bold_site_settings_site_user_path(current_site, user.id), method: :put
                   %br/
-                  = link_to t('.revoke'), revoke_invitation_bold_settings_site_user_path(user.id), method: :delete
+                  = link_to t('.revoke'), revoke_invitation_bold_site_settings_site_user_path(current_site, user.id), method: :delete
               %td.right
                 %strong= user.role_name
 

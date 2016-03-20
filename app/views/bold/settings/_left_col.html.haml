@@ -1,12 +1,12 @@
 .col-xs-12.col-sm-3.left-col
 
   .list-group
-    = link_to t('.general'), bold_settings_root_path, class: "list-group-item#{' active' if 'bold/settings/settings' == params[:controller]}"
-    = link_to t('.categories'), bold_settings_categories_path, class: "list-group-item#{' active' if 'bold/settings/categories' == params[:controller]}"
-    = link_to t('.navigation'), bold_settings_navigations_path, class: "list-group-item#{' active' if 'bold/settings/navigations' == params[:controller]}"
-    = link_to t('.html_snippets'), edit_bold_settings_html_snippet_path, class: "list-group-item#{' active' if 'bold/settings/html_snippets' == params[:controller]}"
-    = link_to t('.themes'), bold_settings_themes_path, class: "list-group-item#{' active' if 'bold/settings/themes' == params[:controller]}"
-    = link_to t('.plugins'), bold_settings_plugins_path, class: "list-group-item#{' active' if 'bold/settings/plugins' == params[:controller]}"
-    = link_to t('.users'), bold_settings_site_users_path, class: "list-group-item#{' active' if 'bold/settings/site_users' == params[:controller]}"
-    = link_to t('.backup'), bold_settings_backups_path, class: "list-group-item#{' active' if 'bold/settings/backups' == params[:controller]}"
+    = link_to t('.general'), bold_site_settings_root_path(current_site), class: "list-group-item#{' active' if 'bold/settings/settings' == params[:controller]}"
+    = link_to t('.categories'), bold_site_settings_categories_path(current_site), class: "list-group-item#{' active' if 'bold/settings/categories' == params[:controller]}"
+    = link_to t('.navigation'), bold_site_settings_navigations_path(current_site), class: "list-group-item#{' active' if 'bold/settings/navigations' == params[:controller]}"
+    = link_to t('.html_snippets'), edit_bold_site_settings_html_snippet_path(current_site), class: "list-group-item#{' active' if 'bold/settings/html_snippets' == params[:controller]}"
+    = link_to t('.themes'), bold_site_settings_themes_path(current_site), class: "list-group-item#{' active' if 'bold/settings/themes' == params[:controller]}"
+    = link_to t('.plugins'), bold_site_settings_plugins_path(current_site), class: "list-group-item#{' active' if 'bold/settings/plugins' == params[:controller]}"
+    = link_to t('.users'), bold_site_settings_site_users_path(current_site), class: "list-group-item#{' active' if 'bold/settings/site_users' == params[:controller]}"
+    = link_to t('.backup'), bold_site_settings_backups_path(current_site), class: "list-group-item#{' active' if 'bold/settings/backups' == params[:controller]}"
 

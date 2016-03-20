@@ -17,33 +17,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
+
 # Base class for all backend controllers
 #
 # BoldController features:
 #
 # - authentication
-# - selection of current site based on session / request host
 # - redirect to setup / site selection when needed
 class BoldController < BaseController
-
   layout 'bold'
 
   before_action :authenticate_user!
-  before_action :remember_user
-  before_action :set_site
-  before_action :require_site
-  before_action :remember_current_site
-  before_action :check_site_config
   before_action { Bold::Kramdown.preview_mode! }
 
   around_action :use_user_time_zone
 
   rescue_from Bold::AccessDenied, with: :handle_access_denied
   rescue_from Bold::SetupNeeded, with: :start_setup
-  rescue_from Bold::SiteNotFound, with: :goto_admin
   rescue_from Bold::NotFound, with: :handle_404
-
-  helper_method :current_site
 
   private
 
@@ -59,13 +50,10 @@ class BoldController < BaseController
   def authenticate_user!
     if User.any?
       super
+      Bold.current_user = current_user
     else
       raise ::Bold::SetupNeeded
     end
-  end
-
-  def remember_user
-    Bold.current_user = current_user
   end
 
   # require a global admin
@@ -81,14 +69,11 @@ class BoldController < BaseController
   def handle_access_denied
     sign_out
     reset_session
-    redirect_to new_user_session_url and return false
-  end
-
-  def goto_admin
-    if Site.any?
-      redirect_to select_admin_sites_url
-    else
-      start_setup
+    respond_to do |format|
+      format.html do
+        request.xhr? ? head(401) : redirect_to(new_user_session_url)
+      end
+      format.any { head 401 }
     end
   end
 
@@ -96,40 +81,6 @@ class BoldController < BaseController
     redirect_to new_setup_user_url
   end
 
-  def set_site
-    Bold.current_site = find_current_site || (Rails.env.development? && Site.first)
-  end
-
-  def find_current_site
-    find_current_site_for_user ||
-      (
-        user_signed_in? &&
-        (
-          (current_user.sites.one? && current_user.sites.first) ||
-          (current_user.admin? && Site.count == 1 && Site.first)
-        )
-      )
-  end
-
-  def require_site
-    unless site_selected?
-      redirect_to select_admin_sites_path and return false
-    end
-  end
-
-  def check_site_config
-    return unless site_selected?
-    unless current_site.theme_config.configured?
-      flash[:info] = 'site_not_configured'
-
-      redirect_to edit_bold_settings_theme_path(current_site.theme_name)
-      return false
-    end
-  end
-
-  def remember_current_site
-    session[:current_site_id] = current_site.id if site_selected?
-  end
 
   def memento(undo_template: nil, &block)
     super &block

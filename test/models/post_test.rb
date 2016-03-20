@@ -21,7 +21,7 @@ require 'test_helper'
 
 class PostTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
     @user = create(:confirmed_user)
     @post = create :post, author: @user
   end

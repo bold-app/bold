@@ -22,25 +22,25 @@ require 'test_helper'
 module Bold::Activity
   class CommentsControllerTest < ActionController::TestCase
     setup do
-      @post = create :published_post
+      @post = create :published_post, site: @site
       @site.update_attribute :post_comments, 'enabled'
       @comment = create :comment, content: @post, site: @site
-      @contact_page = create :published_page, template: 'contact_page'
-      @contact_msg = create :contact_message, content: @contact_page
+      @contact_page = create :published_page, template: 'contact_page', site: @site
+      @contact_msg = create :contact_message, content: @contact_page, site: @site
     end
 
     test 'should get index' do
-      get :index
+      get :index, params: { site_id: @site }
       assert_response :success
       assert assigns(:postings).include?(@comment)
     end
 
     test 'should filter comments by state' do
-      get :index, params: { comment_search: { status: 'pending' } }
+      get :index, params: { site_id: @site, comment_search: { status: 'pending' } }
       assert_response :success
       assert_select "article#comment_#{@comment.id} p", /#{@comment.author_email}/
 
-      get :index, params: { comment_search: { status: 'approved' } }
+      get :index, params: { site_id: @site, comment_search: { status: 'approved' } }
       assert_response :success
       assert_select "article#comment_#{@comment.id}", count: 0
     end

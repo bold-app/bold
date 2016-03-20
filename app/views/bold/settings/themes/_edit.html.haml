@@ -2,7 +2,7 @@
   .col-sm-10.col-sm-offset-1.col-md-9.col-lg-8
 
     %h2
-      = link_with_icon 'menu-left', t('.back'), bold_settings_themes_path, class: 'btn btn-default btn-sm back'
+      = link_with_icon 'menu-left', t('.back'), bold_site_settings_themes_path(current_site), class: 'btn btn-default btn-sm back'
       = @theme.name
       %small= @theme.version if @theme.version.present?
 
@@ -14,7 +14,7 @@
 
 
     %br/
-    = dynamic_configuration_form_for @theme_config, url: bold_settings_theme_path(@theme.id), method: :patch do |f|
+    = dynamic_configuration_form_for @theme_config, url: bold_site_settings_theme_path(current_site, @theme.id), method: :patch do |f|
 
       %fieldset
         %legend= t '.templates'

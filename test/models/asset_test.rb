@@ -21,7 +21,7 @@ require 'test_helper'
 
 class AssetTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
   end
 
   test 'should create scaler job' do

@@ -27,7 +27,7 @@ module Bold
     end
 
     test "should get index" do
-      get :index
+      get :index, params: { site_id: @site.id }
       assert_response :success
       assert posts = assigns(:contents)
       assert posts.include?(@post)
@@ -42,7 +42,7 @@ module Bold
     test "should get new and pre-select default template" do
       @site.theme_config.update_attribute :default_post_template, 'homepage'
       assert_no_difference 'Post.count' do
-        get :new
+        get :new, params: { site_id: @site.id }
       end
       assert_response :success
       assert post = assigns(:content)
@@ -145,7 +145,7 @@ module Bold
           delete :destroy, params: { id: @post.id }
         end
       end
-      assert_redirected_to bold_root_path
+      assert_redirected_to bold_site_posts_path(site_id: @site)
     end
 
     test 'should unpublish post' do

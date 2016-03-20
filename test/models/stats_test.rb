@@ -22,7 +22,7 @@ require 'test_helper'
 class StatsTest < ActiveSupport::TestCase
 
   setup do
-    @site = create :site, time_zone_name: 'UTC'
+    Bold::current_site = @site = create :site, time_zone_name: 'UTC'
     @post = create :post
     @sunday = DateTime.parse('2015-09-27 23:45 UTC')
     @monday = DateTime.parse('2015-09-28 00:15 UTC')

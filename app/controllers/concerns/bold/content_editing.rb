@@ -26,6 +26,8 @@ module Bold
       helper 'bold/content_editing'
       decorate_assigned :contents, with: 'Bold::ContentsDecorator'
       decorate_assigned :content, with: 'Bold::ContentDecorator'
+      site_object :content
+      prepend_before_action :find_content, except: %i(index new create)
     end
 
     def index
@@ -34,7 +36,6 @@ module Bold
     end
 
     def show
-      @content = find_content
       @content.load_draft!
       respond_to do |format|
         format.html { index; render 'index' }
@@ -49,20 +50,16 @@ module Bold
     def create
       @content = collection.build
       save_content
-      @redirect_url = edit_url
     end
 
     def edit
-      @content = find_content
       @content.load_draft!
     end
 
     def change_template
-      @content = find_content
     end
 
     def update_template
-      @content = find_content
       @content.template = params[:content][:template]
       if @content.save_without_draft
         redirect_to edit_url, notice: 'bold.content.template_change_success'
@@ -72,12 +69,10 @@ module Bold
     end
 
     def update
-      @content = find_content
       save_content
     end
 
     def diff
-      @content = find_content
       original = @content.body
       @content.load_draft!
       draft = @content.body
@@ -88,7 +83,6 @@ module Bold
     end
 
     def delete_draft
-      @content = find_content
       memento do
         @content.delete_draft!
       end
@@ -96,13 +90,12 @@ module Bold
     end
 
     def destroy
-      @content = find_content
       if @content.published?
         @content.unpublish
         redirect_to edit_url, notice: t('flash.bold.content.unpublished', title: @content.title)
       else
         @content.delete
-        redirect_to( {action: :index}, notice: t('flash.bold.content.deleted', title: @content.title) )
+        redirect_to( {site_id: current_site.id, action: :index}, notice: t('flash.bold.content.deleted', title: @content.title) )
       end
     end
 
@@ -110,10 +103,6 @@ module Bold
 
     def flash_key(base)
       "#{base}#{'_draft' unless publish?}"
-    end
-
-    def find_content
-      collection.find params[:id]
     end
 
     def save_content
@@ -144,9 +133,9 @@ module Bold
           if params[:go_back].present?
             @back_to = case @content
                        when Post
-                         bold_posts_url
+                         bold_site_posts_url(current_site)
                        when Page
-                         bold_pages_url
+                         bold_site_pages_url(current_site)
                        end
           end
           flash[message[0]] = message[1]

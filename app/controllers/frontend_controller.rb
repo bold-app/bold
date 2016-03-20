@@ -72,8 +72,8 @@ class FrontendController < BaseController
   end
 
   def handle_404_or_goto_admin
-    if Site.any? && request.host == Bold::Config['backend_host']
-      redirect_to select_admin_sites_path
+    if request.host == Bold::Config['backend_host']
+      redirect_to bold_sites_url
     else
       handle_404
     end
@@ -116,9 +116,7 @@ class FrontendController < BaseController
   end
 
   def find_current_site
-    # in development we prefer the selected site over the hostname
-    (Rails.env.development? && find_current_site_for_user) ||
-      Site.for_hostname(request.host)
+    Site.for_hostname(request.host)
   end
 
   def handle_404(*args)

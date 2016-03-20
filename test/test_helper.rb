@@ -101,13 +101,13 @@ class BoldIntegrationTest < ActionDispatch::IntegrationTest
     click_button 'Sign in'
     assert !has_content?('Sign in')
     @current_user = user
-    if user.sites.many?
-      assert_equal '/admin/sites/select', current_path
+    if user.admin? || user.sites.many?
+      assert_equal '/bold', current_path
       if site
-        click_link site.name
+        first(:link, site.name).click
       end
     else
-      assert_equal '/bold', current_path
+      assert_equal "/bold/sites/#{@site.id}", current_path
     end
   end
 
@@ -157,12 +157,12 @@ class ThemeIntegrationTest < BoldIntegrationTest
     @site.add_user! @user
 
     if @page_tpl
-      @page = create :published_page, title: 'Test Page Title', body: 'test page body', site: @site, template: @page_tpl.key
+      @page = create :published_page, site: @site, title: 'Test Page Title', body: 'test page body', site: @site, template: @page_tpl.key
     end
 
     if @post_tpl
-      @category = create :category, name: 'A Category' if @category_tpl
-      @post = create :published_post, title: 'Test Post Title', body: 'test post body', site: @site, template: @post_tpl.key, post_date: Time.local(2015, 02, 05), tag_list: 'foo, "bar baz"', author: @user, category: @category
+      @category = create :category, name: 'A Category', site: @site if @category_tpl
+      @post = create :published_post, site: @site, title: 'Test Post Title', body: 'test post body', site: @site, template: @post_tpl.key, post_date: Time.local(2015, 02, 05), tag_list: 'foo, "bar baz"', author: @user, category: @category
     end
   end
 

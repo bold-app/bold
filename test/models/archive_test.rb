@@ -21,7 +21,7 @@ require 'test_helper'
 
 class ArchiveTest < ActiveSupport::TestCase
   setup do
-    @site = create :site
+    Bold::current_site = @site = create :site
     create :published_post, site: @site, post_date: Time.local(2013, 9, 2)
     create :published_post, site: @site, post_date: Time.local(2015, 6, 29)
 

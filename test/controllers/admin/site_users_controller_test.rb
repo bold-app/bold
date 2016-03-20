@@ -26,7 +26,7 @@ module Admin
       @admin = create :confirmed_admin
       sign_in :user, @admin
       @user = create(:confirmed_user)
-      @site_user = @user.site_users.first
+      @site_user = @user.site_users.create! site: @site
     end
 
     test 'should get new' do
@@ -65,20 +65,24 @@ module Admin
       user = create(:confirmed_user)
 
       sign_in :user, user
-      get :new, xhr: true, params: { user_id: @user.id }
+      get :new, params: { user_id: @user.id }
       assert_access_denied
+
+      sign_in :user, user
+      get :new, xhr: true, params: { user_id: @user.id }
+      assert_response 401
 
       sign_in :user, user
       post :create, xhr: true, params: { user_id: @user.id, site_user: {} }
-      assert_access_denied
+      assert_response 401
 
       sign_in :user, user
       get :edit, xhr: true, params: { user_id: @user.id, id: @site_user.id }
-      assert_access_denied
+      assert_response 401
 
       sign_in :user, user
       patch :update, xhr: true, params: { user_id: @user.id, id: @site_user.id, site_user: {} }
-      assert_access_denied
+      assert_response 401
 
       sign_in :user, user
       delete :destroy, params: { user_id: @user.id, id: @site_user.id }

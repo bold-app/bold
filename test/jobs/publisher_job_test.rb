@@ -23,7 +23,8 @@ class PublisherJobTest < ActiveJob::TestCase
   setup do
     @site = create :site
     @user = create(:confirmed_user)
-    @post = create :post, author: @user
+    @site.add_user! @user
+    @post = create :post, author: @user, site: @site
     @post.post_date = Time.now + 5.minutes
     @post.publish!
   end

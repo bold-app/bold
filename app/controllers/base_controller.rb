@@ -39,13 +39,9 @@ class BaseController < ApplicationController
   include Bold::I18n::AutoLocale
   around_action :set_locale
 
-  private
+  helper_method :current_site
 
-  def find_current_site_for_user
-    user_signed_in? and
-      id = session[:current_site_id] and
-      current_user.sites.where(id: id).first
-  end
+  private
 
   def current_site
     Bold.current_site

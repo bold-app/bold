@@ -3,7 +3,7 @@
 
     %h2= t '.heading'
 
-    = simple_form_for @site, url: bold_settings_settings_path do |f|
+    = simple_form_for @site, url: bold_site_settings_settings_path(current_site) do |f|
 
       = f.input :name, input_html: { class: 'input-lg' }
       .row
@@ -19,11 +19,11 @@
             %label.control-label= t'.favicon'
             %div.favicon
               - if @site.favicon
-                = link_to image_tag(bold_asset_path(@site.favicon), alt: 'favicon'), favicon_bold_settings_settings_path, remote: true
+                = link_to image_tag(bold_asset_path(@site.favicon), alt: 'favicon'), favicon_bold_site_settings_settings_path(current_site), remote: true
                 &nbsp;
-                = link_to t('.change'), favicon_bold_settings_settings_path, remote: true, class: 'btn btn-default btn-sm'
+                = link_to t('.change'), favicon_bold_site_settings_settings_path(current_site), remote: true, class: 'btn btn-default btn-sm'
               - else
-                = link_to t('.set_favicon'), favicon_bold_settings_settings_path, remote: true, class: 'btn btn-default btn-sm'
+                = link_to t('.set_favicon'), favicon_bold_site_settings_settings_path(current_site), remote: true, class: 'btn btn-default btn-sm'
 
         .col-sm-9
           .form-group
@@ -32,9 +32,9 @@
               - if @site.logo
                 = link_to image_tag(bold_asset_path(@site.logo), alt: 'logo'), logo_bold_settings_settings_path, remote: true
                 &nbsp;
-                = link_to t('.change'), logo_bold_settings_settings_path, remote: true, class: 'btn btn-default btn-sm'
+                = link_to t('.change'), logo_bold_site_settings_settings_path(current_site), remote: true, class: 'btn btn-default btn-sm'
               - else
-                = link_to t('.set_favicon'), logo_bold_settings_settings_path, remote: true, class: 'btn btn-default btn-sm'
+                = link_to t('.set_favicon'), logo_bold_site_settings_settings_path(current_site), remote: true, class: 'btn btn-default btn-sm'
 
       = f.input :twitter_handle, hint: t('.twitter_hint')
 

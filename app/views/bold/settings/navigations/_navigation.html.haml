@@ -1,6 +1,6 @@
 - html_id = dom_id(navigation)
 .row{id: html_id, data: { id: navigation.id, pos: navigation.position }}
-  = simple_form_for navigation, html: {id: ('new_navigation_form' if navigation.new_record?) }, url: (navigation.new_record? ? bold_settings_navigations_path : bold_settings_navigation_path(navigation)), remote: true do |f|
+  = simple_form_for navigation, html: {id: ('new_navigation_form' if navigation.new_record?) }, url: (navigation.new_record? ? bold_site_settings_navigations_path(current_site) : bold_settings_navigation_path(navigation)), remote: true do |f|
     .col-xs-12.col-sm-4
       = link_to icon(:sort), '#', class: 'move pull-left' unless navigation.new_record?
       = f.input :name, input_html: { id: "#{html_id}_name" }, placeholder: t('.name_plh'), label: false

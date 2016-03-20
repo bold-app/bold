@@ -28,7 +28,7 @@ module BoldHelper
   end
 
   def show_sites_menu?
-    current_user.admin? && Site.many? or current_user.sites.many?
+    current_user.available_sites.many?
   end
 
   #def public_url(permalinkable)
@@ -133,7 +133,7 @@ module BoldHelper
         end
         js << "toastr.remove();" # avoid stacking of multiple messages
         if undo_id > 0
-          link = link_to t('flash.bold.undo.link'), '#', onclick: 'window.bold.undo(this); return false;', rel: bold_undo_path(undo_id)
+          link = link_to t('flash.bold.undo.link'), '#', onclick: 'window.bold.undo(this); return false;', rel: bold_site_undo_path(current_site, undo_id)
           js << "toastr.#{FLASH_MAPPING[key]}('#{escape_javascript link}', '#{escape_javascript msg}', { timeOut: 300000, extendedTimeOut: 300000 });"
         else
           js << "toastr.#{FLASH_MAPPING[key]}(null, '#{escape_javascript msg}', { timeOut: 3000, extendedTimeOut: 5000 });"
@@ -187,9 +187,9 @@ module BoldHelper
   def content_form_url(content = @content)
     case content
     when Post
-      content.new_record? ? bold_posts_path : bold_post_path(@content)
+      content.new_record? ? bold_site_posts_path(current_site) : bold_post_path(@content)
     when Page
-      content.new_record? ? bold_pages_path : bold_page_path(@content)
+      content.new_record? ? bold_site_pages_path(current_site) : bold_page_path(@content)
     end
   end
 

@@ -13,17 +13,14 @@
             %span.icon-bar
             %span.icon-bar
 
-          - if show_sites_menu?
-            %ul.nav.navbar-nav.hidden-xs
-              %li{:class => "dropdown"}
-                %a.dropdown-toggle.navbar-brand{"data-hover" => "dropdown", "data-toggle" => "dropdown" }
-                  = image_tag 'bold/logo.png', alt: 'bold logo', style: 'display: inline; height: 25px;'
-                  %span.caret
-                %ul.dropdown-menu{:role => "menu"}
-                  - for site in current_user.available_sites
-                    %li= link_to site.name, bold_site_path(site)
-          - elsif site = current_user.sites.first
-            = link_to site.name, bold_site_path(site), class: 'navbar-brand'
+          %ul.nav.navbar-nav.hidden-xs
+            %li{:class => "dropdown"}
+              %a.dropdown-toggle.navbar-brand{"data-hover" => "dropdown", "data-toggle" => "dropdown", href: bold_sites_path }
+                = image_tag 'bold/logo.png', alt: 'bold logo', style: 'display: inline; height: 25px;'
+                %span.caret
+              %ul.dropdown-menu{:role => "menu"}
+                - for site in current_user.available_sites
+                  %li= link_to site.name, bold_site_path(site)
 
         .navbar-right.hidden-xs
           %ul.nav.navbar-nav
@@ -32,8 +29,6 @@
                 = gravatar_image_tag User.current.email, 26
                 %span.caret
               %ul.dropdown-menu{role: 'menu'}
-                %li= link_with_icon :user, t('bold.common.nav.profile'), edit_bold_profile_path
-                %li.divider{role: 'presentation'}
                 %li= link_with_icon :off, t('bold.common.nav.signout'), destroy_user_session_path, method: :delete
 
         - call_hook :view_layouts_bold_navbar

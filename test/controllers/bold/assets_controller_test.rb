@@ -34,6 +34,32 @@ module Bold
       assert_equal @text, assigns(:assets).first
     end
 
+    test 'should get new' do
+      get :new, params: { site_id: @site.id }
+      assert_response :success
+    end
+
+    test 'should get new for url' do
+      get :new, params: { site_id: @site, source: 'url'}
+      assert_response :success
+    end
+
+    test 'should create asset from url' do
+      assert_difference 'Asset.count' do
+        post :create_from_url, params: { site_id: @site, asset: { remote_file_url: 'https://oft-unterwegs.de/files/inline/7e9aaa6e-c1e4-48b6-8d70-e866ac01359f/teaser' }}
+      end
+    end
+
+    test 'should handle empty url' do
+      post :create_from_url, params: { site_id: @site, asset: { remote_file_url: '' }}
+      assert_response :success
+    end
+
+    test 'should refuse bogus source' do
+      get :new, params: { site_id: @site, source: 'foo'}
+      assert_response 404
+    end
+
     test 'should get edit' do
       get :edit, params: { id: @photo.id }
       assert_response :success

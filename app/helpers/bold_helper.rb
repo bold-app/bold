@@ -196,4 +196,8 @@ module BoldHelper
   def diff_path(content)
     Post === content ? diff_bold_post_path(content) : diff_bold_page_path(content)
   end
+
+  def listgroup_item(label, path, &block)
+    link_to label, path, class: "list-group-item#{' active' if yield}"
+  end
 end

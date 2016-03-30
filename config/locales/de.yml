@@ -26,6 +26,10 @@ de:
       user_invited: "Einladung an %{email} verschickt."
 
     bold:
+      assets:
+        from_url:
+          success: 'Download successful'
+          failure: 'Failed to download file'
       category:
         deleted: Kategorie gelöscht.
       comment:
@@ -247,14 +251,20 @@ de:
       index:
         upload: Hochladen
       new:
-        add_files: Datei auswählen...
-        add_more: Mehr Dateien hinzufügen...
-        drag_photos_here: Dateien hierher ziehen
-        heading: Hochladen
+        source:
+          local: Dateien hochladen
+          url: Entfernte Dateien hinzufügen
       meta:
         taken_on: "Aufgenommen am %{date}"
       update:
         success: 'Gespeichert.'
+      upload:
+        add_files: Datei auswählen...
+        add_more: Mehr Dateien hinzufügen...
+        drag_photos_here: Dateien hierher ziehen
+        heading: Dateien hochladen
+      url:
+        heading: Entfernte Dateien hinzufügen
 
     common:
       nav:
@@ -585,6 +595,7 @@ de:
         caption: Beschreibung
         attribution: Urheber
         original_url: Quell-URL
+        remote_file_url: Quell-URL
       asset_search:
         query: Dateiname, Titel, Beschreibung, Tags
         content_type: Dateityp

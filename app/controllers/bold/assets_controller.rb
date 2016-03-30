@@ -33,6 +33,12 @@ module Bold
       @assets = @asset_search.present? ? @asset_search.search(assets) : assets
     end
 
+    VALID_SOURCES = %w(upload url)
+    def new
+      @source = params[:source] || 'upload'
+      head 404 and return unless VALID_SOURCES.include? @source
+    end
+
     def pick
     end
 
@@ -46,6 +52,17 @@ module Bold
     def show
       @asset.ensure_version! params[:version]
       send_file @asset.diskfile_path(params[:version]), disposition: :inline
+    end
+
+    def create_from_url
+      @asset = current_site.assets.build new_asset_params(key: :remote_file_url)
+      if @asset.save
+        redirect_to new_bold_site_asset_url(current_site, source: 'url'), notice: 'bold.assets.from_url.success'
+      else
+        @source = 'url'
+        flash[:alert] = 'bold.assets.from_url.failure'
+        render 'new'
+      end
     end
 
     def create
@@ -90,14 +107,17 @@ module Bold
     end
 
     def asset_params
-      params.require(:asset).permit :file, :title, :caption, :tag_list, :attribution, :original_url
+      params.require(:asset).permit :file, :title, :caption, :tag_list, :attribution, :original_url, :remote_file_url
     end
 
-    def new_asset_params
+    def new_asset_params(key: :file)
       params.require(:asset).tap do |attributes|
-        attributes[:file] = attributes[:file].first if Array === attributes[:file]
-        attributes.delete(:content_id) if attributes[:content_id].blank?
-      end.permit(:file, :content_id)
+        if key == :file
+          attributes[:file] = attributes[:file].first if Array === attributes[:file]
+        end
+        #attributes.delete(:content_id) if attributes[:content_id].blank?
+      #end.permit(:file, :content_id, :remote_file_url)
+      end.permit(key)
     end
 
   end

@@ -30,6 +30,10 @@ class Asset < ActiveRecord::Base
   before_save :store_metadata, if: :file_changed?
   after_save :call_post_processor, if: :file_changed?
 
+  validates :file, presence: true
+  validates_download_of :file
+  validates_integrity_of :file
+
   after_destroy ->(asset){ asset.remove_file! }
 
   scope :files, ->{ where "#{table_name}.content_type NOT LIKE 'image/%'" }
@@ -168,7 +172,8 @@ class Asset < ActiveRecord::Base
   end
 
   def filename
-    File.basename file.path
+    p = file&.path
+    p.blank? ? 'unknown' : File.basename(p)
   end
 
   def mime_type

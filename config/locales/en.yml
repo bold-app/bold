@@ -26,6 +26,10 @@ en:
       user_invited: "Sent invitation to %{email}."
 
     bold:
+      assets:
+        from_url:
+          success: 'Download successful'
+          failure: 'Failed to download file'
       category:
         deleted: Category deleted.
       comment:
@@ -249,14 +253,20 @@ en:
       index:
         upload: Upload
       new:
-        add_files: Click to select
-        add_more: Add more files...
-        drag_photos_here: Drag files here
-        heading: Upload
+        source:
+          local: Upload files
+          url: Add remote file
       meta:
         taken_on: "Shot on %{date}"
       update:
         success: 'Saved.'
+      upload:
+        add_files: Click to select
+        add_more: Add more files...
+        drag_photos_here: Drag files here
+        heading: Upload
+      url:
+        heading: Add Remote File
 
     common:
       nav:
@@ -593,6 +603,7 @@ en:
         caption: Caption
         attribution: Attribution
         original_url: Image URL
+        remote_file_url: Source URL
       asset_search:
         query: Filename, title, caption, tags
         content_type: Content type

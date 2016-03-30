@@ -24,9 +24,15 @@ class AssetTest < ActiveSupport::TestCase
     Bold::current_site = @site = create :site
   end
 
+  test 'should create from remote url' do
+    asset = create :asset, file: nil, site: @site, remote_file_url: 'https://oft-unterwegs.de/files/inline/7e9aaa6e-c1e4-48b6-8d70-e866ac01359f/teaser'
+    assert_equal 28907, asset.file_size
+    assert asset.persisted?
+  end
+
   test 'should create scaler job' do
     assert_enqueued_with job: ImageScalerJob do
-      @asset = create :asset
+      @asset = create :asset, site: @site
     end
   end
 

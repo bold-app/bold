@@ -157,12 +157,12 @@ class ThemeIntegrationTest < BoldIntegrationTest
     @site.add_user! @user
 
     if @page_tpl
-      @page = create :published_page, site: @site, title: 'Test Page Title', body: 'test page body', site: @site, template: @page_tpl.key
+      @page = create :published_page, site: @site, title: 'Test Page Title', body: 'test page body', template: @page_tpl.key
     end
 
     if @post_tpl
       @category = create :category, name: 'A Category', site: @site if @category_tpl
-      @post = create :published_post, site: @site, title: 'Test Post Title', body: 'test post body', site: @site, template: @post_tpl.key, post_date: Time.local(2015, 02, 05), tag_list: 'foo, "bar baz"', author: @user, category: @category
+      @post = create :published_post, site: @site, title: 'Test Post Title', body: 'test post body', template: @post_tpl.key, post_date: Time.local(2015, 02, 05), tag_list: 'foo, "bar baz"', author: @user, category: @category
     end
   end
 

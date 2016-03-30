@@ -1,0 +1,11 @@
+%h2= t'.heading'
+
+= simple_form_for Asset.new, url: create_from_url_bold_site_assets_path(current_site) do |f|
+
+  .row
+    .col-sm-8
+      = f.input :remote_file_url, class: 'input-lg'
+  .row
+    .col-sm-8
+      .buttons
+        = button

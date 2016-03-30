@@ -1,41 +1,12 @@
 .row
-  .col-xs-12
+  .col-xs-12.col-sm-3.left-col
 
-    %h2= t '.heading'
+    .list-group
+      = listgroup_item(t('.source.upload'), new_bold_site_asset_path(current_site)){ @source.blank? || @source == 'upload' }
+      = listgroup_item(t('.source.url'), new_bold_site_asset_path(current_site, source: 'url')){ @source == 'url' }
+      = call_hook :view_assets_new_sources_list
 
-    = form_for Asset.new, url: bold_assets_path, html: { multipart: true, id: 'fileupload' } do |f|
-      #uploaded-files.row
-        #uploads-placeholder
-          %p= t '.drag_photos_here'
-          %p= t 'bold.common.or'
-          %span.btn.btn-primary.btn-file
-            %span= t('.add_files')
-            = f.file_field :file, :multiple => true
-        .thumb.preview.txt.template
-          = placeholder_image_tag 150, 4.0/3
-          .progress-wrapper
-            .progress
-              .progress-bar{"aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => "0", :role => "progressbar", :style => "width: 0;"}
-            %a.cancel{:href => "#"}
-              %span.glyphicon.glyphicon-remove
-        .thumb.preview.img.template
-          %img/
-          .progress-wrapper
-            .progress
-              .progress-bar{"aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => "0", :role => "progressbar", :style => "width: 0;"}
-            %a.cancel{:href => "#"}
-              %span.glyphicon.glyphicon-remove
+  .col-xs-12.col-sm-8.right-col
 
-      #add-more.row.pull-right
-        %span.btn.btn-primary.btn-file
-          %span= t('.add_more')
-          = f.file_field :file, :multiple => true
-
-
-= javascript_tag do
-  $(function () {
-  $('#fileupload').uploader({debug: false});
-  });
-
-
+    = render partial: @source
 

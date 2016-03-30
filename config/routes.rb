@@ -58,6 +58,7 @@ Rails.application.routes.draw do
 
         resources :assets, shallow: true do
           collection do
+            post :create_from_url
             get :gallery
             delete :bulk_destroy
           end

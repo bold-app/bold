@@ -310,13 +310,13 @@ class ContentDecorator < Draper::Decorator
   def meta_ld_json(image: nil)
     {
       '@context' => 'http://schema.org',
-      'publisher' => h.site.name,
       'headline' => meta_title,
       'description' => meta_description,
       'url' => canonical_url,
       'datePublished' => meta_pub_date,
       'dateModified' => meta_mod_date,
     }.tap do |meta|
+      meta.update h.site.meta_ld_json
       meta['@type'] = if Post === object
         'Article' # BlogPosting? 
       elsif homepage?

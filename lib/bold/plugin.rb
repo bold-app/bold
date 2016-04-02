@@ -35,7 +35,7 @@ module Bold
     def content_class(content = nil, &block)
       if block_given?
         @content_class = block
-      else
+      elsif @content_class
         @content_class.call content.site, content.site.plugin_config(id), content
       end
     end

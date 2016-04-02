@@ -37,4 +37,8 @@ class PublicContentSearch < ContentSearch
       search Site.current.contents.published
     end
   end
+
+  def results?
+    _posts.any?
+  end
 end

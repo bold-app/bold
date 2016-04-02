@@ -36,6 +36,21 @@ class SiteDecorator < Draper::Decorator
     end
   end
 
+  def meta_ld_json
+    {
+      'publisher' => object.name,
+    }.tap do |meta|
+      if search_enabled?
+        path = h.content_path object.search_page.path
+        meta["potentialAction"] = {
+          "@type"  => "SearchAction",
+          "target" => object.external_url(path) + '?q={search_term_string}',
+          "query-input" =>  "required name=search_term_string"
+        }
+      end
+    end
+  end
+
   def canonical_url(path = '')
     object.external_url(path)
   end

@@ -31,6 +31,15 @@ module Bold
       super hook, template, if: ->(context){ Site.current.plugin_enabled?(id) }
     end
 
+    # override to dynamically add some css class(es) to the content's body tag
+    def content_class(content = nil, &block)
+      if block_given?
+        @content_class = block
+      else
+        @content_class.call content.site, content.site.plugin_config(id), content
+      end
+    end
+
     def to_param; id end
 
 

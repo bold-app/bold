@@ -122,12 +122,6 @@ module Bold
     end
 
 
-    # declare js and css files referenced by your theme so they are added
-    # to the asset pipeline.
-    def assets(*names)
-      Rails.application.config.assets.precompile += names.flatten
-    end
-
     def templates
       @templates ||= {}
     end

@@ -60,6 +60,12 @@ module Bold
       ]
     end
 
+    # declare js and css files referenced by your extension so they are added
+    # to the asset pipeline.
+    def assets(*names)
+      Rails.application.config.assets.precompile += names.flatten
+    end
+
     # define your routes when registering the extension so Bold can install
     # them *before* any catch all routes.
     def routes(&block)

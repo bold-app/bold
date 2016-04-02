@@ -149,14 +149,16 @@ class Site < ActiveRecord::Base
       create_theme_config
   end
 
-  def plugin_config(name)
-    extension_configs.plugins.where(name: name).first || create_plugin_config(name)
+  def plugin_config(id)
+    extension_configs.plugins.where(name: id).first || create_plugin_config(id)
   end
 
-  # returns the plugins currently enabled for this site
-  def plugins
+  # returns the plugin configurations currently enabled for this site
+  def plugin_configs
     extension_configs.plugins.all.select(&:enabled?)
   end
+  # TODO deprecate
+  alias plugins plugin_configs
 
   def extension_enabled?(name)
     extension_configs.where(name: name).detect(&:enabled?).present?

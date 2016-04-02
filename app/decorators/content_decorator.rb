@@ -34,6 +34,11 @@ class ContentDecorator < Draper::Decorator
       s << " " << tags_class if tags?
       s << " " << object.template << "-template"
       s << " paged" if h.paged?
+      object.site.plugin_configs.each do |p|
+        if c = p.plugin.content_class(object)
+          s << ' ' << String(c)
+        end
+      end
     end
   end
 

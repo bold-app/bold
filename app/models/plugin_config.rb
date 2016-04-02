@@ -33,14 +33,14 @@ class PluginConfig < ExtensionConfig
     save validate: false
   end
 
+  def plugin
+    Bold::Plugin[name] or raise ActiveRecord::RecordNotFound
+  end
+
   private
 
   def defaults
     { enabled: '0' }.merge plugin.default_settings
-  end
-
-  def plugin
-    Bold::Plugin[name] or raise ActiveRecord::RecordNotFound
   end
 
 end

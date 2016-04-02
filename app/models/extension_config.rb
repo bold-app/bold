@@ -40,6 +40,10 @@ class ExtensionConfig < ActiveRecord::Base
     end
   end
 
+  def true?(key)
+    config[String(key)].to_i == 1
+  end
+
   def config=(cfg)
     if cfg
       cfg.stringify_keys!

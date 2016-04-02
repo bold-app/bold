@@ -96,6 +96,13 @@ GIT
       rails (>= 3.2)
 
 GIT
+  remote: git://github.com/bold-app/uap-ruby.git
+  revision: 0a85263de7c9d895b70f1aa445e25cb275757205
+  submodules: true
+  specs:
+    user_agent_parser (2.3.0)
+
+GIT
   remote: git://github.com/jkraemer/chronic.git
   revision: d38001e035c6ad4769eb110f6ceb71f317706198
   branch: thread_safe
@@ -370,7 +377,6 @@ GEM
     uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    user_agent_parser (2.3.0)
     valid_email (0.0.12)
       activemodel
       mail (~> 2.6.1)
@@ -449,7 +455,7 @@ DEPENDENCIES
   teambox-icons-rails!
   therubyracer
   uglifier (>= 1.3.0)
-  user_agent_parser (~> 2.2)
+  user_agent_parser!
   valid_email
   warden (~> 1.2)
   web-console (~> 2.0)

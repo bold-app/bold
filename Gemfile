@@ -55,7 +55,16 @@ gem 'simple_form', '~> 3.2.1'
 gem 'speakingurl-rails', '~> 8.0'
 gem 'stringex', '~> 2.5'
 gem 'teambox-icons-rails', github: 'bold-app/teambox-icons-rails'
-gem 'user_agent_parser', '~> 2.2'
+
+# device detection libraries. support for any of those is built in, but
+# user_agent_parser appears to be most capable:
+# The libraries will be tried in the order shown here, the first that's found
+# is used.
+gem 'user_agent_parser', github: 'bold-app/uap-ruby', submodules: true
+#gem 'browser'
+#gem 'device_detector'
+
+
 gem 'valid_email'
 gem 'warden', '~> 1.2'
 gem 'words_counted', '~> 1.0'

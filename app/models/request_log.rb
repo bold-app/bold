@@ -19,29 +19,6 @@
 #
 class RequestLog < ActiveRecord::Base
 
-  USER_AGENT_PARSER = UserAgentParser::Parser.new
-
-  # common mobile OSes
-  MOBILE_OS = [
-    'Android',
-    'BlackBerry OS',
-    'iOS',
-    'Symbian OS',
-    'Windows Phone',
-  ]
-
-  # esoteric devices which are not detected by OS
-  MOBILE_DEVICES = [
-    'Palm Source',
-    'Generic Smartphone',
-  ]
-
-  # some mobile browsers have user agent strings which do not
-  # lead to mobile os / device detection
-  MOBILE_BROWSERS = [
-    'Opera Mini',
-    'Opera Mobile'
-  ]
 
   belongs_to :site
   belongs_to :resource, polymorphic: true
@@ -72,7 +49,9 @@ class RequestLog < ActiveRecord::Base
 
   def set_device_class!
     if device_class.nil?
-      self.device_class = self.class.determine_device_class(request['user_agent'], request['language'])
+      self.device_class =
+        Bold::DeviceDetector.new(request['user_agent'],
+                                 request['language']).device_class
       save
     end
   end
@@ -99,24 +78,6 @@ class RequestLog < ActiveRecord::Base
       self.status   = res.status
       self.response['disposition']  = res.headers['Content-Disposition']
       self.response['content_type'] = res.content_type
-    end
-  end
-
-  # sg-Orbiter/1.0 (+http://searchgears.de/uber-uns/crawling-faq.html)
-  #
-  def self.determine_device_class(user_agent, language)
-    # 'real' clients always have user agent and accept-language headers
-    return :bot if user_agent.blank? || language.blank?
-    ua = USER_AGENT_PARSER.parse(user_agent)
-    device = ua.device.family
-    if device == 'Spider'
-      :bot
-    elsif MOBILE_OS.include?(ua.os.name) ||
-      MOBILE_DEVICES.include?(device) ||
-      MOBILE_BROWSERS.include?(ua.name)
-      :mobile
-    else
-      :desktop
     end
   end
 

@@ -24,9 +24,7 @@ class UndoTest < BoldIntegrationTest
   setup do
     unless defined? Poltergeist
       Capybara.current_driver = Capybara.javascript_driver
-      @user = create :confirmed_user
       @site.update_attributes post_comments: 'enabled', akismet_key: '28736d172cca'
-
       ActiveJob::Base.queue_adapter = :delayed_job
     end
   end

@@ -68,6 +68,10 @@ class SiteDecorator < Draper::Decorator
     @navigation ||= NavigationsDecorator.decorate site.navigations
   end
 
+  def navigation?
+    navigation.any?
+  end
+
   #
   # Posts
   #

@@ -21,6 +21,8 @@ class NavigationsDecorator < Draper::CollectionDecorator
 
   Topic = Struct.new(:name, :url, :active)
 
+  delegate :any?
+
   def each_topic
     object.order(position: :asc).each do |n|
       active = begin

@@ -26,8 +26,28 @@ class AssetTest < ActiveSupport::TestCase
 
   test 'should create from remote url' do
     asset = create :asset, file: nil, site: @site, remote_file_url: 'https://oft-unterwegs.de/files/inline/7e9aaa6e-c1e4-48b6-8d70-e866ac01359f/teaser'
+    assert asset.image?
+    assert asset.scalable?
     assert_equal 28907, asset.file_size
     assert asset.persisted?
+  end
+
+  test 'should detect image' do
+    file = Rack::Test::UploadedFile.new(File.join(File.dirname(__FILE__), '..', 'fixtures', 'photo.jpg'), 'text/plain')
+    asset = Asset.create file: file
+    assert asset.image?
+    assert asset.scalable?
+    assert_equal 'text/plain', asset.content_type
+    assert_equal 'image/jpeg', asset.send(:magic_content_type)
+  end
+
+  test 'should detect fake image' do
+    file = Rack::Test::UploadedFile.new(File.join(File.dirname(__FILE__), '..', 'fixtures', 'test.txt'), 'image/jpeg')
+    asset = Asset.create file: file
+    assert !asset.image?
+    assert !asset.scalable?
+    assert_equal 'image/jpeg', asset.content_type
+    assert_equal '', asset.send(:magic_content_type)
   end
 
   test 'should create scaler job' do

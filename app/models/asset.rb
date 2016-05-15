@@ -135,7 +135,11 @@ class Asset < ActiveRecord::Base
   end
 
   def image?
-    content_type.to_s =~ /^image/
+    magic_content_type.to_s =~ /\Aimage/
+  end
+
+  def scalable?
+    !!(magic_content_type.to_s =~ /\Aimage\/(jpeg|png|tiff)\z/)
   end
 
   def xy_ratio
@@ -213,11 +217,15 @@ class Asset < ActiveRecord::Base
     self.content_type = file.content_type
     self.file_size = file.size
 
-    get_jpeg_metadata if content_type =~ /jpe?g/
+    get_jpeg_metadata if magic_content_type =~ /jpeg/
 
     if image? and width.blank? || height.blank?
       self.width, self.height = `identify -format "%wx%h" #{file.path}`.split(/x/) 
     end
+  end
+
+  def magic_content_type
+    @magic_content_type ||= MimeMagic.by_magic(file).to_s
   end
 
   def get_jpeg_metadata
@@ -235,10 +243,6 @@ class Asset < ActiveRecord::Base
         self.caption = xmp.dc.description.join("\n") rescue nil
       end
     end
-  end
-
-  def scalable?
-    content_type !~ /ico/
   end
 
   def call_post_processor

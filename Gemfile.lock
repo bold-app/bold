@@ -268,6 +268,7 @@ GEM
     metaclass (0.0.4)
     method_source (0.8.2)
     mime-types (2.99.1)
+    mimemagic (0.3.1)
     mini_magick (3.8.1)
       subexec (~> 0.2.1)
     mini_portile2 (2.0.0)
@@ -434,6 +435,7 @@ DEPENDENCIES
   kaminari!
   kramdown (~> 1.9.0)
   memento (~> 0.4.3)!
+  mimemagic (~> 0.3.1)
   mini_magick (~> 3.0)
   mocha (~> 1.1.0)
   nokogiri

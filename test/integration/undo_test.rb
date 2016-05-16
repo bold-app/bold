@@ -75,14 +75,16 @@ class UndoTest < BoldIntegrationTest
   test 'should undo comment actions' do
     skip unless defined? Capybara::Poltergeist
     login_as @user
-    p = create :published_post
+    p = create :published_post, site: @site
     c = create :comment, content: p, author_name: 'Max Muster', body: 'test comment'
-    date = c.created_at
+    assert date = c.created_at
 
     #
     # undo delete
     #
-    visit '/bold/activity/comments'
+    visit '/bold'
+    click_link 'Activity'
+    click_link 'Comments & Messages'
     assert has_content? 'Max Muster'
     assert has_content? 'test comment'
 
@@ -112,7 +114,9 @@ class UndoTest < BoldIntegrationTest
     #
     # undo mark as spam
     #
-    visit '/bold/activity/comments'
+    visit '/bold'
+    click_link 'Activity'
+    click_link 'Comments & Messages'
     assert has_content? 'Max Muster'
     assert has_content? 'test comment'
 
@@ -148,7 +152,9 @@ class UndoTest < BoldIntegrationTest
     #
     c.spam!
 
-    visit '/bold/activity/comments'
+    visit '/bold'
+    click_link 'Activity'
+    click_link 'Comments & Messages'
     assert has_content? 'Max Muster'
     assert has_content? 'test comment'
 

@@ -131,7 +131,7 @@ module Bold
     end
 
     def homepage_template
-      find_template *Template::USAGE_KEYS[:homepage]
+      find_template(*Template::USAGE_KEYS[:homepage])
     end
 
     # find_template :homepage, :page
@@ -165,7 +165,7 @@ module Bold
     # installs a view hook which will only be rendered if this is the active
     # theme of the current site.
     def render_on(hook, template)
-      super hook, template, if: ->(context){ Site.current.theme_name == id.to_s }
+      super hook, template, if: ->(context){ Site.current&.theme_name == id.to_s }
     end
 
     # Declares an image version. To avoid collisions it is a good idea to

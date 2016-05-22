@@ -30,7 +30,10 @@ module Bold
       end
 
       def matches?(request)
-        if site = Site.for_hostname(request.host)
+        if request.path.starts_with?('/bold')
+          # backend routes are always allowed
+          true
+        elsif site = Site.for_hostname(request.host)
           case @extension
           when Plugin
             site.plugin_enabled? @extension.id.to_s

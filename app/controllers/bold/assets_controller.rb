@@ -33,10 +33,14 @@ module Bold
       @assets = @asset_search.present? ? @asset_search.search(assets) : assets
     end
 
-    VALID_SOURCES = %w(upload url)
     def new
       @source = params[:source] || 'upload'
-      head 404 and return unless VALID_SOURCES.include? @source
+      head 404 and return unless valid_source? @source
+    end
+
+    BUILTIN_SOURCES = %w(upload url).freeze
+    def valid_source?(source)
+      BUILTIN_SOURCES.include? source
     end
 
     def pick

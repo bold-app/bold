@@ -73,7 +73,7 @@ $ ->
     true
 
   # media thumbnail list - select elements
-  $(document).on 'click', '.thumb[data-id]', (e) ->
+  $(document).on 'click', '#imagepicker .thumb[data-id]', (e) ->
     $(this).toggleClass 'selected'
     selected = $('.thumb.selected').size()
     if selected > 0

@@ -254,8 +254,8 @@ en:
         upload: Upload
       new:
         source:
-          local: Upload files
           url: Add remote file
+          upload: Upload
       meta:
         taken_on: "Shot on %{date}"
       update:

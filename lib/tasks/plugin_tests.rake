@@ -20,7 +20,7 @@
 namespace :bold do
   namespace :plugin do
 
-    Rake::TestTask.new :test => 'db:test:prepare' do |t|
+    Rake::TestTask.new :test => 'db:test:clone_structure' do |t|
       t.description = "run plugin tests"
       t.libs << "test"
       t.verbose = true

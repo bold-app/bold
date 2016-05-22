@@ -11,47 +11,57 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150702102543) do
+ActiveRecord::Schema.define(version: 20160522082635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "citext"
   enable_extension "hstore"
+  enable_extension "pg_trgm"
+  enable_extension "unaccent"
   enable_extension "uuid-ossp"
 
-  create_table "assets", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "file",         limit: 500,              null: false
-    t.string   "content_type", limit: 100
-    t.hstore   "meta",                     default: {}, null: false
+  create_table "assets", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "file",           limit: 500,              null: false
+    t.string   "content_type",   limit: 100
+    t.hstore   "meta",                       default: {}, null: false
     t.uuid     "site_id"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
-    t.string   "slug",         limit: 500,              null: false
-    t.integer  "file_size",                             null: false
-  end
-
-  add_index "assets", ["site_id", "slug"], name: "idx_assets_slugs", unique: true, using: :btree
-  add_index "assets", ["site_id"], name: "index_assets_on_site_id", using: :btree
-
-  create_table "comments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.text     "body",                                    null: false
-    t.string   "author_email",   limit: 100,              null: false
-    t.string   "author_name",    limit: 100,              null: false
-    t.string   "author_website", limit: 100
-    t.integer  "status",                     default: 0,  null: false
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
-    t.uuid     "site_id"
-    t.hstore   "request",                    default: {}, null: false
-    t.uuid     "post_id",                                 null: false
-    t.inet     "author_ip",                               null: false
-    t.datetime "comment_date",                            null: false
+    t.string   "slug",           limit: 500,              null: false
+    t.integer  "file_size",                               null: false
+    t.string   "disk_directory"
+    t.uuid     "creator_id"
+    t.index ["site_id", "creator_id"], name: "index_assets_on_site_id_and_creator_id", using: :btree
+    t.index ["site_id", "slug"], name: "idx_assets_slugs", unique: true, using: :btree
+    t.index ["site_id"], name: "index_assets_on_site_id", using: :btree
   end
 
-  add_index "comments", ["site_id", "post_id"], name: "comments_site_id_post_id_idx", using: :btree
-  add_index "comments", ["status"], name: "comments_status_idx", using: :btree
-  add_index "comments", ["status"], name: "index_comments_on_status", using: :btree
+  create_table "categories", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "name",        limit: 100
+    t.string   "slug",        limit: 100
+    t.text     "description"
+    t.uuid     "site_id"
+    t.uuid     "asset_id"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.index ["site_id", "slug"], name: "index_categories_on_site_id_and_slug", using: :btree
+  end
 
-  create_table "contents", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "contact_messages", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "subject",        null: false
+    t.text     "body",           null: false
+    t.string   "sender_name",    null: false
+    t.string   "sender_email",   null: false
+    t.string   "receiver_email"
+    t.uuid     "site_id",        null: false
+    t.uuid     "user_id"
+    t.uuid     "content_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "contents", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string   "type"
     t.string   "title",                 limit: 500
     t.string   "slug",                  limit: 500
@@ -68,13 +78,12 @@ ActiveRecord::Schema.define(version: 20150702102543) do
     t.uuid     "author_id"
     t.hstore   "meta",                              default: {}, null: false
     t.hstore   "template_field_values",             default: {}, null: false
+    t.uuid     "category_id"
+    t.datetime "deleted_at"
+    t.index ["site_id", "type", "status"], name: "index_contents_on_site_id_and_type_and_status", using: :btree
   end
 
-  add_index "contents", ["site_id", "slug"], name: "index_contents_on_site_id_and_slug", using: :btree
-  add_index "contents", ["site_id"], name: "index_contents_on_site_id", using: :btree
-  add_index "contents", ["status"], name: "index_contents_on_status", using: :btree
-
-  create_table "delayed_jobs", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "delayed_jobs", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
     t.integer  "attempts",   default: 0, null: false
     t.text     "handler",                null: false
@@ -86,30 +95,40 @@ ActiveRecord::Schema.define(version: 20150702102543) do
     t.string   "queue"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
   end
 
-  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
-
-  create_table "drafts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "drafts", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "content_id"
     t.hstore   "drafted_changes", default: {}, null: false
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
+    t.index ["content_id"], name: "index_drafts_on_content_id", using: :btree
   end
 
-  add_index "drafts", ["content_id"], name: "index_drafts_on_content_id", using: :btree
-
-  create_table "extension_configs", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "extension_configs", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string   "name",       limit: 100
     t.string   "type",       limit: 100
     t.hstore   "config",                 default: {}, null: false
     t.uuid     "site_id"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.index ["name", "site_id"], name: "index_extension_configs_on_name_and_site_id", unique: true, using: :btree
+    t.index ["site_id"], name: "index_extension_configs_on_site_id", using: :btree
   end
 
-  add_index "extension_configs", ["name", "site_id"], name: "index_extension_configs_on_name_and_site_id", unique: true, using: :btree
-  add_index "extension_configs", ["site_id"], name: "index_extension_configs_on_site_id", using: :btree
+  create_table "fulltext_indices", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "config"
+    t.boolean  "published",       default: false, null: false
+    t.string   "searchable_type"
+    t.uuid     "searchable_id"
+    t.tsvector "tsv"
+    t.uuid     "site_id",                         null: false
+    t.index ["published"], name: "index_fulltext_indices_on_published", using: :btree
+    t.index ["searchable_id", "published"], name: "fulltext_indices_searchable_unique_idx", unique: true, using: :btree
+    t.index ["site_id", "searchable_type"], name: "index_fulltext_indices_on_site_id_and_searchable_type", using: :btree
+    t.index ["tsv"], name: "fulltext_tsv_idx", using: :gin
+  end
 
   create_table "memento_sessions", force: :cascade do |t|
     t.uuid     "user_id"
@@ -128,65 +147,115 @@ ActiveRecord::Schema.define(version: 20150702102543) do
     t.datetime "updated_at",  null: false
   end
 
-  create_table "request_logs", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.integer  "status",        limit: 2,                                 null: false
-    t.boolean  "secure",                                                  null: false
-    t.string   "hostname",                                                null: false
-    t.string   "path",                                                    null: false
-    t.hstore   "request",                  default: {},                   null: false
-    t.hstore   "response",                 default: {},                   null: false
-    t.uuid     "site_id",                                                 null: false
-    t.uuid     "resource_id"
-    t.string   "resource_type", limit: 50
-    t.datetime "created_at",                                              null: false
-    t.integer  "device_class",  limit: 2,                                 null: false
-    t.uuid     "visitor_id",               default: "uuid_generate_v4()", null: false
+  create_table "navigations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "name",       null: false
+    t.string   "url",        null: false
+    t.integer  "position"
+    t.uuid     "site_id",    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  add_index "request_logs", ["device_class"], name: "request_logs_device_class_idx", using: :btree
-  add_index "request_logs", ["site_id", "resource_type", "resource_id"], name: "request_logs_site_id_resource_type_resource_id_idx", using: :btree
+  create_table "permalinks", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "path",             null: false
+    t.string   "destination_type", null: false
+    t.uuid     "destination_id",   null: false
+    t.uuid     "site_id",          null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["site_id", "path"], name: "index_permalinks_on_site_and_path", unique: true, using: :btree
+  end
 
-  create_table "site_users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "redirects", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "location",   null: false
+    t.boolean  "permanent"
+    t.uuid     "site_id",    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "request_logs", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.integer  "status",        limit: 2,                                        null: false
+    t.boolean  "secure",                                                         null: false
+    t.string   "hostname",                                                       null: false
+    t.string   "path",                                                           null: false
+    t.hstore   "request",                  default: {},                          null: false
+    t.hstore   "response",                 default: {},                          null: false
+    t.uuid     "site_id",                                                        null: false
+    t.uuid     "resource_id"
+    t.string   "resource_type", limit: 50
+    t.datetime "created_at",                                                     null: false
+    t.integer  "device_class",  limit: 2
+    t.uuid     "visitor_id",               default: -> { "uuid_generate_v4()" }, null: false
+    t.uuid     "permalink_id"
+    t.boolean  "processed",                default: false,                       null: false
+    t.index ["device_class"], name: "request_logs_device_class_idx", using: :btree
+    t.index ["processed", "resource_type"], name: "index_request_logs_on_processed_and_resource_type", using: :btree
+    t.index ["site_id", "resource_type", "resource_id"], name: "request_logs_site_id_resource_type_resource_id_idx", using: :btree
+  end
+
+  create_table "site_users", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "site_id",                    null: false
     t.uuid     "user_id",                    null: false
     t.boolean  "manager",    default: false, null: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.index ["site_id", "user_id"], name: "index_site_users_on_site_id_and_user_id", unique: true, using: :btree
   end
 
-  add_index "site_users", ["site_id", "user_id"], name: "index_site_users_on_site_id_and_user_id", unique: true, using: :btree
-
-  create_table "sites", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "sites", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string   "name"
     t.string   "hostname"
-    t.text     "aliases",     default: [],              array: true
+    t.string   "aliases",     default: [],              array: true
     t.hstore   "config",      default: {}, null: false
     t.uuid     "homepage_id"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.index "lower((hostname)::text)", name: "index_sites_hostname", unique: true, using: :btree
+    t.index ["aliases"], name: "idx_sites_on_aliases", using: :gin
   end
 
-  add_index "sites", ["hostname"], name: "index_sites_on_hostname", unique: true, using: :btree
-
-  create_table "taggings", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.uuid     "tag_id"
-    t.uuid     "taggable_id"
-    t.string   "taggable_type", limit: 20
-    t.datetime "created_at"
+  create_table "stats_pageviews", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid "site_id",        null: false
+    t.uuid "stats_visit_id", null: false
+    t.date "date",           null: false
+    t.uuid "content_id",     null: false
+    t.uuid "request_log_id", null: false
+    t.index ["site_id", "date", "content_id"], name: "index_stats_pageviews_on_site_id_and_date_and_content_id", using: :btree
+    t.index ["stats_visit_id"], name: "idx_stats_pageviews_visit_id", using: :btree
   end
 
-  add_index "taggings", ["tag_id", "taggable_type", "taggable_id"], name: "taggings_tag_idx", unique: true, using: :btree
-  add_index "taggings", ["taggable_type", "taggable_id"], name: "taggings_idx", using: :btree
+  create_table "stats_visits", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid     "site_id",                                null: false
+    t.uuid     "visitor_id",                             null: false
+    t.string   "country_code", limit: 5
+    t.string   "country_name"
+    t.boolean  "mobile",                 default: false, null: false
+    t.date     "date",                                   null: false
+    t.datetime "started_at",                             null: false
+    t.datetime "ended_at",                               null: false
+    t.integer  "length"
+    t.index ["site_id", "date", "mobile"], name: "index_stats_visits_on_site_id_and_date_and_mobile", using: :btree
+  end
 
-  create_table "tags", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string  "name"
+  create_table "taggings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid     "tag_id",                   null: false
+    t.uuid     "taggable_id",              null: false
+    t.string   "taggable_type", limit: 20, null: false
+    t.datetime "created_at",               null: false
+    t.index ["tag_id", "taggable_type", "taggable_id"], name: "index_taggings_on_tag_id_and_taggable_type_and_taggable_id", unique: true, using: :btree
+    t.index ["taggable_type", "taggable_id"], name: "index_taggings_on_taggable_type_and_taggable_id", using: :btree
+  end
+
+  create_table "tags", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string  "name",                       null: false
+    t.string  "slug",                       null: false
+    t.uuid    "site_id",                    null: false
     t.integer "taggings_count", default: 0
-    t.uuid    "site_id"
+    t.index ["site_id", "slug"], name: "index_tags_on_site_and_slug", unique: true, using: :btree
   end
 
-  add_index "tags", ["site_id"], name: "index_tags_on_site_and_name", unique: true, using: :btree
-
-  create_table "users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string   "name"
     t.string   "email",                  default: "",    null: false
     t.string   "encrypted_password",     default: ""
@@ -215,28 +284,57 @@ ActiveRecord::Schema.define(version: 20150702102543) do
     t.integer  "invitation_limit"
     t.uuid     "invited_by_id"
     t.hstore   "prefs",                  default: {},    null: false
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
   end
 
-  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
+  create_table "visitor_postings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "type",       limit: 30,              null: false
+    t.hstore   "data",                  default: {}, null: false
+    t.hstore   "request",               default: {}, null: false
+    t.inet     "author_ip",                          null: false
+    t.integer  "status",                default: 0,  null: false
+    t.uuid     "content_id",                         null: false
+    t.uuid     "site_id",                            null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.datetime "deleted_at"
+    t.index ["site_id", "type", "content_id"], name: "index_visitor_postings_on_site_id_and_type_and_content_id", using: :btree
+    t.index ["status"], name: "index_visitor_postings_on_status", using: :btree
+  end
 
   add_foreign_key "assets", "sites"
-  add_foreign_key "comments", "contents", column: "post_id", name: "comments_post_id_fkey"
-  add_foreign_key "comments", "sites", name: "comments_site_id_fkey", on_delete: :cascade
+  add_foreign_key "assets", "users", column: "creator_id", on_delete: :nullify
+  add_foreign_key "categories", "assets", on_delete: :nullify
+  add_foreign_key "categories", "sites", on_delete: :cascade
+  add_foreign_key "contact_messages", "contents", on_delete: :nullify
+  add_foreign_key "contact_messages", "sites", on_delete: :cascade
+  add_foreign_key "contact_messages", "users", on_delete: :nullify
+  add_foreign_key "contents", "categories", on_delete: :nullify
   add_foreign_key "contents", "sites", on_delete: :cascade
   add_foreign_key "contents", "users", column: "author_id", name: "contents_author_id_fkey"
   add_foreign_key "drafts", "contents"
   add_foreign_key "extension_configs", "sites", on_delete: :cascade
+  add_foreign_key "fulltext_indices", "sites", name: "site_id_references_sites"
   add_foreign_key "memento_sessions", "users", on_delete: :cascade
   add_foreign_key "memento_states", "memento_sessions", column: "session_id", on_delete: :cascade
+  add_foreign_key "navigations", "sites", on_delete: :cascade
+  add_foreign_key "permalinks", "sites", on_delete: :cascade
+  add_foreign_key "redirects", "sites", on_delete: :cascade
+  add_foreign_key "request_logs", "permalinks", name: "request_logs_permalink_id_fkey", on_delete: :nullify
   add_foreign_key "request_logs", "sites", on_delete: :nullify
   add_foreign_key "site_users", "sites", on_delete: :cascade
   add_foreign_key "site_users", "users", on_delete: :cascade
   add_foreign_key "sites", "contents", column: "homepage_id", on_delete: :nullify
+  add_foreign_key "stats_pageviews", "contents", on_delete: :cascade
+  add_foreign_key "stats_pageviews", "request_logs", on_delete: :nullify
+  add_foreign_key "stats_pageviews", "sites", on_delete: :cascade
+  add_foreign_key "stats_pageviews", "stats_visits", on_delete: :cascade
+  add_foreign_key "stats_visits", "sites", on_delete: :cascade
   add_foreign_key "taggings", "tags", on_delete: :cascade
-  add_foreign_key "tags", "sites", name: "tags_site_id_fkey"
+  add_foreign_key "tags", "sites", on_delete: :cascade
   add_foreign_key "users", "users", column: "invited_by_id", on_delete: :nullify
 end

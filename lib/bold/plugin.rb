@@ -28,7 +28,7 @@ module Bold
     # installs a view hook which will only be rendered if the plugin is active
     # on the current site
     def render_on(hook, template)
-      super hook, template, if: ->(context){ Site.current.plugin_enabled?(id) }
+      super hook, template, if: ->(context){ Site.current&.plugin_enabled?(id) }
     end
 
     # override to dynamically add some css class(es) to the content's body tag

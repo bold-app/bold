@@ -24,9 +24,11 @@ class Asset < ActiveRecord::Base
   prepend Taggable
 
   has_many :request_logs, as: :resource
+  belongs_to :creator, class_name: 'User'
 
   mount_uploader :file, AssetUploader
 
+  before_create :set_creator
   before_save :store_metadata, if: :file_changed?
   after_save :call_post_processor, if: :file_changed?
 
@@ -49,7 +51,8 @@ class Asset < ActiveRecord::Base
 
   Bold::Search::AssetIndexer.setup self
 
-  %i( title caption width height taken_on attribution original_url ).each do |attribute|
+  %i( title caption width height taken_on attribution original_url
+      lat lon gps_altitude ).each do |attribute|
     store_accessor :meta, attribute
   end
 
@@ -217,7 +220,7 @@ class Asset < ActiveRecord::Base
     self.content_type = file.content_type
     self.file_size = file.size
 
-    get_jpeg_metadata if magic_content_type =~ /jpeg/
+    get_jpeg_metadata if magic_content_type == 'image/jpeg'
 
     if image? and width.blank? || height.blank?
       self.width, self.height = `identify -format "%wx%h" #{file.path}`.split(/x/) 
@@ -234,6 +237,17 @@ class Asset < ActiveRecord::Base
     self.height = exifr.height
     self.taken_on = exifr.date_time_original
 
+    if exifr.gps.present?
+      if exifr.gps.longitude.present? && exifr.gps.latitude.present?
+        self.lon = exifr.gps.longitude
+        self.lat = exifr.gps.latitude
+      end
+      if exifr.gps.altitude.present?
+        self.gps_altitude = exifr.gps.altitude
+      end
+    end
+
+
     if xmp = XMP.parse(exifr)
       if xmp.namespaces.include?('dc')
         self.tag_list = xmp.dc.subject rescue []
@@ -243,12 +257,17 @@ class Asset < ActiveRecord::Base
         self.caption = xmp.dc.description.join("\n") rescue nil
       end
     end
+    # TODO location data
   end
 
   def call_post_processor
     if !@skip_post_processing && persisted? && image? && scalable?
       ImageScalerJob.perform_later(self)
     end
+  end
+
+  def set_creator
+    self.creator ||= User.current
   end
 
 end

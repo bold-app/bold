@@ -2,6 +2,7 @@
 %html
   %head
     = render 'layouts/bold/html_head'
+    = call_hook :view_bold_layout_html_head
   %body
     #modal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "modal-label", :role => "dialog", :tabindex => "-1"}
     .navbar.navbar-inverse.navbar-static-top{:role => "navigation"}

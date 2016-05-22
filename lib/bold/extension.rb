@@ -143,7 +143,7 @@ module Bold
         register_lock.synchronize do
           id = id.to_sym
           new(id).tap do |ext|
-            ext.instance_eval &block
+            ext.instance_eval(&block)
             ext.gem_dir = begin
               # creepy but that's what Rails::Engine does as well...
               call_stack = if Kernel.respond_to?(:caller_locations)
@@ -207,7 +207,7 @@ module Bold
             constraint = Bold::Routes::ExtensionConstraint.new(extension)
             router.instance_eval do
               constraints constraint do
-                instance_eval &callable
+                instance_eval(&callable)
               end
             end
           end

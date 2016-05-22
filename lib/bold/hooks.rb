@@ -115,7 +115,6 @@ module Bold
       # the builder object as :builder in their locals.
       #
       def self.render_on(hook, options={})
-        Rails.logger.debug "render_on: #{hook}, #{options.inspect}"
         condition = options.delete :if
         define_method hook do |context|
           return if condition and !condition.call(context)

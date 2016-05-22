@@ -18,6 +18,7 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 ENV['RAILS_ENV'] ||= 'test'
+$VERBOSE=false
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'factory_girl_rails'

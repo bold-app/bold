@@ -3,6 +3,7 @@
 --
 
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -149,6 +150,18 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE ar_internal_metadata (
+    key character varying NOT NULL,
+    value character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
 -- Name: assets; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -162,7 +175,8 @@ CREATE TABLE assets (
     updated_at timestamp without time zone NOT NULL,
     slug character varying(500) NOT NULL,
     file_size integer NOT NULL,
-    disk_directory character varying
+    disk_directory character varying,
+    creator_id uuid
 );
 
 
@@ -593,6 +607,14 @@ ALTER TABLE ONLY memento_states ALTER COLUMN id SET DEFAULT nextval('memento_sta
 
 
 --
+-- Name: ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY ar_internal_metadata
+    ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
 -- Name: assets_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -815,6 +837,13 @@ CREATE INDEX idx_stats_pageviews_visit_id ON stats_pageviews USING btree (stats_
 --
 
 CREATE INDEX index_assets_on_site_id ON assets USING btree (site_id);
+
+
+--
+-- Name: index_assets_on_site_id_and_creator_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_assets_on_site_id_and_creator_id ON assets USING btree (site_id, creator_id);
 
 
 --
@@ -1144,6 +1173,14 @@ ALTER TABLE ONLY extension_configs
 
 
 --
+-- Name: fk_rails_bfb87a3769; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY assets
+    ADD CONSTRAINT fk_rails_bfb87a3769 FOREIGN KEY (creator_id) REFERENCES users(id) ON DELETE SET NULL;
+
+
+--
 -- Name: fk_rails_c2b6a4c44c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1245,75 +1282,6 @@ ALTER TABLE ONLY fulltext_indices
 
 SET search_path TO "$user",public;
 
-INSERT INTO schema_migrations (version) VALUES ('20140718191443');
+INSERT INTO schema_migrations (version) VALUES ('20140718191443'), ('20140722185008'), ('20140723074109'), ('20140723185956'), ('20140724152311'), ('20140724214204'), ('20140728195811'), ('20140730142844'), ('20140804080313'), ('20140807085247'), ('20140814074455'), ('20150219021551'), ('20150404054400'), ('20150421043312'), ('20150502111245'), ('20150503065121'), ('20150607050856'), ('20150607091857'), ('20150702102543'), ('20150807080050'), ('20150815095401'), ('20150816062234'), ('20150819094334'), ('20150830102633'), ('20150831065039'), ('20151006041322'), ('20151006044738'), ('20151006051929'), ('20151011074758'), ('20151024100100'), ('20160116081325'), ('20160213090357'), ('20160216110944'), ('20160219060400'), ('20160219085205'), ('20160219091840'), ('20160522082635');
 
-INSERT INTO schema_migrations (version) VALUES ('20140722185008');
-
-INSERT INTO schema_migrations (version) VALUES ('20140723074109');
-
-INSERT INTO schema_migrations (version) VALUES ('20140723185956');
-
-INSERT INTO schema_migrations (version) VALUES ('20140724152311');
-
-INSERT INTO schema_migrations (version) VALUES ('20140724214204');
-
-INSERT INTO schema_migrations (version) VALUES ('20140728195811');
-
-INSERT INTO schema_migrations (version) VALUES ('20140730142844');
-
-INSERT INTO schema_migrations (version) VALUES ('20140804080313');
-
-INSERT INTO schema_migrations (version) VALUES ('20140807085247');
-
-INSERT INTO schema_migrations (version) VALUES ('20140814074455');
-
-INSERT INTO schema_migrations (version) VALUES ('20150219021551');
-
-INSERT INTO schema_migrations (version) VALUES ('20150404054400');
-
-INSERT INTO schema_migrations (version) VALUES ('20150421043312');
-
-INSERT INTO schema_migrations (version) VALUES ('20150502111245');
-
-INSERT INTO schema_migrations (version) VALUES ('20150503065121');
-
-INSERT INTO schema_migrations (version) VALUES ('20150607050856');
-
-INSERT INTO schema_migrations (version) VALUES ('20150607091857');
-
-INSERT INTO schema_migrations (version) VALUES ('20150702102543');
-
-INSERT INTO schema_migrations (version) VALUES ('20150807080050');
-
-INSERT INTO schema_migrations (version) VALUES ('20150815095401');
-
-INSERT INTO schema_migrations (version) VALUES ('20150816062234');
-
-INSERT INTO schema_migrations (version) VALUES ('20150819094334');
-
-INSERT INTO schema_migrations (version) VALUES ('20150830102633');
-
-INSERT INTO schema_migrations (version) VALUES ('20150831065039');
-
-INSERT INTO schema_migrations (version) VALUES ('20151006041322');
-
-INSERT INTO schema_migrations (version) VALUES ('20151006044738');
-
-INSERT INTO schema_migrations (version) VALUES ('20151006051929');
-
-INSERT INTO schema_migrations (version) VALUES ('20151011074758');
-
-INSERT INTO schema_migrations (version) VALUES ('20151024100100');
-
-INSERT INTO schema_migrations (version) VALUES ('20160116081325');
-
-INSERT INTO schema_migrations (version) VALUES ('20160213090357');
-
-INSERT INTO schema_migrations (version) VALUES ('20160216110944');
-
-INSERT INTO schema_migrations (version) VALUES ('20160219060400');
-
-INSERT INTO schema_migrations (version) VALUES ('20160219085205');
-
-INSERT INTO schema_migrations (version) VALUES ('20160219091840');
 

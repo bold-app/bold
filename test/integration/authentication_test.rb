@@ -21,6 +21,16 @@ require 'test_helper'
 
 class AuthenticationTest < BoldIntegrationTest
 
+  test 'should redirect to original url after sign in' do
+    create(:site).add_user! @user
+    visit "/bold/sites/#{@site.id}"
+    assert_equal '/users/sign_in', current_path
+    fill_in 'Email address', with: @user.email
+    fill_in 'Password', with: 'secret.1'
+    click_on 'Sign in'
+    assert_equal "/bold/sites/#{@site.id}", current_path
+  end
+
   test 'should send password reset link' do
     visit '/bold'
 

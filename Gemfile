@@ -102,7 +102,14 @@ gem 'bold-theme-bootstrap', github: 'bold-app/bold-theme-bootstrap'
 gem 'bold-atom_feed', github: 'bold-app/bold-atom_feed'
 gem 'bold-piwik', github: 'bold-app/bold-piwik'
 
+base_dir = Pathname.new(__FILE__).dirname
 
-local = Pathname.new(__FILE__).dirname.join('Gemfile.local')
+Dir[base_dir.join('vendor', 'gems', '*')].each do |gem_dir|
+  if File.directory? gem_dir
+    gem File.basename(gem_dir), path: gem_dir
+  end
+end
+
+local = base_dir.join('Gemfile.local')
 instance_eval IO.read local if File.readable? local
 

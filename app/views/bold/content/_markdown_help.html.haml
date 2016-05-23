@@ -30,7 +30,13 @@
             %td ![Alt text](http://...)
           %tr
             %td Lists
-            %td * List item
+            %td
+              = "- List item"
+              %br/
+              (indent by two spaces for nested lists)
+          %tr
+            %td Numbered Lists
+            %td 1. List item
           %tr
             %td Blockquote
             %td &gt; quote
@@ -43,5 +49,8 @@
           %tr
             %td Headline 3rd level
             %td ### Headline
+          %tr
+            %td Abbreviations
+            %td *[ISS]: International Space Station
 
       %p=raw t '.more', link: link_to( t('.link'), 'http://kramdown.gettalong.org/quickref.html', target: '_blank')

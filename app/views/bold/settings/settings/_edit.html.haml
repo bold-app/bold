@@ -30,7 +30,7 @@
             %label.control-label= t'.logo'
             %div.logo
               - if @site.logo
-                = link_to image_tag(bold_asset_path(@site.logo), alt: 'logo'), logo_bold_settings_settings_path, remote: true
+                = link_to image_tag(bold_asset_path(@site.logo), alt: 'logo'), logo_bold_site_settings_settings_path, remote: true
                 &nbsp;
                 = link_to t('.change'), logo_bold_site_settings_settings_path(current_site), remote: true, class: 'btn btn-default btn-sm'
               - else

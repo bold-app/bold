@@ -1,6 +1,6 @@
-.col-xs-3.col-sm-2
+.col-xs-4.col-sm-3.col-md-2
   .thumbnail
-    = link_to asset_tag(asset), edit_bold_asset_path(asset), remote: true
+    = link_to asset_tag(asset, :bold_thumb_sq), edit_bold_asset_path(asset), remote: true
     .caption
       = asset.filename
       - if asset.title.present?

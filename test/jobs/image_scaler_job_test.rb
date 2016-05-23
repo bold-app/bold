@@ -32,7 +32,7 @@ class ImageScalerJobTest < ActiveJob::TestCase
     assert File.readable? thumb
     width, height = `identify -format "%wx%h" #{thumb}`.split(/x/).map(&:strip)
     assert_equal width, height
-    assert_equal 240, width.to_i
+    assert_equal 400, width.to_i
   end
 
 end

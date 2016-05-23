@@ -94,6 +94,10 @@ ul.nav.nav-tabs {
   margin-bottom: 10px;
 }
 
+.center {
+  text-align: center;
+}
+
 /* flash
 -------------------------------------------------- */
 
@@ -157,8 +161,11 @@ fieldset .row img.avatar {
 -------------------------------------------------- */
 
 // dimensions of backend image versions
-img.bold_thumb, img.bold_thumb_sq {
+img.bold_thumb {
   max-height: 120px;
+}
+img.bold_thumb_sq {
+  max-height: 200px;
 }
 img.bold_thumb.small, img.bold_thumb_sq.small {
   max-height: 60px;

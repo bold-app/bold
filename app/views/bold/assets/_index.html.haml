@@ -1,0 +1,10 @@
+.col-xs-12
+  .row
+    .col-xs-12.center
+      = bold_pagination_for @assets, remote: true
+  .row
+    = render partial: 'asset', collection: @assets
+  .row
+    .col-xs-12.center
+      = bold_pagination_for @assets, remote: true
+

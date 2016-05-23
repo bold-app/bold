@@ -198,9 +198,8 @@ class Site < ActiveRecord::Base
   # these are used in the backend
   DEFAULT_IMAGE_VERSIONS = [
     { name: :bold_thumb,    height: 240, quality: 60 },
-    { name: :bold_thumb_sq, width: 240, height: 240, crop: true, quality: 60 },
+    { name: :bold_thumb_sq, width: 400, height: 400, crop: true, quality: 60 },
     { name: :bold_preview,    width: 600, quality: 60 },
-    { name: :bold_preview_sq, width: 600, height: 600, crop: true, quality: 60 },
   ].map{|parameters| Bold::ImageVersion.new parameters }
 
   # available image versions under the current theme

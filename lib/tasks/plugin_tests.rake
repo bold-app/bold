@@ -20,8 +20,15 @@
 namespace :bold do
   namespace :plugin do
 
+    Rake::TestTask.new :travis => ['db:create', 'db:structure:load'] do |t|
+      t.description = "run plugin tests (travis ci)"
+      t.libs << "test"
+      t.verbose = true
+      t.pattern = "vendor/gems/#{ENV['PLUGIN'] || '*'}/test/*/*_test.rb"
+    end
+
     Rake::TestTask.new :test => 'db:test:clone_structure' do |t|
-      t.description = "run plugin tests"
+      t.description = "run plugin tests (dev machine)"
       t.libs << "test"
       t.verbose = true
       t.pattern = "vendor/gems/#{ENV['PLUGIN'] || '*'}/test/*/*_test.rb"

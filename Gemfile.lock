@@ -29,7 +29,7 @@ GIT
 
 GIT
   remote: git://github.com/bold-app/bold-theme-bootstrap.git
-  revision: 8caaa2bda785bc20670ba45d0cb80cbbdc748a5c
+  revision: 4beb1c14eb2de5e380ac7ce0906a55cd370c46b7
   specs:
     bold-theme-bootstrap (1.0.0)
 

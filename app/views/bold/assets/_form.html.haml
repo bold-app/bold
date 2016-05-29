@@ -1,14 +1,43 @@
-.meta
-  .thumb
-    - if @asset.image?
-      = asset_tag @asset, :bold_thumb
-    - else
-      = placeholder_image_tag 105, 4.0/3
+.row
+  .col-xs-12.col-sm-6
+    = asset_tag @asset, :bold_preview
 
-  = render 'meta', asset: @asset
+  .col-xs-12.col-sm-6
+    %p
+      %strong= @asset.filename
 
-= f.input :title, label: false, placeholder: t('simple_form.labels.defaults.title'), wrapper_html: { class: 'clearfix'}, input_html: { class: 'input-sm' }
-= f.input :caption, label: false, placeholder: t('simple_form.labels.asset.caption'), input_html: { class: 'input-sm' }
-= f.input :attribution, label: false, placeholder: t('simple_form.labels.asset.attribution'), input_html: { class: 'input-sm' }
-= f.input :original_url, label: false, placeholder: t('simple_form.labels.asset.original_url'), input_html: { class: 'input-sm' }
-= f.input :tag_list, input_html: { class: 'input-sm', rows: 3 }, as: :text
+    %dl
+      - if @asset.image? && @asset.taken_on.present?
+        %dt= t'.taken_on'
+        %dd= @asset.taken_on_date
+      %dt= t'.uploaded'
+      %dd= @asset.creation_date
+      %dt= t'.size'
+      %dd
+        = number_to_human_size @asset.file_size
+        - if @asset.image? and d = @asset.dimensions
+          = '/ ' + d
+
+  - if @asset.portrait?
+    .col-xs-12.col-sm-6
+      = f.input :title, label: false, placeholder: t('simple_form.labels.defaults.title'), wrapper_html: { class: 'clearfix'}, input_html: { class: 'input-sm' }
+      = f.input :caption, label: false, placeholder: t('simple_form.labels.asset.caption'), input_html: { class: 'input-sm' }
+      = f.input :attribution, label: false, placeholder: t('simple_form.labels.asset.attribution'), input_html: { class: 'input-sm' }
+      = f.input :original_url, label: false, placeholder: t('simple_form.labels.asset.original_url'), input_html: { class: 'input-sm' }
+      = f.input :tag_list, label: false, placeholder: t('simple_form.labels.defaults.tag_list'), input_html: { class: 'input-sm' }
+
+
+- unless @asset.portrait?
+  .row
+    .col-xs-12.col-sm-6
+      = f.input :title, label: false, placeholder: t('simple_form.labels.defaults.title'), wrapper_html: { class: 'clearfix'}, input_html: { class: 'input-sm' }
+    .col-xs-12.col-sm-6
+      = f.input :caption, label: false, placeholder: t('simple_form.labels.asset.caption'), input_html: { class: 'input-sm' }
+    .col-xs-12.col-sm-6
+      = f.input :attribution, label: false, placeholder: t('simple_form.labels.asset.attribution'), input_html: { class: 'input-sm' }
+    .col-xs-12.col-sm-6
+      = f.input :original_url, label: false, placeholder: t('simple_form.labels.asset.original_url'), input_html: { class: 'input-sm' }
+    .col-xs-12.col-sm-6
+      = f.input :tag_list, label: false, placeholder: t('simple_form.labels.defaults.tag_list'), input_html: { class: 'input-sm' }
+
+

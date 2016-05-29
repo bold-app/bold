@@ -14,6 +14,7 @@ en:
   common:
     back: Back
     more: More
+    delete: Delete
 
   flash:
     admin:
@@ -241,15 +242,18 @@ en:
         button_close: Cancel
 
     assets:
-      asset:
+      edit:
+        button_close: Cancel
+        change_file: Replace file...
         confirm_delete:
           zero: Delete %{name}?
           one: "%{name} is referenced by one page or post. Delete anyway?"
           other: "%{name} is referenced by %{count} pages or posts. Delete anyway?"
-      edit:
-        button_close: Cancel
-        change_file: Replace file...
         save: Update
+      form:
+        size: Size
+        taken_on: Taken on
+        uploaded: Uploaded
       index:
         upload: Upload
       new:

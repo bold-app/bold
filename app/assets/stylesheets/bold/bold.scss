@@ -160,6 +160,22 @@ fieldset .row img.avatar {
 /* assets
 -------------------------------------------------- */
 
+#new_asset_search.form-inline {
+  margin-bottom: 20px;
+}
+
+/* edit asset modal */
+.modal-content.assets-edit {
+  button.close {
+    float: none;
+    position: absolute;
+    right: 14px;
+    top: 9px;
+  }
+  img {
+    margin-bottom: 20px;
+  }
+}
 // dimensions of backend image versions
 img.bold_thumb {
   max-height: 120px;
@@ -179,12 +195,6 @@ img.bold_preview, img.bold_preview_sq {
 
 header.assets {
   margin-bottom: 20px;
-}
-.thumbnail {
-  overflow: hidden;
-  .caption {
-    font-size: smaller;
-  }
 }
 
 div.asset-link-picker {

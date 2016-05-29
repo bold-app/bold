@@ -41,8 +41,9 @@ module BoldHelper
   end
 
   def asset_tag(asset, version = :bold_thumb, html_class = '')
+    # FIXME  show n/a icon for non-readable assets
     if asset.image? && asset.readable?
-      path = asset.readable?(version) ? bold_asset_path(asset, version: version) : bold_asset_path(asset)
+      path = bold_asset_path(asset, version: version)
       image_tag path, alt: asset.title, class: "#{html_class} #{version}".strip
     elsif mime_type = asset.mime_type
       teambox_icon mime_type, 512

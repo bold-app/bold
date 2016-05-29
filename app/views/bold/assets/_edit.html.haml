@@ -1,12 +1,11 @@
-.modal-dialog.modal-sm
-  .modal-content
-
-    .modal-header
-      %button.close{"data-dismiss" => "modal", :type => "button"} ×
-      %h4#modal-label.modal-title= @asset.name
+.modal-dialog.modal-lg
+  .modal-content.assets-edit
 
     .modal-body
+      %button.close{"data-dismiss" => "modal", :type => "button"} ×
+
       = simple_form_for @asset, remote: true, url: bold_asset_path(@asset), multipart: true do |f|
+
         = render 'form', f: f
 
     .modal-footer
@@ -20,6 +19,7 @@
           %span= t('.change_file')
           = f.file_field :file, :multiple => false
 
+      = link_to t('common.delete'), bold_asset_path(@asset), method: :delete, data: { confirm: t('.confirm_delete', name: @asset.name, count: 0) }, class: 'btn btn-danger pull-left'
       = button '.save', 'primary', id: 'update-meta'
 
 = javascript_tag do

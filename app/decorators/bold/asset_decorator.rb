@@ -39,4 +39,8 @@ class Bold::AssetDecorator < Draper::Decorator
     end
   end
 
+  def portrait?
+    image? and width.present? and height.present? and width.to_i < height.to_i
+  end
+
 end

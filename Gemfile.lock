@@ -22,6 +22,12 @@ GIT
       liquid (~> 3.0)
 
 GIT
+  remote: git://github.com/bold-app/bold-featherlight.git
+  revision: 8d2829fc8e88f1aa4fd8c42742d431df410e744d
+  specs:
+    bold-featherlight (0.1.0)
+
+GIT
   remote: git://github.com/bold-app/bold-piwik.git
   revision: 319c740c0b55ff0e50ca4357feea1f1392822c15
   specs:
@@ -406,6 +412,7 @@ DEPENDENCIES
   acts_as_list!
   akismet (~> 2.0.0)
   bold-atom_feed!
+  bold-featherlight!
   bold-piwik!
   bold-theme-bootstrap!
   bold-theme-casper!

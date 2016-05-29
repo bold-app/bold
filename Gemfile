@@ -94,13 +94,14 @@ group :test do
 end
 
 # Some default themes
-gem 'bold-theme-casper', github: 'bold-app/bold-theme-casper'
-gem 'bold-theme-lean', github: 'bold-app/bold-theme-lean'
+gem 'bold-theme-casper',    github: 'bold-app/bold-theme-casper'
+gem 'bold-theme-lean',      github: 'bold-app/bold-theme-lean'
 gem 'bold-theme-bootstrap', github: 'bold-app/bold-theme-bootstrap'
 
 # plugins
-gem 'bold-atom_feed', github: 'bold-app/bold-atom_feed'
-gem 'bold-piwik', github: 'bold-app/bold-piwik'
+gem 'bold-atom_feed',    github: 'bold-app/bold-atom_feed'
+gem 'bold-featherlight', github: 'bold-app/bold-featherlight'
+gem 'bold-piwik',        github: 'bold-app/bold-piwik'
 
 base_dir = Pathname.new(__FILE__).dirname
 

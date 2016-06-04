@@ -32,37 +32,51 @@ class TagsTest < ActiveSupport::TestCase
     @tags = Bold::Tags.new @site
   end
 
+  test 'should handle number of tags less than no of groups' do
+    assert_equal 5, @site.tags.size
+    assert tags = @tags.grouped_tags(groups: 4, limit: 2)
+    assert_equal 2, tags.size
+    assert_equal %w(three one), tags.flatten.map(&:name)
+  end
+
+  test 'should limit number of tags' do
+    assert_equal 5, @site.tags.size
+    assert tags = @tags.grouped_tags(groups: 2, limit: 4)
+    assert_equal 2, tags.size
+    assert_equal %w(three one two bar), tags.flatten.map(&:name)
+  end
+
+  test 'should create tags array with group id' do
+    weighted_tags = @tags.weighted_tags(groups: 2, limit: 4)
+    tags = weighted_tags.transpose
+    assert_equal %w(three one two bar), tags[0].map(&:name)
+    assert_equal [0, 0, 1, 1], tags[1]
+  end
+
   test 'should group tags in 2 groups' do
     assert_equal 5, @site.tags.size
-    assert tags = @tags.grouped_tags(2)
-    assert_equal 5, tags.size
-    tags = tags.transpose
-    assert_equal %w(bar foo one two three), tags[0].map(&:name)
-    assert_equal [1,1,2,2,2], tags[1]
+    assert tags = @tags.grouped_tags(groups: 2)
+    assert_equal 2, tags.size
+    assert_equal 3, tags[0].size
+    assert_equal %w(three one two bar foo), tags.flatten.compact.map(&:name)
   end
 
   test 'should group tags in 3 groups' do
-    assert tags = @tags.grouped_tags(3)
-    assert_equal 5, tags.size
-    tags = tags.transpose
-    assert_equal %w(bar foo one two three), tags[0].map(&:name)
-    assert_equal [1,2,2,3,3], tags[1]
+    assert tags = @tags.grouped_tags(groups: 3)
+    assert_equal 3, tags.size
+    assert_equal %w(three one two bar foo), tags.flatten.compact.map(&:name)
   end
 
   test 'should group tags in 4 groups' do
-    assert tags = @tags.grouped_tags(4)
-    assert_equal 5, tags.size
-    tags = tags.transpose
-    assert_equal %w(bar foo one two three), tags[0].map(&:name)
-    assert_equal [1,2,3,4,4], tags[1]
+    assert tags = @tags.grouped_tags(groups: 4)
+    assert_equal 3, tags.size
+    assert_equal %w(three one two bar foo), tags.flatten.compact.map(&:name)
   end
 
   test 'should group tags in 5 groups' do
-    assert tags = @tags.grouped_tags(5)
+    assert tags = @tags.grouped_tags(groups: 5)
     assert_equal 5, tags.size
-    tags = tags.transpose
-    assert_equal %w(bar foo one two three), tags[0].map(&:name)
-    assert_equal [1,2,3,4,5], tags[1]
+    assert_equal %w(three one two bar foo), tags.flatten.map(&:name)
   end
 
 end

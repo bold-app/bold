@@ -23,25 +23,36 @@ module Bold
       @site = site
     end
 
-    # segments tags in _groups_ groups of roughly the same size, so the first
-    # group has the least used tags, and the last those used most often.
-    # returns an array of [tag, group_index] pairs with group_index ranging
-    # from 1 to _groups_.
-    def grouped_tags(groups = 4)
-      tags = @site.tags.where('taggings_count > 0')
-      tag_count = tags.count
-      group_size = tag_count / groups.to_f
-      [].tap do |result|
-        tags.order('taggings_count ASC, lower(name) ASC').to_a.each_with_index do |tag, idx|
-          group = ((idx+1)/group_size).ceil
-          group = groups if group > groups
-          result << [tag.decorate, group]
-        end
+    # returns an array of [tag, group_index] pairs.
+    #
+    # Lower group index means more frequently used tag, starting with 0.
+    def weighted_tags(*args)
+      result = []
+      grouped_tags(*args).each_with_index do |tags, index|
+        result << tags.compact.map{|t| [t, index]}
       end
+      return result.flatten(1)
     end
 
-    def each(&block)
-      grouped_tags.each &block
+    # segments tags in _groups_ groups of roughly the same size, so the first
+    # group has the most used tags, and the last those used the least.
+    # returns an array of arrays, holding decorated tags.
+    #
+    # There may be less groups returned than requested, but it will never be
+    # more.
+    def grouped_tags(groups: 4, limit: nil)
+      tags = @site.tags.where('taggings_count > 0')
+      tags = tags.limit(limit.to_i) if limit
+      tag_count = tags.count
+      groups = groups.to_i
+      groups = tag_count if groups > tag_count
+      group_size = (tag_count / groups.to_f).ceil
+
+      tags.
+        order('taggings_count DESC, lower(name) ASC').
+        map(&:decorate).
+        in_groups_of(group_size)
     end
+
   end
 end

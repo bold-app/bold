@@ -227,11 +227,10 @@ module FrontendHelper
   # Be sure to include them when you roll your own layout.
   #
   def bold_meta
-    site.site_meta_tags.tap do |out|
+    site.site_html_head_tags.tap do |out|
       if o = displayed_object and o.respond_to?(:meta_tags) and response.status == 200 # dont bother outputting meta tags on error pages
         out << o.meta_tags
       end
-      out << site.html_head_snippet.to_s.html_safe
       out << call_hook(:view_layout_html_head)
     end
   end

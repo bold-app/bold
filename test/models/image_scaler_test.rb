@@ -34,7 +34,7 @@ class ImageScalerTest < ActiveSupport::TestCase
 
   test 'should create scaled image version' do
     cfg = { name: 'small', width: 200, ratio: 2, quality: 50, crop: false }
-    assert path = @scaler.create_version(cfg)
+    assert path = @scaler.send(:create_version, cfg)
     img = MiniMagick::Image.open path
     assert_equal 133, img[:width]
     assert_equal 100, img[:height]
@@ -42,7 +42,7 @@ class ImageScalerTest < ActiveSupport::TestCase
 
   test 'should create cropped image version' do
     cfg = { name: 'cropped', width: 200, ratio: 2, quality: 50, crop: true }
-    assert path = @scaler.create_version(cfg)
+    assert path = @scaler.send(:create_version, cfg)
     img = MiniMagick::Image.open path
     assert_equal 200, img[:width]
     assert_equal 100, img[:height]

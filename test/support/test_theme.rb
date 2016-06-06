@@ -40,7 +40,7 @@ Bold::Theme.register :test do
   render_on :view_layout_html_head_start, 'html_head'
 
   image_version :small, width: 280, height: 210, quality: 80, crop: true
-  image_version :big, width: 1000, height: 1000, quality: 80, crop: false
+  image_version :big, width: 1000, height: 1000, quality: 80, crop: false, alternatives: { mobile: { width: 750 } }
 end
 
 ActionController::Base.append_view_path 'test/support/views'

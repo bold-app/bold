@@ -49,6 +49,7 @@ class Site < ActiveRecord::Base
   # the mail_from setting is unused atm, add UI once we need it, i.e. once
   # sites send emails for whatever reason
   CONFIG_ATTRIBUTES = %i(
+    adaptive_images
     akismet_key
     author_page_id
     archive_page_id
@@ -60,13 +61,12 @@ class Site < ActiveRecord::Base
     default_locale
     detect_user_locale
     error_page_id
-    honor_donottrack
     favicon_id
-    logo_id
+    honor_donottrack
     html_head_snippet
+    logo_id
     mail_from
     notfound_page_id
-    url_scheme
     post_comments
     search_page_id
     site_css
@@ -76,6 +76,7 @@ class Site < ActiveRecord::Base
     time_zone_name
     tsearch_config
     twitter_handle
+    url_scheme
   )
 
   CONFIG_ATTRIBUTES.each do |attribute|
@@ -204,7 +205,6 @@ class Site < ActiveRecord::Base
 
   # available image versions under the current theme
   def image_versions
-    # DEFAULT_IMAGE_VERSIONS + theme.image_versions.values
     if theme.image_versions.any?
       theme.image_versions.values
     else
@@ -212,8 +212,13 @@ class Site < ActiveRecord::Base
     end
   end
 
+  def image_version(name)
+    name = name.to_s
+    image_versions.detect{|v| v.name.to_s == name}
+  end
+
   def has_image_version?(name)
-    name.to_s == 'original' or image_versions.detect{|v| v.name.to_s == name.to_s}.present?
+    name.to_s == 'original' or image_version(name).present?
   end
 
   def authors
@@ -287,6 +292,10 @@ class Site < ActiveRecord::Base
     honor_donottrack.to_s == '1'
   end
 
+  def adaptive_images?
+    adaptive_images.to_s == '1'
+  end
+
   def compute_stats
     transaction do
       StatsPageview.build_pageviews self
@@ -315,6 +324,7 @@ class Site < ActiveRecord::Base
     self.time_zone_name = Time.zone.name
     self.theme_name ||= 'none'
     self.tsearch_config ||= 'bold_english'
+    self.adaptive_images ||= '1'
     create_theme_config
   end
 

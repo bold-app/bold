@@ -26,6 +26,45 @@ module Frontend
       @asset = create :asset, site: @site
     end
 
+    test 'should show hi res asset if enabled' do
+      @site.update_attributes adaptive_images: '1'
+      @request.cookies['boldScreenSize'] = '2'
+      get :show, params: { id: @asset.to_param, version: 'big' }
+      assert_response :success
+      assert disp = @response.headers['Content-Disposition']
+      assert_equal "inline; filename=\"big_2x_#{@asset.filename}\"", disp
+    end
+
+    test 'should show 3x hi res asset' do
+      @site.update_attributes adaptive_images: '1'
+      @request.cookies['boldScreenSize'] = '3|736' # iphone 6+
+      get :show, params: { id: @asset.to_param, version: 'big' }
+      assert_response :success
+      assert disp = @response.headers['Content-Disposition']
+      assert_equal "inline; filename=\"big_mobile_3x_#{@asset.filename}\"", disp
+    end
+
+    test 'should set dpr cookie' do
+      get :display_config, params: { dpr: 2, res: 1024 }
+      assert_response 204
+      assert_equal 2, session[:dpr]
+      assert_equal 1024, session[:res]
+    end
+
+    test 'should ignore invalid dpr' do
+      get :display_config, params: { dpr: 4 }
+      assert_response 204
+      assert_nil session[:dpr]
+      assert_nil session[:res]
+    end
+
+    test 'should ignore missing res' do
+      get :display_config, params: { dpr: 2 }
+      assert_response 204
+      assert_equal 2, session[:dpr]
+      assert_nil session[:res]
+    end
+
     test 'should show asset' do
       get :show, params: { id: @asset.to_param }
       assert_response :success

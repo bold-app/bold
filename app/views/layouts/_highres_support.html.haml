@@ -1,0 +1,6 @@
+- unless session[:dpr].present?
+  = javascript_tag "(function(w){var res=Math.max(screen.width,screen.height);var dpr=((w.devicePixelRatio===undefined)?1:w.devicePixelRatio);if(!!w.navigator.standalone){var r=new XMLHttpRequest();r.open('GET','#{j display_config_path}?dpr='+dpr+'&res='+res,false);r.send()}else{document.cookie='#{Frontend::AssetsController::COOKIE}='+dpr+'|'+res+'; path=/'}})(window);"
+  %noscript
+    %style{id:"devicePixelRatio", media:"only screen and (-moz-min-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2)"}
+      html{ background-image:url("#{display_config_path}?dpr=2"); }
+

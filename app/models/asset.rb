@@ -257,6 +257,7 @@ class Asset < ActiveRecord::Base
         self.caption = xmp.dc.description.join("\n") rescue nil
       end
     end
+
     # TODO location data
   end
 

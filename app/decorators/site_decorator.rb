@@ -19,11 +19,11 @@
 #
 class SiteDecorator < Draper::Decorator
   include PostList
-  delegate :name, :theme_name, :html_head_snippet, :body_start_snippet, :body_end_snippet, :tags, :search_page, :site_js
+  delegate :name, :theme_name, :body_start_snippet, :body_end_snippet, :tags, :search_page, :site_js
 
 
-  # global meta tags displayed on every page
-  def site_meta_tags
+  # global meta tags and other html-head things rendered on every page
+  def site_html_head_tags
     h.csrf_meta_tags.to_s.tap do |output|
       output << "\n"
       if object.favicon.present?
@@ -33,6 +33,10 @@ class SiteDecorator < Draper::Decorator
       if object.site_css.present?
         output << h.stylesheet_link_tag(h.site_content_path(format: :css))
       end
+      if object.adaptive_images?
+        output << h.render('layouts/highres_support')
+      end
+      output << object.html_head_snippet.to_s.html_safe
     end
   end
 

@@ -157,6 +157,9 @@ Rails.application.routes.draw do
 
   # Frontend routes
 
+  # retina support
+  get 'displayconfig' => 'frontend/assets#display_config', as: :display_config
+
   # Sitemap
   get 'sitemap.xml' => 'frontend/sitemaps#show', as: :sitemap, defaults: { format: :xml }
 

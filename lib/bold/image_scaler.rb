@@ -29,17 +29,28 @@ module Bold
     def initialize(asset)
       raise ArgumentError.new('no image given') unless asset && asset.image?
       @asset = asset
+      @site = asset.site
     end
 
 
     # creates all the versions configured for the asset's site
     def run
-      (Site::DEFAULT_IMAGE_VERSIONS + @asset.site.image_versions).each do |image_version|
-        Rails.logger.info "creating version of #{@asset.title} #{image_version.name}"
-        create_version image_version.to_hash
+      (Site::DEFAULT_IMAGE_VERSIONS +
+         @site.image_versions).uniq.each do |image_version|
+
+        # create adaptive image sizes if enabled:
+        if @site.adaptive_images?
+          image_version.possible_variations.each do |v|
+            create_version v.to_hash
+          end
+        else
+          create_version image_version.to_hash
+        end
       end
     end
 
+
+    private
 
 
     # config: { name: :large, width: 2048, height: 2048, quality: 70, crop: false }

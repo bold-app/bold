@@ -496,6 +496,7 @@ en:
       settings:
         edit:
           akismet_key_hint: Akismet is a comment spam filtering service. To use it, get an API key at akismet.com
+          adaptive_images_hint: Delivers high resolution images to devices with Retina or similar displays. Also adjusts image sizes to enhance performance with mobile devices.
           twitter_hint: "For Twitter Card meta data."
           comments:
             disabled: Disabled
@@ -633,6 +634,7 @@ en:
         html_head_snippet: Insert into <head>
         body_start_snippet: Insert at beginning of <body>
         body_end_snippet: Append to <body>
+        adaptive_images: Adaptive images
         site_css: Custom CSS
         site_js: Custom JavaScript
         name: Site name

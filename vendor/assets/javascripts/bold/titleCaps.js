@@ -11,13 +11,13 @@
   var punct = "([!\"#$%&'()*+,./:;<=>?@[\\\\\\]^_`{|}~-]*)";
 
   this.titleCaps = function(title){
-    var parts = [], split = /[:.;?!] |(?: |^)["Ò]/g, index = 0;
+    var parts = [], split = /[:.;?!] |(?: |^)["Ã’]/g, index = 0;
 
     while (true) {
       var m = split.exec(title);
 
       parts.push( title.substring(index, m ? m.index : title.length)
-        .replace(/\b([A-Za-z][a-z.'Õ]*)\b/g, function(all){
+        .replace(/\b([A-Za-z][a-z.'Ã•]*)\b/g, function(all){
           return /[A-Za-z]\.[A-Za-z]/.test(all) ? all : upper(all);
         })
         .replace(RegExp("\\b" + small + "\\b", "ig"), lower)
@@ -33,7 +33,7 @@
     }
 
     return parts.join("").replace(/ V(s?)\. /ig, " v$1. ")
-      .replace(/(['Õ])S\b/ig, "$1s")
+      .replace(/(['Ã•])S\b/ig, "$1s")
       .replace(/\b(AT&T|Q&A)\b/ig, function(all){
         return all.toUpperCase();
       });

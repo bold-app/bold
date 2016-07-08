@@ -23,7 +23,7 @@ class Admin::ImportsControllerTest < ActionController::TestCase
 
   setup do
     @admin = create :confirmed_admin
-    sign_in :user, @admin
+    sign_in @admin
   end
 
   test "should get new" do

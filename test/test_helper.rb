@@ -53,15 +53,15 @@ class ActiveSupport::TestCase
 end
 
 class ActionController::TestCase
-  include Devise::TestHelpers
+  include Devise::Test::ControllerHelpers
 
   def assert_access_denied
     assert_redirected_to new_user_session_path
   end
 
-  def sign_in(*args)
-    super
-    ::Bold.current_user = args.last
+  def sign_in(user, scope: :user)
+    super user, scope: scope
+    ::Bold.current_user = user
   end
 
   setup do

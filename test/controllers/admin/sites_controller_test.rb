@@ -24,7 +24,7 @@ module Admin
 
     setup do
       @admin = create :confirmed_admin
-      sign_in :user, @admin
+      sign_in @admin
     end
 
     test 'should require login' do
@@ -38,19 +38,19 @@ module Admin
       @site.add_user! user
       assert user.site_user?(@site)
 
-      sign_in :user, user
+      sign_in user
       get :index
       assert_access_denied
 
-      sign_in :user, user
+      sign_in user
       get :new
       assert_access_denied
 
-      sign_in :user, user
+      sign_in user
       post :create, params: { site: {} }
       assert_access_denied
 
-      sign_in :user, user
+      sign_in user
       delete :destroy, params: { id: @site.id }
       assert_access_denied
     end

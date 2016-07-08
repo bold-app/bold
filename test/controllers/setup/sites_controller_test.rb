@@ -30,7 +30,7 @@ class Setup::SitesControllerTest < ActionController::TestCase
   end
 
   test "should get new" do
-    sign_in :user, @user
+    sign_in @user
     get :new
     assert_response :success
   end
@@ -43,7 +43,7 @@ class Setup::SitesControllerTest < ActionController::TestCase
   end
 
   test 'should require admin' do
-    sign_in :user, create(:confirmed_user)
+    sign_in create(:confirmed_user)
     get :new
     assert_access_denied
     post :create
@@ -51,7 +51,7 @@ class Setup::SitesControllerTest < ActionController::TestCase
   end
 
   test 'should create site' do
-    sign_in :user, @user
+    sign_in @user
     assert_difference 'Site.count' do
       post :create, params: { site: { name: 'foo', theme_name: 'test', hostname: 'example.com' } }
     end
@@ -60,7 +60,7 @@ class Setup::SitesControllerTest < ActionController::TestCase
   end
 
   test 'should not run when site exists' do
-    sign_in :user, @user
+    sign_in @user
     create :site
     get :new
     assert_redirected_to '/bold/sites'

@@ -24,7 +24,7 @@ module Admin
 
     setup do
       @admin = create :confirmed_admin
-      sign_in :user, @admin
+      sign_in @admin
       @user = create(:confirmed_user)
       @site_user = @user.site_users.create! site: @site
     end
@@ -64,27 +64,27 @@ module Admin
     test 'should require admin' do
       user = create(:confirmed_user)
 
-      sign_in :user, user
+      sign_in user
       get :new, params: { user_id: @user.id }
       assert_access_denied
 
-      sign_in :user, user
+      sign_in user
       get :new, xhr: true, params: { user_id: @user.id }
       assert_response 401
 
-      sign_in :user, user
+      sign_in user
       post :create, xhr: true, params: { user_id: @user.id, site_user: {} }
       assert_response 401
 
-      sign_in :user, user
+      sign_in user
       get :edit, xhr: true, params: { user_id: @user.id, id: @site_user.id }
       assert_response 401
 
-      sign_in :user, user
+      sign_in user
       patch :update, xhr: true, params: { user_id: @user.id, id: @site_user.id, site_user: {} }
       assert_response 401
 
-      sign_in :user, user
+      sign_in user
       delete :destroy, params: { user_id: @user.id, id: @site_user.id }
       assert_access_denied
     end

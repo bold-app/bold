@@ -24,7 +24,9 @@ module Bold
       class Base
         attr_reader :from, :to
 
-        def initialize(to: Date.today, from: (to - 4.weeks), site: Site.current)
+        def initialize(to: Time.zone.today,
+                       from: (to - 4.weeks),
+                       site: Site.current)
           @site = site
           @from = to_date from
           @to   = to_date to

@@ -28,7 +28,7 @@ class AssetTest < ActiveSupport::TestCase
     asset = create :asset, file: nil, site: @site, remote_file_url: 'https://oft-unterwegs.de/files/inline/7e9aaa6e-c1e4-48b6-8d70-e866ac01359f/teaser'
     assert asset.image?
     assert asset.scalable?
-    assert_equal 28907, asset.file_size
+    assert_equal 45232, asset.file_size
     assert asset.persisted?
   end
 

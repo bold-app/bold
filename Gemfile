@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'nokogiri'
-gem 'rails', '5.0.0.rc2'
+gem 'rails', '~> 5.0.0'
 gem 'rails-i18n', '~> 4.0'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
@@ -11,7 +11,7 @@ gem 'therubyracer', platforms: :ruby
 gem 'pg', '~> 0.18.2', platforms: :ruby
 gem "activerecord-jdbcpostgresql-adapter", platforms: :jruby
 
-gem 'jquery-rails', '~> 4.0.4'
+gem 'jquery-rails' #, '~> 4.0.4'
 # gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
@@ -28,7 +28,7 @@ gem 'daemons'
 gem 'delayed_job_active_record', '~> 4.0'
 
 # FIXME revert to ~> 4.0.0 once released
-gem 'devise', '4.0.0.rc1'
+gem 'devise', '4.2.0'
 gem 'devise_invitable', github: 'bold-app/devise_invitable', branch: 'bold'
 
 gem 'diffy', '~> 3.0.7'
@@ -43,8 +43,8 @@ gem 'http_accept_language', '~> 2.0.5'
 gem 'httparty', '~> 0.13.5'
 gem 'i18n_language_select', github: 'bold-app/i18n_language_select'
 gem 'jquery-fileupload-rails', github: 'bold-app/jquery-fileupload-rails'
-#gem 'kaminari', '~> 0.16'
-gem 'kaminari', github: 'amatsuda/kaminari'
+gem 'kaminari', '~> 0.17'
+#gem 'kaminari', github: 'amatsuda/kaminari'
 gem 'memento', '~> 0.4.3', github: 'bold-app/memento'
 gem 'mimemagic', '~> 0.3.1'
 gem 'mini_magick', '~> 3.0'
@@ -75,7 +75,6 @@ gem 'xmp', github: 'jkraemer/xmp'
 group :development, :test do
   gem 'pry-byebug', platforms: :ruby
   gem 'puma'
-  gem 'quiet_assets'
   gem 'spring'
   #gem 'yaml_db'
 end

@@ -25,6 +25,16 @@ class PageTest < ActiveSupport::TestCase
     Bold.current_site = @site
   end
 
+  test 'new page should have site' do
+    p = Page.new title: 'my new page'
+    assert_equal @site, p.site
+  end
+
+  test 'new page should have default template' do
+    p = Page.new title: 'my new page'
+    assert p.template.present?
+  end
+
   test 'should have hit count' do
     assert p = create(:published_page, title: 'My Great Page')
     assert_equal 0, p.hit_count
@@ -32,50 +42,13 @@ class PageTest < ActiveSupport::TestCase
     assert_equal 1, p.hit_count
   end
 
-  test 'should auto-fix permalink' do
+  test 'should auto-fix slug' do
     assert p = create(:page, title: 'My Great Page')
     assert p.update_attribute :slug, 'foo, bar'
     p.reload
     assert_equal 'foo-bar', p.slug
   end
 
-  test 'should create permalink when published' do
-    assert p = create(:page, title: 'My Great Page')
-    assert_equal 'my-great-page', p.slug
-    refute p.published?
-    assert_nil p.permalink
-
-    p.publish!
-    p.reload
-    assert p.published?
-    assert l = p.permalink
-    assert_equal 'my-great-page', l.path
-  end
-
-  test 'should replace old redirect when published' do
-    assert p = create(:page, title: 'My Great Page')
-    assert_equal 'my-great-page', p.slug
-    p.publish!
-    p.reload
-    assert p.published?
-    assert l = p.permalink
-    assert_equal 'my-great-page', l.path
-
-    assert_difference 'Permalink.count' do
-      assert_difference 'Redirect.count' do
-        p.slug = 'new-slug'
-        assert p.publish!
-      end
-    end
-
-    assert p2 = create(:page, title: 'My Great Page')
-    assert_no_difference 'Permalink.count' do
-      assert_difference 'Redirect.count', -1 do
-        assert p2.publish!
-      end
-    end
-
-  end
 
   test 'should store and retrieve template field values' do
     page = create :page, site: @site, template: 'homepage',
@@ -90,28 +63,13 @@ class PageTest < ActiveSupport::TestCase
     assert_equal 'homepage', page.get_template.name
   end
 
-  test 'may be saved empty as draft' do
+  test 'may be saved empty' do
     page = Page.new site: @site, title: 'blank page'
     assert page.save, page.errors.inspect
     page.reload
     assert page.draft?
     assert_equal 'blank page', page.title
     assert page.body.blank?
-  end
-
-  test 'should store tags in draft' do
-    page = create :published_page
-    page.tag_list = 'foo'
-    assert_equal 'foo', page.tag_list
-    assert page.changed?
-    assert_difference 'Draft.count' do
-      assert page.save
-    end
-    page.reload
-    assert page.has_draft?
-    assert_equal '', page.tag_list
-    page.load_draft!
-    assert_equal 'foo', page.tag_list
   end
 
   test 'new record should save slug' do
@@ -152,88 +110,34 @@ class PageTest < ActiveSupport::TestCase
     assert @page.get_template
   end
 
-  test 'changed published page should save draft' do
-    page = create :published_page
-    assert !page.has_draft?
-    page.title = 'new title'
-    page.body = 'new body'
-    assert page.save
-    assert page.has_draft?
 
-    assert page.draft.drafted_changes.key?('title'), page.draft.inspect
-    assert page.draft.drafted_changes.key?('body'), page.draft.inspect
-
-    page.reload
-    assert_equal 'This is a Page', page.title
-    assert_match /### H3 here/, page.body
-
-    assert_equal 'new title', page.draft.drafted_changes['title']
-    assert_equal 'new body', page.draft.drafted_changes['body']
-    page.load_draft!
-    assert_equal 'new title', page.title
-    assert_equal 'new body', page.body
-  end
-
-  test 'new page should not save draft' do
-    page = Page.new title: 'new page', body: 'new content', site: @site
-    assert_difference 'Page.count', 1 do
-      assert_no_difference 'Draft.count' do
-        page.save
-      end
-    end
-    page.reload
-    assert page.draft?
+  test 'should unpublish page' do
+    page = Page.new status: :published, last_update: 2.days.ago
+    page.unpublish
     assert !page.published?
-    assert !page.has_draft?
-    assert !page.draft.present?
-    assert_equal 'new page', page.title
-    assert_equal 'new content', page.body
+    assert page.draft?
+    assert_equal nil, page.last_update
   end
 
-  test 'page should remove draft upon republish' do
-    page = create :published_page, title: 'pub title', body: 'pub body'
-    assert page.published?
-    assert_nil page.last_update
-    assert_no_difference 'Page.count' do
-      assert_difference 'Draft.count', 1 do
-        page.update_attributes body: 'new body'
-      end
-    end
-    page.reload
-    assert page.published?
-    assert page.has_draft?
-    assert !page.draft?
-    assert page.draft.present?
-    assert_equal 'pub title', page.title
-    assert_equal 'pub body', page.body
-    assert_nil page.last_update
-
-    page.load_draft!
-    assert_equal 'new body', page.body
-
-    page.body = 'changed again'
-    assert page.publish!
-    assert page.last_update
-    page.reload
-    assert !page.draft.present?
-    assert_equal 'pub title', page.title
-    assert_equal 'changed again', page.body
-  end
-
-  test 'should publish and set post dates accordingly' do
-    @page = create :page
+  test 'should publish and set post date accordingly' do
+    @page = build :page
     assert !@page.published?
-    assert @page.publish!
-    @page.reload
+    assert @page.publish
     assert @page.published?
     assert @page.post_date.present?
     assert_nil @page.last_update
+  end
 
-    assert @page.publish!
+  test 'should not publish unchanged record' do
+    @page = create :published_page
+    assert !@page.publish
     assert_nil @page.last_update
+  end
 
+  test 'should publish update' do
+    @page = create :published_page
     @page.title = 'new title'
-    assert @page.publish!
+    assert @page.publish
     assert @page.last_update.present?
   end
 
@@ -242,7 +146,7 @@ class PageTest < ActiveSupport::TestCase
     assert_equal @site, page.site
     assert_equal @site, Site.current
     assert_nil Page[page.slug]
-    page.publish!
+    page.update_attribute :status, :published
     assert_equal page, Page[page.slug]
     Bold.current_site = create(:site)
     assert_nil Page[page.slug]

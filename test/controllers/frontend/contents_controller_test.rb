@@ -23,27 +23,13 @@ module Frontend
   class ContentsControllerTest < ActionController::TestCase
 
     setup do
-      @page = create :published_page, site: @site
-      @post = create :published_post, site: @site, post_date: Time.local(2015, 07, 2),
-        tag_list: 'foo, bar', author: @user
     end
 
     test 'should show page' do
-      get :show, params: { path: @page.path }
+      p = publish_page
+      get :show, params: { path: p.path }
       assert_response :success
-      assert_select 'h2', @page.title
-    end
-
-    test 'should show category' do
-      assert cat = create(:category, name: 'New Category', site: @site)
-      assert cat.persisted?
-      @post.category_id = cat.id
-      @post.publish!
-      assert_equal @post, cat.posts.first
-      get :show, params: { path: cat.path }
-      assert_response :success
-      assert_select 'h2', /#{cat.name}/
-      assert_select 'h3', /#{@post.title}/
+      assert_select 'h2', p.title
     end
 
     test 'should render 404 for unknown paths' do
@@ -69,44 +55,67 @@ module Frontend
       assert_equal '', @response.body
     end
 
+    test 'should show category' do
+      create_special_page :category
+      r = CreateCategory.call @site.categories.build(name: 'New Category')
+      assert r.category_created?
+      assert cat = r.category
+      p = publish_post category: cat
+      get :show, params: { path: cat.path }
+      assert_response :success
+      assert_select 'h2', /#{cat.name}/
+      assert_select 'h3', /#{p.title}/
+    end
+
+
     test 'should render empty archive for year' do
+      create_special_page :archive
       get :archive, params: { year: '2011' }
       assert_response :success
       assert_select 'h2', "2011"
     end
+
     test 'should render archive for year' do
+      p = publish_post post_date: Time.local(2015, 07, 2)
+      create_special_page :archive
       get :archive, params: { year: '2015' }
       assert_response :success
       assert_select 'h2', "2015"
-      assert_select 'h3', @post.title
+      assert_select 'h3', p.title
     end
 
     test 'should render empty archive for month' do
+      create_special_page :archive
       get :archive, params: { year: '2015', month: '01' }
       assert_response :success
       assert_select 'h2', "January 2015"
     end
 
     test 'should render archive for month' do
+      p = publish_post post_date: Time.local(2015, 07, 2)
+      create_special_page :archive
       get :archive, params: { year: '2015', month: '07' }
       assert_response :success
-      assert_select 'h3', @post.title
+      assert_select 'h3', p.title
       assert_select 'h2', "July 2015"
     end
 
     test 'should render by author listing' do
+      p = publish_post author: @user
+      create_special_page :author
       get :author, params: { author: @user.name }
       assert_response :success
       assert_select 'h2', "Posts by #{@user.name}"
-      assert_select 'h3', @post.title
+      assert_select 'h3', p.title
     end
 
     test 'should render tag listing' do
-      assert @post.tag_list =~ /bar/
+      p = publish_post tag_list: 'foo, bar', author: @user
+      create_special_page :tag
       get :show, params: { path: 'bar' }
       assert_response :success
       assert_select 'h2', 'Posts tagged bar'
-      assert_select 'h3', @post.title
+      assert_select 'h3', p.title
 
       # we should not have this kind of metadata on listing pages:
       assert_no_match /name='author'/, @response.body
@@ -114,28 +123,33 @@ module Frontend
     end
 
     test 'should render search page' do
+      create_special_page :search
       get :show, params: { path: 'search' }
       assert_response :success
     end
 
     test 'should render search results' do
+      create_special_page :search
+      p = publish_post tag_list: 'foo, bar'
+
       get :show, params: { path: 'search', q: 'foobar' }
       assert_response :success
       assert_select 'h3', count: 0
 
       get :show, params: { path: 'search', q: 'bar' }
       assert_response :success
-      assert_select 'h3', @post.title
+      assert_select 'h3', p.title
     end
 
     test 'should create request log' do
+      p = publish_page
       assert_difference 'RequestLog.count' do
-        get :show, params: { path: @page.path }
+        get :show, params: { path: p.path }
       end
       assert l = RequestLog.order('created_at').last
       assert_equal 200, l.status
-      assert_equal @page, l.resource
-      assert_equal @page.site, l.site
+      assert_equal p, l.resource
+      assert_equal p.site, l.site
     end
 
     test 'should record 404' do

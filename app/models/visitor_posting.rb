@@ -20,13 +20,13 @@
 
 require 'akismet/client'
 
+# Base class for comments and contact form messages
 class VisitorPosting < ActiveRecord::Base
-  include SiteModel
   include Spamcheck
   include Deletable
 
-  belongs_to :content
-  validates :content, presence: true
+  belongs_to :site,    required: true, inverse_of: :visitor_postings
+  belongs_to :content, required: true
 
   before_validation :strip_tags!, on: :create
   before_validation :init_status, on: :create
@@ -47,6 +47,10 @@ class VisitorPosting < ActiveRecord::Base
     self.status ||= :pending
   end
 
+  def content=(obj)
+    self.site = obj.site
+    super
+  end
 
   def strip_tags!
     sanitizer = Rails::Html::FullSanitizer.new

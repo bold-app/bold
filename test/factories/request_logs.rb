@@ -24,8 +24,8 @@ FactoryGirl.define do
     hostname "test.host"
     path "/2015/01/some-post"
     site { Site.current }
-    resource { Site.current.homepage }
-    permalink { Site.current.homepage.permalink }
+    resource { FactoryGirl.create :page }
+    permalink { FactoryGirl.create :permalink }
     visitor_id { SecureRandom.uuid }
     device_class 2
 

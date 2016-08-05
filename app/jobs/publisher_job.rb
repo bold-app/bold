@@ -23,16 +23,9 @@ class PublisherJob < ActiveJob::Base
   queue_as :default
 
   def perform(post)
-    Bold::with_site(post.site) do
-      if post.scheduled?
-        if post.post_date <= Time.zone.now
-          post.publish!
-        else
-          self.class.set(wait_until: post.post_date).perform_later(post)
-        end
-      end
+    Bold.with_site(post.site) do
+      PublishContent.call post
     end
   end
-
 
 end

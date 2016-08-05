@@ -44,14 +44,18 @@ module Bold
       tags = @site.tags.where('taggings_count > 0')
       tags = tags.limit(limit.to_i) if limit
       tag_count = tags.count
-      groups = groups.to_i
-      groups = tag_count if groups > tag_count
-      group_size = (tag_count / groups.to_f).ceil
+      if tag_count > 0
+        groups = groups.to_i
+        groups = tag_count if groups > tag_count
+        group_size = (tag_count / groups.to_f).ceil
 
-      tags.
-        order('taggings_count DESC, lower(name) ASC').
-        map(&:decorate).
-        in_groups_of(group_size)
+        tags.
+          order('taggings_count DESC, lower(name) ASC').
+          map(&:decorate).
+          in_groups_of(group_size)
+      else
+        []
+      end
     end
 
   end

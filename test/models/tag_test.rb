@@ -24,14 +24,23 @@ class TagTest < ActiveSupport::TestCase
     Bold::current_site = @site = create :site
   end
 
+  test 'should parse tags' do
+    assert_equal ['bar,fancy', 'foo'], Tag.parse_tags('foo, "bar,fancy"').sort
+  end
+
   test 'should init slug from name' do
     assert t = create(:tag, name: 'A tag')
     assert_equal 'a-tag', t.slug
   end
 
-  test 'should create permalink' do
-    assert t = create(:tag, name: 'A tag')
-    assert p = t.permalink
-    assert_equal 'a-tag', p.path
+  test 'should save with permalink' do
+    t = build :tag, name: 'A tag'
+    t.permalink = Permalink.new path: 'a-tag', destination: t
+    assert_difference 'Tag.count' do
+      assert_difference 'Permalink.count' do
+        assert t.save
+      end
+    end
   end
+
 end

@@ -18,9 +18,20 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 class Tag < ActiveRecord::Base
-  include HasPermalink
+  include SiteModel
+  prepend HasPermalink
+  prepend HasSlug
 
-  belongs_to :site
+  GLUE = ', '.freeze
+
+  # patterns for tag string parsing: double quotes, single quotes, no quotes
+  PATTERNS = [
+    /(\A|,)\s*"(?<tag>.*?)"\s*(?=,\s*|\z)/,
+    /(\A|,)\s*'(?<tag>.*?)'\s*(?=,\s*|\z)/,
+    /(\A|,)\s*(?<tag>.*?)\s*(?=,\s*|\z)/
+  ]
+
+
   has_many :taggings # cascades on delete
   has_many :taggables, through: :taggings
 
@@ -32,6 +43,10 @@ class Tag < ActiveRecord::Base
   scope :least_used, ->(limit = 20) { order('taggings_count asc').limit(limit) }
   scope :named, ->(name) { where slug: name.to_url }
 
+  def name=(new_name)
+    self.slug = new_name if slug.blank?
+    super
+  end
 
   def ==(object)
     super || (object.is_a?(Tag) && name == object.name)
@@ -46,6 +61,34 @@ class Tag < ActiveRecord::Base
       %{"#{name}"}
     else
       name
+    end
+  end
+
+  def self.join_tag_names(tag_names)
+    tag_names.join GLUE
+  end
+
+  # parse a tag string
+  #
+  # Example:
+  #   tag_list = parse_tags "One , Two,  Three"
+  #   tag_list # ["One", "Two", "Three"]
+  def self.parse_tags(string)
+    string = if string.respond_to?(:join)
+      join_tag_names string
+    else
+      string.to_s
+    end.strip
+
+    [].tap do |tag_list|
+      PATTERNS.each do |pat|
+        string.gsub!(pat) do |match|
+          tag_list << $~['tag']
+          ''
+        end
+      end
+      tag_list.reject!(&:blank?)
+      tag_list.compact!
     end
   end
 

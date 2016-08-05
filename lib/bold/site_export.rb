@@ -47,13 +47,11 @@ module Bold
     end
 
     def import!
-      Bold::Search::disable_indexing do
-        in_tmp_dir do
-          unzip
-          import_assets
-          import_categories
-          import_contents
-        end
+      in_tmp_dir do
+        unzip
+        import_assets
+        import_categories
+        import_contents
       end
       RebuildFulltextIndexJob.perform_later(@site, 'Content')
       RebuildFulltextIndexJob.perform_later(@site, 'Asset')
@@ -110,18 +108,17 @@ module Bold
         id   = record.delete 'id'
         record.delete 'site_id'
         (@site.assets.find_by_id(id) || @site.assets.build).tap do |asset|
+          # FIXME use create asset action to get back metadata etc
           was_new = asset.new_record?
-          asset.with_deferred_post_processing do
-            asset.attributes = record
-            asset.file = File.new File.join ASSETS_DIR, id.to_s, file
-            asset.save validate: false
-            if was_new
-              # restore id and created_at, correct file location
-              file_dir = File.dirname asset.file.path
-              old_id = asset.id
-              asset.update_columns id: id, created_at: record['created_at']
-              SafeShell.execute 'mv', file_dir, file_dir.sub(old_id, id)
-            end
+          asset.attributes = record
+          asset.file = File.new File.join ASSETS_DIR, id.to_s, file
+          asset.save validate: false
+          if was_new
+            # restore id and created_at, correct file location
+            file_dir = File.dirname asset.file.path
+            old_id = asset.id
+            asset.update_columns id: id, created_at: record['created_at']
+            SafeShell.execute 'mv', file_dir, file_dir.sub(old_id, id)
           end
         end
       end

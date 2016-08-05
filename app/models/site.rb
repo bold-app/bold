@@ -22,11 +22,6 @@ class Site < ActiveRecord::Base
 
   scope :by_name, ->{ order('name ASC') }
 
-  # Export the site before removal as a final safety net.
-  # order matters - when declaring this after the has_manies all is destroyed
-  # already when store_backup! is called.
-  before_destroy :store_backup!
-
   has_many :assets,       dependent: :destroy
   has_many :contents,     dependent: :destroy
   has_many :request_logs
@@ -95,9 +90,6 @@ class Site < ActiveRecord::Base
   end
 
   before_create :init_defaults
-  before_create :add_current_user_as_manager
-
-  after_create :init_default_content
 
   def self.for_hostname(host)
     host = normalize_hostname host
@@ -117,18 +109,6 @@ class Site < ActiveRecord::Base
     else
       []
     end
-  end
-
-  def basename_for_export
-    "#{hostname.gsub(/\W/, '_')}_#{time_zone.now.strftime '%Y%m%d-%H%M'}"
-  end
-
-  def export!(destination = Rails.root.join('exports'))
-    ::Bold::SiteExport.new(self, File.join(destination, "#{basename_for_export}.zip")).export!
-  end
-
-  def import!(zipfile)
-    ::Bold::SiteExport.new(self, zipfile).import!
   end
 
   def alias_string
@@ -318,6 +298,10 @@ class Site < ActiveRecord::Base
     visitor_postings.where type: 'ContactMessage'
   end
 
+  def store_backup!
+    ExportSite.call self
+  end
+
   private
 
   def init_defaults
@@ -326,12 +310,6 @@ class Site < ActiveRecord::Base
     self.tsearch_config ||= 'bold_english'
     self.adaptive_images ||= '1'
     create_theme_config
-  end
-
-  def add_current_user_as_manager
-    if user = Bold.current_user
-      site_users.build user: user, manager: true
-    end
   end
 
   def create_theme_config
@@ -352,71 +330,7 @@ class Site < ActiveRecord::Base
     end
   end
 
-  def init_default_content
-    Bold::Search::disable_indexing do
-      if p = create_page_with_template(I18n.t('bold.content.page_title.homepage'),
-                                       theme.homepage_template
-                                      )
-        self.homepage_id = p.id
-      end
-      if p = create_page_with_template(I18n.t('bold.content.page_title.notfound'),
-                                       theme.find_template(:not_found),
-                                       body: I18n.t('bold.content.page_body.notfound')
-                                      )
-        self.notfound_page_id = p.id
-      end
-      if p = create_page_with_template(I18n.t('bold.content.page_title.error'),
-                                       theme.find_template(:error),
-                                       body: I18n.t('bold.content.page_body.error')
-                                      )
-        self.error_page_id = p.id
-      end
-      if p = create_page_with_template(I18n.t('bold.content.page_title.tag'),
-                                       theme.find_template(:tag)
-                                      )
-        self.tag_page_id = p.id
-      end
-      if p = create_page_with_template(I18n.t('bold.content.page_title.category'),
-                                       theme.find_template(:category)
-                                      )
-        self.category_page_id = p.id
-      end
-      if p = create_page_with_template(I18n.t('bold.content.page_title.author'),
-                                       theme.find_template(:author)
-                                      )
-        self.author_page_id = p.id
-      end
-      if p = create_page_with_template(I18n.t('bold.content.page_title.archive'),
-                                       theme.find_template(:archive)
-                                      )
-        self.archive_page_id = p.id
-      end
-      if p = create_page_with_template(I18n.t('bold.content.page_title.search'),
-                                       theme.find_template(:search),
-                                       with_permalink: true
-                                      )
-        self.search_page_id = p.id
-      end
-      save
-    end
-    navigations.create! name: I18n.t('bold.content.navigation.home'), url: external_url
-    true
-  end
 
-  # Creates a page with the given title, template and body.
-  #
-  # Most pages created this way have no Permalink attached, which means they
-  # cannot be reached directly through a public URL. Search pages are the
-  # notable exception.
-  def create_page_with_template(title, template, body: nil, with_permalink: false)
-    if template
-      Page.create!(title: title, template: template.name, site: self, author: User.current, body: body).tap{|p| p.publish! create_permalink: with_permalink }
-    end
-  end
-
-  def store_backup!
-    export!
-  end
 
   def ensure_hostname_uniqueness
     unless_unique(self.hostname) do

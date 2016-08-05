@@ -23,15 +23,26 @@ class StatsTest < ActiveSupport::TestCase
 
   setup do
     Bold::current_site = @site = create :site, time_zone_name: 'UTC'
+    @page = create :page
+    @page_link = create :permalink, destination: @page
     @post = create :post
+    @post_link = create :permalink, destination: @post, path: 'some/post'
     @sunday = DateTime.parse('2015-09-27 23:45 UTC')
     @monday = DateTime.parse('2015-09-28 00:15 UTC')
     @friday = DateTime.parse('2015-10-02 13:00 UTC')
-    @r1 = create :request_log, created_at: @sunday
-    @r2 = create :request_log, created_at: @monday, visitor_id: @r1.visitor_id
-    @r2 = create :request_log, created_at: @monday+1.second, visitor_id: @r1.visitor_id, resource: @post, permalink: @post.permalink
-    @r3 = create :request_log, created_at: @monday
-    @r4 = create :request_log, created_at: @friday
+    @r1 = create :request_log, created_at: @sunday,
+                               resource: @page,
+                               permalink: @page_link
+    @r2 = create :request_log, created_at: @monday, visitor_id: @r1.visitor_id,
+                               resource: @page,
+                               permalink: @page_link
+    @r2 = create :request_log, created_at: @monday+1.second, visitor_id: @r1.visitor_id, resource: @post, permalink: @post_link
+    @r3 = create :request_log, created_at: @monday,
+                               resource: @page,
+                               permalink: @page_link
+    @r4 = create :request_log, created_at: @friday,
+                               resource: @page,
+                               permalink: @page_link
   end
 
   test 'should have dates and length' do

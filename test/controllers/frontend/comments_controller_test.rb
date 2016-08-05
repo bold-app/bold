@@ -23,8 +23,8 @@ module Frontend
   class CommentsControllerTest < ActionController::TestCase
 
     setup do
-      @post = create :published_post, site: @site
-      @post.site.update_attribute :post_comments, 'enabled'
+      @site.update_attribute :post_comments, 'enabled'
+      @post = publish_post
     end
 
     test 'should validate comment' do

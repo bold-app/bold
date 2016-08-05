@@ -23,6 +23,7 @@ FactoryGirl.define do
   factory :asset, :class => 'Asset' do
     caption "Some Caption here"
     file { Rack::Test::UploadedFile.new File.join(File.dirname(__FILE__), '..', 'fixtures', 'photo.jpg'), 'image/jpeg' }
+    file_size 23000
 
     factory :asset_2 do
       file { Rack::Test::UploadedFile.new File.join(File.dirname(__FILE__), '..', 'fixtures', 'title_and_caption.jpg'), 'image/jpeg' }

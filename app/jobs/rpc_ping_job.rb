@@ -24,8 +24,11 @@ class RpcPingJob < ActiveJob::Base
   queue_as :default
 
   def perform(post)
-    Bold::with_site(post.site) do
-      Bold::Config.rpc_ping_urls.map{|url| [ url, ping(url, post) ] }
+    # we only ping for posts that are published
+    if post.is_a?(Post) && post.published?
+      Bold.with_site(post.site) do
+        Bold::Config.rpc_ping_urls.map{|url| [ url, ping(url, post) ] }
+      end
     end
   end
 

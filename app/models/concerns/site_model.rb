@@ -22,7 +22,7 @@ module SiteModel
 
   included do
     belongs_to :site, required: true
-    before_validation :take_current_site, on: :create
+    after_initialize :take_current_site
   end
 
   def take_current_site

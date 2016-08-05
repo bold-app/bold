@@ -27,7 +27,8 @@ FactoryGirl.define do
     author { User.current || User.active.first || FactoryGirl.create(:confirmed_user) }
 
     factory :published_page do
-      after(:create){ |p, ev| p.publish! }
+      after(:build){ |p, ev| p.publish }
+      after(:create){ |p, ev| PublishContent.call p }
     end
   end
 end

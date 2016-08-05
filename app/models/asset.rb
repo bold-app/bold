@@ -23,14 +23,11 @@ class Asset < ActiveRecord::Base
 
   prepend Taggable
 
+  has_many :fulltext_indices, as: :searchable, dependent: :delete_all
   has_many :request_logs, as: :resource
   belongs_to :creator, class_name: 'User'
 
   mount_uploader :file, AssetUploader
-
-  before_create :set_creator
-  before_save :store_metadata, if: :file_changed?
-  after_save :call_post_processor, if: :file_changed?
 
   validates :file, presence: true
   validates_download_of :file
@@ -48,8 +45,6 @@ class Asset < ActiveRecord::Base
     only_when_blank: true,
     sync_url: true,
     scope: :site_id
-
-  Bold::Search::AssetIndexer.setup self
 
   %i( title caption width height taken_on attribution original_url
       lat lon gps_altitude ).each do |attribute|
@@ -137,12 +132,20 @@ class Asset < ActiveRecord::Base
     end
   end
 
+  def jpeg?
+    magic_content_type == 'image/jpeg'
+  end
+
   def image?
-    magic_content_type.to_s =~ /\Aimage/
+    !!(magic_content_type.to_s =~ /\Aimage/)
   end
 
   def scalable?
     !!(magic_content_type.to_s =~ /\Aimage\/(jpeg|png|tiff)\z/)
+  end
+
+  def scalable_image?
+    image? and scalable?
   end
 
   def xy_ratio
@@ -157,6 +160,15 @@ class Asset < ActiveRecord::Base
 
   def markdown(inline_version = 'IMAGE_VERSION', link_to = 'LINK_TO')
     %{![#{alt_text}](#{slug}!#{inline_version}#{'!'+link_to if link_to.present?}#{" '#{title.gsub "'", "\'"}'" if title.present?})}
+  end
+
+  def data_for_index
+    {
+      a: title,
+      b: caption,
+      c: tag_list,
+      d: file.filename.to_s.split(/\W|_/)
+    }
   end
 
   def to_jq_upload
@@ -187,15 +199,6 @@ class Asset < ActiveRecord::Base
     MIME::Types[content_type][0] rescue nil
   end
 
-  def with_deferred_post_processing
-    @skip_post_processing = true
-    yield
-    @skip_post_processing = false
-    call_post_processor
-  ensure
-    @skip_post_processing = false
-  end
-
   private
 
   def name_for_slug
@@ -216,59 +219,10 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  def store_metadata
-    self.content_type = file.content_type
-    self.file_size = file.size
-
-    get_jpeg_metadata if magic_content_type == 'image/jpeg'
-
-    if image? and width.blank? || height.blank?
-      self.width, self.height = `identify -format "%wx%h" #{file.path}`.split(/x/) 
-    end
-  end
 
   def magic_content_type
     @magic_content_type ||= MimeMagic.by_magic(file).to_s
   end
 
-  def get_jpeg_metadata
-    exifr = EXIFR::JPEG.new file.path
-    self.width = exifr.width
-    self.height = exifr.height
-    self.taken_on = exifr.date_time_original
-
-    if exifr.gps.present?
-      if exifr.gps.longitude.present? && exifr.gps.latitude.present?
-        self.lon = exifr.gps.longitude
-        self.lat = exifr.gps.latitude
-      end
-      if exifr.gps.altitude.present?
-        self.gps_altitude = exifr.gps.altitude
-      end
-    end
-
-
-    if xmp = XMP.parse(exifr)
-      if xmp.namespaces.include?('dc')
-        self.tag_list = xmp.dc.subject rescue []
-        if title.blank?
-          self.title = xmp.dc.title.first rescue nil
-        end
-        self.caption = xmp.dc.description.join("\n") rescue nil
-      end
-    end
-
-    # TODO location data
-  end
-
-  def call_post_processor
-    if !@skip_post_processing && persisted? && image? && scalable?
-      ImageScalerJob.perform_later(self)
-    end
-  end
-
-  def set_creator
-    self.creator ||= User.current
-  end
 
 end

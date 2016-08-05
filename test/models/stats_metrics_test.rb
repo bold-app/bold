@@ -25,7 +25,10 @@ class StatsMetricsTest < ActiveSupport::TestCase
     Time.zone = 'UTC'
     Bold::current_site = @site = create :site, time_zone_name: 'UTC'
 
+    @page = create :page
+    @page_link = create :permalink, path: @page.slug, destination: @page
     @post = create :post
+    @post_link = create :permalink, path: @post.slug, destination: @post
     today = Time.zone.today
     day_0 = today - 6
     day_2 = today - 4
@@ -33,24 +36,51 @@ class StatsMetricsTest < ActiveSupport::TestCase
     day_5 = today - 1
 
     # these dont count
-    create :request_log, created_at: 12.days.ago
-    create :request_log, created_at: 8.days.ago, permalink: @post.permalink
+    create :request_log, created_at: 12.days.ago,
+                         resource: @page,
+                         permalink: @page.permalink
+    create :request_log, created_at: 8.days.ago,
+                         resource: @post,
+                         permalink: @post.permalink
 
-    @v0_1  = create :request_log, created_at: day_0.beginning_of_day + 1.hours
-    @v1_1  = create :request_log, created_at: day_0.beginning_of_day + 8.hours
-    @v1_1a = create :request_log, created_at: day_0.beginning_of_day + 8.hours + 5.minutes, visitor_id: @v1_1.visitor_id
-    @v1_2  = create :request_log, created_at: day_0.beginning_of_day + 8.hours + 6.minutes, visitor_id: @v1_1.visitor_id, resource: @post, permalink: @post.permalink
+    @v0_1  = create :request_log, created_at: day_0.beginning_of_day + 1.hours,
+                                  resource: @page,
+                                  permalink: @page.permalink
+    @v1_1  = create :request_log, created_at: day_0.beginning_of_day + 8.hours,
+                                  resource: @page,
+                                  permalink: @page.permalink
+
+    @v1_1a = create :request_log, created_at: day_0.beginning_of_day + 8.hours + 5.minutes,
+                                  visitor_id: @v1_1.visitor_id,
+                                  resource: @page,
+                                  permalink: @page.permalink
+    @v1_2  = create :request_log, created_at: day_0.beginning_of_day + 8.hours + 6.minutes,
+                                  visitor_id: @v1_1.visitor_id,
+                                  resource: @post,
+                                  permalink: @post.permalink
 
 
     # same time and page, different visitor
-    @v2 = create :request_log, created_at: day_2.beginning_of_day + 1.hour
-    @v3 = create :request_log, created_at: day_2.beginning_of_day + 1.hour, visitor_id: @v1_1.visitor_id
+    @v2 = create :request_log, created_at: day_2.beginning_of_day + 1.hour,
+                               resource: @page,
+                               permalink: @page.permalink
+    @v3 = create :request_log, created_at: day_2.beginning_of_day + 1.hour,
+                               visitor_id: @v1_1.visitor_id,
+                               resource: @page,
+                               permalink: @page.permalink
 
-    @v4 = create :request_log, created_at: day_4
+    @v4 = create :request_log, created_at: day_4,
+                               resource: @page,
+                               permalink: @page.permalink
 
     # two pageviews by same visitor, same page but different visits
-    @v5 = create :request_log, created_at: day_5.beginning_of_day + 9.hours
-    @v6 = create :request_log, created_at: day_5.beginning_of_day + 10.hours, visitor_id: @v5.visitor_id
+    @v5 = create :request_log, created_at: day_5.beginning_of_day + 9.hours,
+                               resource: @page,
+                               permalink: @page.permalink
+    @v6 = create :request_log, created_at: day_5.beginning_of_day + 10.hours,
+                               visitor_id: @v5.visitor_id,
+                               resource: @page,
+                               permalink: @page.permalink
 
     StatsPageview.build_pageviews @site
   end

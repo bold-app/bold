@@ -19,16 +19,22 @@
 #
 class Category < ActiveRecord::Base
   include SiteModel
-  include HasPermalink
+  prepend HasPermalink
+  prepend HasSlug
 
   has_many :posts, dependent: :nullify
   belongs_to :asset
 
   memento_changes :destroy
 
-  validates :name, presence: true, length: { maximum: 100 }
+  validates :name,
+    presence: true,
+    length: { maximum: 100 },
+    uniqueness: { scope: :site_id, case_sensitive: false }
 
-  private
-
+  def name=(new_name)
+    self.slug = new_name if slug.blank?
+    super
+  end
 
 end

@@ -1,4 +1,20 @@
 GIT
+  remote: git://github.com/amatsuda/kaminari.git
+  revision: 9c44b6461f00471886caff921feea36f29dbb06d
+  specs:
+    kaminari (1.0.0.alpha)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
+
+GIT
+  remote: git://github.com/blowmage/minitest-rails.git
+  revision: 2a7b5ffaeb4f5164144bfd82923e22e349d84580
+  specs:
+    minitest-rails (3.0.0.rc1.20160507123149)
+      minitest (~> 5.8)
+      railties (~> 5.0.0.rc1)
+
+GIT
   remote: git://github.com/bold-app/acts_as_list.git
   revision: 448a30e7d621c33571c64eef6fe926009fcf32ae
   specs:
@@ -248,6 +264,7 @@ GEM
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     i18n (0.7.0)
+    immutable-struct (2.2.2)
     jbuilder (2.5.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
@@ -428,6 +445,7 @@ DEPENDENCIES
   http_accept_language (~> 2.0.5)
   httparty (~> 0.13.5)
   i18n_language_select!
+  immutable-struct
   jbuilder (~> 2.0)
   jquery-fileupload-rails!
   jquery-rails
@@ -436,6 +454,7 @@ DEPENDENCIES
   memento (~> 0.4.3)!
   mimemagic (~> 0.3.1)
   mini_magick (~> 3.0)
+  minitest-rails!
   mocha (~> 1.1.0)
   nokogiri
   pg (~> 0.18.2)

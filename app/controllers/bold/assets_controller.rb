@@ -60,7 +60,8 @@ module Bold
 
     def create_from_url
       @asset = current_site.assets.build new_asset_params(key: :remote_file_url)
-      if @asset.save
+
+      if @asset.file.present? and CreateAsset.call(@asset)
         redirect_to new_bold_site_asset_url(current_site, source: 'url'), notice: 'bold.assets.from_url.success'
       else
         @source = 'url'
@@ -71,7 +72,7 @@ module Bold
 
     def create
       @asset = current_site.assets.build new_asset_params
-      if @asset.save
+      if CreateAsset.call(@asset)
         respond_to do |format|
           format.html {
             render :json => [@asset.to_jq_upload].to_json,

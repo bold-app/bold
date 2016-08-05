@@ -40,33 +40,6 @@ module Bold
       SQL
     end
 
-    # True if indexing is disabled.
-    #
-    def self.indexing_disabled?
-      !!RequestStore.store[:fulltext_disabled]
-    end
-
-    # Enables indexing
-    #
-    def self.enable_indexing
-      RequestStore.store.delete :fulltext_disabled
-    end
-
-    # Disables indexing
-    #
-    # This is a global flag disabling both content and asset indexers
-    def self.disable_indexing
-      RequestStore.store[:fulltext_disabled] = true
-      if block_given?
-        begin
-          return yield
-        ensure
-          enable_indexing
-        end
-      end
-      nil
-    end
-
 
   end
 end

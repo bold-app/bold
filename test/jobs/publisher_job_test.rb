@@ -24,9 +24,7 @@ class PublisherJobTest < ActiveJob::TestCase
     @site = create :site
     @user = create(:confirmed_user)
     @site.add_user! @user
-    @post = create :post, author: @user, site: @site
-    @post.post_date = Time.now + 5.minutes
-    @post.publish!
+    @post = publish_post author: @user, post_date: (Time.now + 5.minutes)
   end
 
   test 'should publish post' do

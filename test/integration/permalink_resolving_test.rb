@@ -22,7 +22,7 @@ require 'test_helper'
 class PermalinkResolvingTest < BoldIntegrationTest
 
   setup do
-    @post = create :published_post, slug: 'some-post', title: 'hello from site 1', body: 'lorem ipsum', site: @site
+    @post = publish_post slug: 'some-post', title: 'hello from site 1', body: 'lorem ipsum'
   end
 
   test 'should redirect to new slug' do
@@ -32,7 +32,8 @@ class PermalinkResolvingTest < BoldIntegrationTest
 
     assert_difference 'Redirect.count' do
       assert_difference 'Permalink.count' do
-        @post.update_attribute :slug, 'new-link'
+        @post.slug = 'new-link'
+        CreatePermalink.call @post, @post.permalink_path_args
       end
     end
     @post.reload

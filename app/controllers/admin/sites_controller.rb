@@ -36,10 +36,12 @@ module Admin
 
     def create
       @site = Site.new site_params
-      if @site.save
+      result = CreateSite.call(@site)
+      if result.site_created?
         redirect_to admin_sites_path
       else
         load_sites
+        flash[:alert] = result.error_message
         render :new
       end
     end
@@ -64,6 +66,8 @@ module Admin
     end
 
     def destroy
+      # Export the site before removal as a final safety net.
+      @site.store_backup!
       @site.destroy
       redirect_to admin_sites_path
     end

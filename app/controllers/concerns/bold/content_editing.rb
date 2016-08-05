@@ -36,7 +36,7 @@ module Bold
     end
 
     def show
-      @content.load_draft!
+      @content.load_draft
       respond_to do |format|
         format.html { index; render 'index' }
         format.js
@@ -47,13 +47,9 @@ module Bold
       @content = collection.build
     end
 
-    def create
-      @content = collection.build
-      save_content
-    end
 
     def edit
-      @content.load_draft!
+      @content.load_draft
     end
 
     def change_template
@@ -61,20 +57,16 @@ module Bold
 
     def update_template
       @content.template = params[:content][:template]
-      if @content.save_without_draft
+      if @content.save
         redirect_to edit_url, notice: 'bold.content.template_change_success'
       else
         redirect_to edit_url, notice: 'bold.content.template_change_failure'
       end
     end
 
-    def update
-      save_content
-    end
-
     def diff
       original = @content.body
-      @content.load_draft!
+      @content.load_draft
       draft = @content.body
       if draft != original
         @diff = Diffy::Diff.new(original, draft).to_s(:html)
@@ -84,7 +76,7 @@ module Bold
 
     def delete_draft
       memento do
-        @content.delete_draft!
+        @content.delete_draft
       end
       redirect_to edit_url, notice: 'bold.content.draft_deleted'
     end
@@ -92,7 +84,11 @@ module Bold
     def destroy
       if @content.published?
         @content.unpublish
-        redirect_to edit_url, notice: t('flash.bold.content.unpublished', title: @content.title)
+        if @content.save
+          redirect_to edit_url, notice: t('flash.bold.content.unpublished', title: @content.title)
+        else
+          redirect_to edit_url, alert: t('flash.bold.content.unpublish_failed', title: @content.title)
+        end
       else
         @content.delete
         redirect_to( {site_id: current_site.id, action: :index}, notice: t('flash.bold.content.deleted', title: @content.title) )
@@ -100,60 +96,6 @@ module Bold
     end
 
     private
-
-    def flash_key(base)
-      "#{base}#{'_draft' unless publish?}"
-    end
-
-    def save_content
-      @content.attributes = content_params
-      @content.author ||= User.current
-      was_published = @content.published?
-      has_changes = @content.changed?
-      message = if @success = save_or_publish_content
-        if (@published && !was_published) || has_changes
-          [:notice, flash_key('bold.content.saved')]
-        else
-          [:info, flash_key('bold.content.no_changes')]
-        end
-      else
-        Rails.logger.error @content.errors.inspect if Rails.env.development?
-        [:alert, flash_key('bold.content.not_saved')]
-      end
-      respond_to do |format|
-        format.html do
-          flash[message[0]] = message[1]
-          if @success
-            redirect_to edit_url
-          else
-            render @content.new_record? ? 'new' : 'edit'
-          end
-        end
-        format.js do
-          if params[:go_back].present?
-            @back_to = case @content
-                       when Post
-                         bold_site_posts_url(current_site)
-                       when Page
-                         bold_site_pages_url(current_site)
-                       end
-          end
-          flash[message[0]] = message[1]
-        end
-      end
-    end
-
-    def save_or_publish_content
-      if publish?
-        @published = @content.publish!
-      else
-        @content.save
-      end
-    end
-
-    def publish?
-      params[:publish] || params[:do_publish].present?
-    end
 
   end
 end

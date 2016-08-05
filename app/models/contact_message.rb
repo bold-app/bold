@@ -34,8 +34,6 @@ class ContactMessage < VisitorPosting
   validates :sender_email,   presence: true, length: { maximum: 100 }, format: /.+@.+\..{2,}/
   validates :body,           presence: true, length: { minimum: 2, maximum: 10.kilobytes }
 
-  after_create :trigger_spamcheck
-
   def receiver_email
     content.author.email
   end
@@ -45,10 +43,6 @@ class ContactMessage < VisitorPosting
   end
 
   private
-
-  def trigger_spamcheck
-    ContactMessageSpamcheckJob.perform_later(self)
-  end
 
   def additional_akismet_attributes
     {

@@ -28,7 +28,6 @@ class Bold::Settings::NavigationsControllerTest < ActionController::TestCase
   test 'should render index' do
     get :index, params: { site_id: @site }
     assert_response :success
-    assert_select 'input[value=Home]'
     assert_select 'input[value=Test]'
   end
 

@@ -24,8 +24,11 @@ class Draft < ActiveRecord::Base
 
   memento_changes :destroy
 
-  def take_changes_from(content)
+  def take_changes
+    return unless content
+
     DRAFTABLES.each do |attribute|
+      next unless content.respond_to? attribute
       value = content.send attribute
       drafted_changes[attribute] = case attribute
                                    when 'template_field_values'
@@ -38,7 +41,9 @@ class Draft < ActiveRecord::Base
     content.reload
   end
 
-  def apply_changes_to(content)
+  def apply_changes
+    return unless content
+
     drafted_changes.each do |attribute, value|
       value = case attribute
               when 'template_field_values'
@@ -53,6 +58,5 @@ class Draft < ActiveRecord::Base
       end
     end
   end
-
 
 end

@@ -25,7 +25,7 @@ class ImageScalerJobTest < ActiveJob::TestCase
   end
 
   test 'should scale to square thumb' do
-    asset = create :asset, site: @site
+    asset = create_asset
     ImageScalerJob.perform_now asset
 
     assert thumb = asset.diskfile_path(:bold_thumb_sq)

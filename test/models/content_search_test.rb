@@ -37,6 +37,7 @@ class ContentSearchTest < ActiveSupport::TestCase
   end
 
   test 'should find post by title, body, tags and category' do
+    IndexContent.call @post
     cs = ContentSearch.new query: 'foo'
     assert cs.search(@site.contents).blank?
 
@@ -47,10 +48,13 @@ class ContentSearchTest < ActiveSupport::TestCase
   end
 
   test 'should find post after tag update' do
+    IndexContent.call @post
     cs = ContentSearch.new query: 'bar'
     assert cs.search(@site.contents).where(id: @post.id).any?
 
     @post.tag_list = 'boom'; @post.save
+    IndexContent.call @post
+
     assert cs.search(@site.contents).where(id: @post.id).blank?
     cs.query = 'boom'
     assert cs.search(@site.contents).where(id: @post.id).any?

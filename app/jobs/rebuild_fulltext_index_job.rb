@@ -21,8 +21,13 @@ class RebuildFulltextIndexJob < ActiveJob::Base
   queue_as :default
 
   def perform(site, model)
-    Bold::with_site(site) do
-      model.constantize.indexer.rebuild_index
+    Bold.with_site(site) do
+      case model
+      when 'Content'
+        IndexContent.rebuild_index
+      when 'Asset'
+        IndexAsset.rebuild_index
+      end
     end
   end
 end

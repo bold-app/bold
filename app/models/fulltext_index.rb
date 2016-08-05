@@ -46,8 +46,11 @@ class FulltextIndex < ActiveRecord::Base
   SET_WEIGHT = "setweight(to_tsvector(#{CONFIG}, :text), :weight)"
 
   scope :published, ->{ where published: true }
-  scope :search, ->(q){ where "plainto_tsquery(#{CONFIG}, :query) @@ tsv",
-    config: Site.current.tsearch_config, query: q}
+  scope :search, ->(q){
+    where "plainto_tsquery(#{CONFIG}, :query) @@ tsv",
+          config: Site.current.tsearch_config,
+          query: q
+  }
 
 
   private

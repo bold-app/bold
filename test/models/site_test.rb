@@ -22,7 +22,10 @@ require 'test_helper'
 class SiteTest < ActiveSupport::TestCase
 
   setup do
-    @site = create :site, theme_name: 'test', url_scheme: 'https', hostname: 'test.host'
+    @site = build :site, theme_name: 'test',
+                         url_scheme: 'https',
+                         hostname: 'test.host'
+    CreateSite.new(@site).call
     Bold::current_site = @site
 
     register_plugin :dummy do
@@ -33,7 +36,6 @@ class SiteTest < ActiveSupport::TestCase
   teardown do
     unregister_theme :foo
     unregister_plugin :dummy
-    FileUtils.rm_f @file if @file
   end
 
   test 'should validate uniqueness of hostname' do
@@ -141,37 +143,6 @@ class SiteTest < ActiveSupport::TestCase
     @site.reload
     assert @site.plugins.blank?
     assert !@site.plugin_enabled?('dummy')
-  end
-
-  test 'should generate export and import it again' do
-    assert_equal Site.current, @site
-    asset = create :asset
-    category = create :category, name: 'A category'
-    post = create :published_post, title: 'hello from site 1', body: 'lorem ipsum', site: @site, category: category
-    assert @site.assets.include?(asset)
-    assert @site.contents.include?(post)
-    assert f = @file = @site.export!('/tmp')
-    assert File.size(f) > 0
-    assert_match /.+\.zip$/, f
-    assert listing = `unzip -l #{f}`.lines
-    assert listing.detect{ |l| l =~ /contents.yml/ }
-    assert listing.detect{ |l| l =~ /assets.yml/ }
-    assert listing.detect{ |l| l =~ /categories.yml/ }
-    assert listing.detect{ |l| l =~ /assets\/#{asset.id}\/#{asset.filename}/ }
-
-    @site.destroy
-    assert Asset.count.zero?
-    assert Content.count.zero?
-    another_site = Site.create! theme_name: 'test', hostname: 'acme.com', name: 'test 2'
-    assert_difference 'another_site.contents.count', 1 do
-      assert_difference 'another_site.assets.count', 1 do
-        assert_difference 'another_site.categories.count', 1 do
-          another_site.import! f
-          another_site.reload
-        end
-      end
-    end
-    assert_equal 'A category', another_site.categories.first.name
   end
 
   test 'should downcase hostname upon creation' do

@@ -22,26 +22,57 @@ require 'test_helper'
 module Themes
   class BootstrapTest < ThemeIntegrationTest
 
-    setup do
-      setup_site 'bootstrap'
+    def theme_name
+      'bootstrap'
     end
 
     test 'theme structure' do
-      assert theme = Bold::Theme['bootstrap']
-      assert tpl = theme.homepage_template
+      assert tpl = @site.theme.homepage_template
       assert_equal :default, tpl.key
     end
 
-    test 'check special pages' do
-      check_special_pages except: %w(author_page search_page archive_page tag_page category_page)
+    test 'should show homepage' do
+      create_homepage
+      visit '/'
     end
 
-    test 'should show page and post' do
-      visit '/'
+    test 'should show page' do
+      publish_page title: 'Test Page Title',
+                   body: 'test page body',
+                   template: 'default'
       visit '/test-page-title'
       assert has_content? 'test page body'
+    end
+
+    test 'should show post' do
+      publish_post(
+        title: 'Test Post Title',
+        body: 'test post body',
+        template: 'default',
+        post_date: Time.local(2015, 02, 05),
+        tag_list: 'foo, "bar baz"',
+        author: @user,
+        category: @category
+      )
+
       visit '/2015/02/test-post-title'
       assert has_content? 'test post body'
+      if has_comment_form?
+        fill_in 'comment_author_name', with: 'Max Muster'
+        fill_in 'comment_author_email', with: 'user@host.com'
+        fill_in 'comment_body', with: 'What a nice post!'
+        assert_difference 'Comment.count' do
+          click_on 'comment_submit'
+        end
+        assert !has_content?('What a nice post!')
+
+        assert c = @site.comments.last
+        assert c.pending?
+        c.approved!
+
+        visit '/2015/02/test-post-title'
+        assert has_content?('What a nice post!')
+      end
     end
 
   end

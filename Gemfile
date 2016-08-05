@@ -42,6 +42,7 @@ gem 'exifr', '~> 1.2'
 gem 'http_accept_language', '~> 2.0.5'
 gem 'httparty', '~> 0.13.5'
 gem 'i18n_language_select', github: 'bold-app/i18n_language_select'
+gem 'immutable-struct'
 gem 'jquery-fileupload-rails', github: 'bold-app/jquery-fileupload-rails'
 gem 'kaminari', '~> 0.17'
 gem 'memento', '~> 0.4.3', github: 'bold-app/memento'
@@ -72,6 +73,8 @@ gem 'xmp', github: 'jkraemer/xmp'
 
 
 group :development, :test do
+  #gem 'minitest-rails', '~> 2.2.1'
+  gem 'minitest-rails', github: 'blowmage/minitest-rails'
   gem 'pry-byebug', platforms: :ruby
   gem 'puma'
   gem 'spring'

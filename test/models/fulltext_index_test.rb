@@ -21,10 +21,8 @@ require 'test_helper'
 
 class FulltextIndexTest < ActiveSupport::TestCase
   setup do
-    Bold::current_site = @site = create :site
-    Bold::Search.disable_indexing do
-      @post = create :post
-    end
+    Bold.current_site = @site = create :site
+    @post = create :post
   end
 
   test 'should init tsv and be searchable' do
@@ -33,15 +31,6 @@ class FulltextIndexTest < ActiveSupport::TestCase
     assert FulltextIndex.where("plainto_tsquery(?) @@ tsv", 'title').any?
     assert FulltextIndex.where("plainto_tsquery(?) @@ tsv", 'the').blank?
     assert FulltextIndex.where("plainto_tsquery(?) @@ tsv", 'less').any?
-  end
-
-  test 'should disable indexing' do
-    block_called = false
-    Bold::Search.disable_indexing do
-      block_called = true
-      assert Bold::Search::indexing_disabled?
-    end
-    assert block_called
   end
 
   test 'should update tsv with new data' do

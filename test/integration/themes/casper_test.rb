@@ -18,36 +18,19 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 require 'test_helper'
+require 'integration/generic_theme_test'
 
 module Themes
-  class CasperTest < ThemeIntegrationTest
+  class CasperTest < GenericThemeTest
 
-    setup do
-      setup_site 'casper'
+    def theme_name
+      'casper'
     end
 
     test 'theme structure' do
-      assert theme = Bold::Theme['casper']
-      assert tpl = theme.homepage_template
+      assert tpl = @theme.homepage_template
       assert_equal :home, tpl.key
     end
 
-    test 'check special pages' do
-      check_special_pages
-    end
-
-    test 'should show homepage and post' do
-      check_home_page_and_post
-    end
-
-    test 'should show page' do
-      check_shows_page
-    end
-
-    test 'should list posts' do
-      check_archive
-      check_tags
-      check_author_listing
-    end
   end
 end

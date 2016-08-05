@@ -50,6 +50,59 @@ class ActiveSupport::TestCase
     Bold.current_user = nil
     Bold.current_site = nil
   end
+
+  private
+
+  def publish_page(attributes = {})
+    save_page attributes, true
+  end
+
+  def save_page(attributes = {}, publish = false)
+    build(:page, { site: @site }.merge(attributes)).tap do |p|
+      r = SaveContent.call p, publish: true
+      assert r.saved?, r.inspect
+      p.reload
+    end
+  end
+
+  def publish_post(attributes = {})
+    save_post attributes, true
+  end
+
+  def save_post(attributes = {}, publish = false)
+    build(:post, { site: @site }.merge(attributes)).tap do |p|
+      r = SaveContent.call p, publish: publish
+      assert r.saved?, r.inspect
+      p.reload
+    end
+  end
+
+  def create_asset(file = Rack::Test::UploadedFile.new(Rails.root/'test'/'fixtures'/'photo.jpg', 'image/jpeg'))
+    CreateAsset.call(@site.assets.build(file: file)).asset
+  end
+
+  def create_category(name = 'New category')
+    @site.categories.build(name: name).tap do |cat|
+      CreateCategory.call cat
+    end
+  end
+
+  def create_homepage(site: @site)
+    publish_page(title: 'homepage', site: site,
+                 template: site.theme.find_template(:homepage).name).tap do |p|
+      site.update_attribute :homepage_id, p.id
+    end
+  end
+
+  def create_special_page(kind, site: @site)
+    if tpl = site.theme.find_template(kind)
+      publish_page(title: kind.to_s,
+                   template: tpl.name).tap do |p|
+        site.update_attribute :"#{kind}_page_id", p.id
+      end
+    end
+  end
+
 end
 
 class ActionController::TestCase
@@ -67,6 +120,7 @@ class ActionController::TestCase
   setup do
     @user = create :confirmed_admin
     @site = create :site, theme_name: 'test'
+    create_homepage
     create :site_user, user: @user, site: @site, manager: true
     sign_in @user
     request.host = @site.hostname
@@ -86,7 +140,14 @@ class BoldIntegrationTest < ActionDispatch::IntegrationTest
     @admin = create :confirmed_admin
     @site_admin = create :confirmed_user
     @user = create :confirmed_user
-    @site = Site.find_by_hostname('test.host') || create( :site, hostname: 'test.host', theme_name: 'test' )
+
+    @theme_name = if respond_to?(:theme_name)
+                    theme_name
+                  else
+                    ENV['BOLD_THEME'] || 'test'
+                  end
+    @site = Site.find_by_hostname('test.host') || create( :site, hostname: 'test.host', theme_name: @theme_name )
+
     @site.add_user! @user
     @site.add_user! @site_admin, :manager
     set_host @site.hostname
@@ -151,115 +212,6 @@ class ThemeIntegrationTest < BoldIntegrationTest
 
   private
 
-  def setup_site(theme)
-    parse_theme_structure theme
-    @site.destroy if @site
-    @site = create :site, hostname: 'test.host', theme_name: theme, post_comments: 'enabled'
-    @site.add_user! @user
-
-    if @page_tpl
-      @page = create :published_page, site: @site, title: 'Test Page Title', body: 'test page body', template: @page_tpl.key
-    end
-
-    if @post_tpl
-      @category = create :category, name: 'A Category', site: @site if @category_tpl
-      @post = create :published_post, site: @site, title: 'Test Post Title', body: 'test post body', template: @post_tpl.key, post_date: Time.local(2015, 02, 05), tag_list: 'foo, "bar baz"', author: @user, category: @category
-    end
-  end
-
-  def parse_theme_structure(theme)
-    @theme = Bold::Theme[theme]
-    @homepage_tpl = @theme.homepage_template
-    @post_tpl     = @theme.find_template :post, :default
-    @page_tpl     = @theme.find_template :page, :default
-    @tag_tpl      = @theme.find_template :tag, :post_listing
-    @archive_tpl  = @theme.find_template :archive, :post_listing
-    @category_tpl = @theme.find_template :category, :post_listing
-    @author_tpl   = @theme.find_template :author, :post_listing
-    @search_tpl   = @theme.find_template :search, :post_listing
-  end
-
-  def check_special_pages(except: [])
-    %w(homepage archive_page tag_page author_page category_page notfound_page error_page search_page).each do |p|
-      next if except.include? p
-      assert @site.send(p).present?, "#{p} not found"
-    end
-  end
-
-  def check_home_page
-    visit '/'
-  end
-
-  def check_home_page_and_post
-    check_home_page
-    if @post
-      assert has_content? @post.title
-      click_link @post.title
-      assert has_content? @post.title
-      assert has_content? 'test post body'
-      assert_equal "/#{@post.path}", current_path
-      if has_comment_form?
-        fill_in 'comment_author_name', with: 'John the Comment Tester'
-        fill_in 'comment_author_email', with: 'user@host.com'
-        fill_in 'comment_body', with: Faker::Lorem::paragraph
-        click_on 'comment_submit'
-        assert_equal "/#{@post.path}", current_path
-        refute has_content? 'John the Comment Tester' # DJ / spam check
-
-        assert c = @site.comments.last
-        assert_equal 'John the Comment Tester', c.author_name
-        assert c.body.present?
-        assert !c.approved?
-        c.update_attribute :status, :approved
-
-        visit current_path
-        assert has_content? 'John the Comment Tester'
-      end
-    end
-  end
-
-  def check_shows_page
-    if @page
-      visit '/test-page-title'
-      assert has_content? 'Test Page Title'
-      assert has_content? 'test page body'
-    end
-  end
-
-  def check_archive
-    if @post
-      visit '/2015'
-      assert has_content? @post.title
-      visit '/2015/02'
-      assert has_content? @post.title
-      visit '/2014/01'
-      refute has_content?(@post.title)
-    end
-  end
-
-  def check_tags
-    if @post
-      visit '/foo'
-      assert has_content? @post.title
-    end
-  end
-
-  def check_category
-    if @post
-      visit '/a-category'
-      assert has_content? @post.title
-    end
-  end
-
-  def check_author_listing
-    if @post
-      assert_equal @user, @post.author
-      visit "/authors/#{URI::escape @admin.name}"
-      assert !has_content?(@post.title)
-      visit "/authors/#{URI::escape @user.name}"
-      assert has_content? @post.title
-    end
-  end
 
   def has_comment_form?
     fill_in 'comment_body', with: 'lorem'

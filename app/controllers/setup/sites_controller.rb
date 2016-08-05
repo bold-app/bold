@@ -28,9 +28,11 @@ class Setup::SitesController < SetupController
 
   def create
     @site = Site.new site_params
-    if @site.save
+    r = CreateSite.call @site
+    if r.site_created?
       redirect_to bold_site_path(@site)
     else
+      flash.now[:alert] = r.error_message
       render 'new'
     end
   end

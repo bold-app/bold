@@ -22,9 +22,17 @@ require 'test_helper'
 class TagsTest < ActiveSupport::TestCase
   setup do
     Bold::current_site = @site = create :site
-    create :published_post, site: @site, tag_list: 'one, two, three'
-    create :published_post, site: @site, title: 'post two', tag_list: 'two, three, bar'
-    create :published_post, site: @site, title: 'post three', tag_list: 'one, three, foo'
+    p = create :published_post, site: @site
+    p.tag_list = 'one, two, three'
+    ApplyTags.call p
+
+    p = create :published_post, site: @site, title: 'post two'
+    p.tag_list = 'two, three, bar'
+    ApplyTags.call p
+
+    p = create :published_post, site: @site, title: 'post three'
+    p.tag_list = 'one, three, foo'
+    ApplyTags.call p
 
     # now we have:
     # bar(1), foo(1), one(2), two(2), three(3)

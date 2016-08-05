@@ -19,11 +19,11 @@
 #
 class Content < ActiveRecord::Base
   include SiteModel
-  include HasPermalink
   include Deletable
   include TextStats
 
-  prepend Taggable
+  prepend HasPermalink
+  prepend HasSlug
 
   # once published, content may have staged, not yet published changes:
   prepend Draftable
@@ -38,6 +38,7 @@ class Content < ActiveRecord::Base
 
   belongs_to :author, class_name: 'User'
 
+  has_many :fulltext_indices, as: :searchable, dependent: :delete_all
   has_many :request_logs, as: :resource
 
   store_accessor :meta, :meta_title
@@ -46,11 +47,13 @@ class Content < ActiveRecord::Base
   # any content is either a draft or published, or scheduled to be published
   # in the future.
   enum status: %i(draft scheduled published)
+
   after_initialize do |r|
     r.status ||= :draft
     r.template_field_values ||= {}
   end
   before_validation do |r|
+    r.slug = r.title if r.slug.blank?
     r.slug.sub! %r{\A/}, ''
     r.body ||= ''
   end
@@ -70,6 +73,9 @@ class Content < ActiveRecord::Base
     joins(:author).where("lower(users.name) = ?", name.to_s.unicode_downcase)
   }
 
+  def permalink_path_args
+    [ slug ]
+  end
 
   #
   # marks this content as deleted and destroys the permalink
@@ -89,12 +95,23 @@ class Content < ActiveRecord::Base
   # Search
   #
 
-  Bold::Search::ContentIndexer.setup self
-
   def fulltext_searchable?
     get_template.fulltext_searchable?
   end
 
+  # b: is for tags which are added in Post#data_for_index
+  def data_for_index
+    {
+      a: [ title, meta_title ],
+      c: [ teaser, meta_description ],
+      d: body.to_s
+    }
+  end
+
+  #
+  # template variables
+  #
+  #
   def template_field_value?(field_name)
     template_field_values[field_name.to_s].present?
   end
@@ -111,6 +128,7 @@ class Content < ActiveRecord::Base
     get_template.fields?
   end
 
+
   def last_published_at
     last_update || post_date
   end
@@ -126,34 +144,30 @@ class Content < ActiveRecord::Base
     site.homepage_id == id
   end
 
-  def publish!(create_permalink: true)
-    return true unless changed? || draft? || scheduled?
-    old_attributes = attributes.slice 'status', 'post_date', 'last_update'
-    transaction do
-      now = Time.zone.now
-      if self.post_date && post_date > now
-        self.status = :scheduled
-        @skip_permalink = true
-      else
-        self.post_date ||= now
-        self.last_update = now unless draft? || scheduled?
-        self.status = :published
-        @skip_permalink = true unless create_permalink
-      end
-      if save(context: :publish)
-        if scheduled?
-          PublisherJob.set(wait_until: post_date).perform_later(self)
-        end
-        true
-      else
-        self.attributes = old_attributes
-        false
-      end
+  def publish
+    return false unless changed? || draft? || scheduled?
+    self.author ||= User.current
+
+    now = Time.zone.now
+    self.post_date ||= now
+
+    if post_date > now
+      self.status = :scheduled
+    else
+      self.last_update = now unless draft? || scheduled?
+      self.status = :published
     end
+    true
+  end
+
+  def publish!(*_)
+    ActiveSupport::Deprecation.warn('Content#publish! will be removed, use the PublishContent action')
+    PublishContent.call self
   end
 
   def unpublish
-    update_attributes status: :draft, last_update: nil
+    self.status = :draft
+    self.last_update = nil
   end
 
   # true if content was updated after it has been initially published
@@ -231,15 +245,16 @@ class Content < ActiveRecord::Base
     end
   end
 
+  def title=(new_title)
+    self.slug = new_title if slug.blank?
+    super
+  end
+
 
   private
 
   def count_pageviews(scope)
     scope.count 'distinct(content_id, stats_visit_id)'
-  end
-
-  def slug_attribute
-    title
   end
 
   def set_author

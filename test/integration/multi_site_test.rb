@@ -24,9 +24,12 @@ class MultiSiteTest < BoldIntegrationTest
   setup do
     @user = create :confirmed_user
     @site1 = create :site, hostname: 'site1.de', name: 'Site one'
-    create :published_post, title: 'hello from site 1', body: 'lorem ipsum', site: @site1
+    create_homepage site: @site1
+    publish_post title: 'hello from site 1', body: 'lorem ipsum', site: @site1
+
     @site2 = create :site, hostname: 'site2.de', name: 'Seite zwei'
-    create :published_post, title: 'hello from site 2', body: 'lorem ipsum', site: @site2
+    create_homepage site: @site2
+    publish_post title: 'hello from site 2', body: 'lorem ipsum', site: @site2
     [@site1, @site2].each{|s| s.add_user! @user}
   end
 

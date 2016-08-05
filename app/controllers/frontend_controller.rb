@@ -129,7 +129,7 @@ class FrontendController < BaseController
         format.html {
           render 'errors/404', layout: 'error', status: 404, formats: :html
         }
-        format.any { head status: :not_found }
+        format.any { head :not_found }
       end
     end
     log_request

@@ -22,7 +22,7 @@ require 'test_helper'
 class ContactMessageTest < ActiveSupport::TestCase
   setup do
     Bold::current_site = @site = create :site
-    @page = create :published_page, site: @site, template: 'contact_page'
+    @page = publish_page template: 'contact_page'
   end
 
   test 'should take site from contact_page' do

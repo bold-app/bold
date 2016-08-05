@@ -19,79 +19,31 @@
 #
 module Taggable
 
-  GLUE = ', '.freeze
-
-  # patterns for tag string parsing: double quotes, single quotes, no quotes
-  PATTERNS = [
-    /(\A|,)\s*"(?<tag>.*?)"\s*(?=,\s*|\z)/,
-    /(\A|,)\s*'(?<tag>.*?)'\s*(?=,\s*|\z)/,
-    /(\A|,)\s*(?<tag>.*?)\s*(?=,\s*|\z)/
-  ]
-
   def self.prepended(clazz)
     clazz.class_eval do
+
       has_many :taggings, as: :taggable, dependent: :destroy
       has_many :tags, through: :taggings
 
-      scope :tagged_with, ->(name){
-        if Tag === name
-          joins(:tags).where('tags.id = ?'.freeze, name.id)
+      scope :tagged_with, ->(tag){
+        if tag.is_a? Tag
+          joins(:tags).where('tags.id = ?'.freeze, tag.id)
         else
-          joins(:tags).where('lower(tags.name) = ?'.freeze, name.to_s.unicode_downcase)
+          joins(:tags).where('lower(tags.name) = ?'.freeze, tag.to_s.unicode_downcase)
         end
       }
+
+      attr_writer :tag_list
     end
   end
 
   def tag_list
-    # we go through taggings instead of tags to get the tags potentially
-    # updated by tag_list=
-    taggings.map(&:tag).compact.map(&:quoted_name).join GLUE
+    @tag_list ||= Tag.join_tag_names tags.map(&:quoted_name)
   end
 
-  def tag_list=(string)
-    site = self.site || Site.current
-    old_ids = taggings.map(&:id).sort
-    self.taggings = parse_tags(string).map do |name|
-      tag = site.tags.named(name).first || site.tags.build(name: name)
-
-      (tag.persisted? and self.taggings.find_by_tag_id(tag.id)) or self.taggings.build(tag: tag)
-    end
-    if old_ids != taggings.map{|t|t.id.to_s}.sort
-      @tags_changed = true
-    end
-  end
-
-  def tags_changed?
-    !!@tags_changed
-  end
-
-  def changed?
-    super || tags_changed?
-  end
-
-  # parse a tag string
-  #
-  # Example:
-  #   tag_list = parse_tags "One , Two,  Three"
-  #   tag_list # ["One", "Two", "Three"]
-  def parse_tags(string)
-    if string.respond_to?(:join)
-      string = string.join(GLUE)
-    else
-      string = string.to_s.dup
-    end
-    string.strip!
-    [].tap do |tag_list|
-      PATTERNS.each do |pat|
-        string.gsub!(pat) do |match|
-          tag_list << $~['tag']
-          ''
-        end
-      end
-      tag_list.reject!(&:blank?)
-      tag_list.compact!
-    end
+  def reload
+    super
+    @tag_list = nil
   end
 
 end

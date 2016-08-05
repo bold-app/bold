@@ -19,39 +19,34 @@
 #
 class Post < Content
   include Teaser
+  prepend Taggable
 
   belongs_to :category
 
-  # memento_changes :update, :destroy
 
   scope :recent, ->(count){ alive.published.ordered.limit(count) }
-  scope :ordered, ->{ order 'post_date DESC' }
+  scope :ordered, ->{ order 'post_date DESC'.freeze }
 
   scope :for_year, ->(year){
     start = Time.zone.parse("#{year}-01-01")
-    alive.where 'post_date between ? AND ?', start, start.end_of_year
+    alive.where 'post_date between ? AND ?'.freeze, start, start.end_of_year
   }
 
   scope :for_month, ->(year, month){
     start = Time.zone.parse("#{year}-#{month}-01")
-    alive.where 'post_date between ? AND ?', start, start.end_of_month
+    alive.where 'post_date between ? AND ?'.freeze, start, start.end_of_month
   }
+
+
+  # memento_changes :update, :destroy
 
   after_initialize :set_default_values
 
+
   def permalink_path_args
-    # only generate a permalink for published posts
-    [ publishing_year, publishing_month, slug ] if published?
+    [ publishing_year, publishing_month, slug ]
   end
 
-  def publish!
-    first_time = !published?
-    super.tap do |success|
-      if success && first_time && published?
-        RpcPingJob.perform_later(self)
-      end
-    end
-  end
 
   def comments
     Comment.alive.where(content_id: id)
@@ -75,6 +70,7 @@ class Post < Content
   end
   alias commentable? comments_enabled?
 
+  # FIXME -> CommentAction
   def comment!(comment_params, request)
     Comment.new(comment_params).tap do |comment|
       comment.content = self
@@ -82,6 +78,17 @@ class Post < Content
       comment.save
     end
   end
+
+  def data_for_index
+    super.tap do |data|
+      tags = tag_list
+      if cat = category
+        tags << ' ' << cat.name
+      end
+      data[:b] = tags
+    end
+  end
+
 
   private
 

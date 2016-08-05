@@ -42,15 +42,10 @@ en:
         created_draft: Draft saved.
         draft_deleted: Draft deleted.
         deleted: "%{title} was deleted."
-        no_changes: Nothing changed.
-        no_changes_draft: Nothing changed.
-        not_saved: Error, could not publish.
-        not_saved_draft: Draft could not be saved.
-        saved: Published!
-        saved_draft: Draft saved.
         template_change_failure: Template change failed.
         template_change_success: Template changed.
         unpublished: "%{title} changed to draft state."
+        unpublish_failed: "%{title} could not be changed to draft state."
       navigation:
         deleted: 'Navigation deleted.'
         created: 'Navigation created.'
@@ -73,6 +68,19 @@ en:
 
     created: Created.
     saved: Saved.
+
+  actions:
+    create_site:
+      site_not_saved: Failed to create the site.
+      create_navigation_failed: Failed to create the default navigation.
+      create_content_failed: Failed to create the default content.
+    save_content:
+      no_changes: Nothing changed.
+      no_changes_draft: Nothing changed.
+      not_saved: "Error, could not publish. %{reason}"
+      not_saved_draft: "Draft could not be saved. %{reason}"
+      saved: Published!
+      saved_draft: Draft saved.
 
   notifications:
     daily_summary:

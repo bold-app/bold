@@ -22,23 +22,29 @@ require 'test_helper'
 module Frontend
   class SitemapsControllerTest < ActionController::TestCase
 
-    setup do
-      @page = create :published_page, site: @site
-      @category = create :category, site: @site
-      @post = create :published_post, site: @site, tag_list: 'foo', category_id: @category.id
-      @unpub = create :post, site: @site, title: 'not published'
-    end
-
     test 'should show sitemap' do
+      cat = build :category, site: @site
+      create_special_page :tag
+      create_special_page :category
+      create_special_page :author
+      CreateCategory.call cat
+
+      pg = publish_page
+      po = publish_post tag_list: 'foo', category_id: cat.id
+      unpub = save_post title: 'not published'
+
       get :show, params: { format: :xml }
       assert_response :success
-      assert @response.body !~ /#{Regexp.escape @unpub.slug}</
-      assert_select 'loc', @page.public_url
-      assert_select 'loc', @post.public_url
+
+      assert @response.body !~ /#{Regexp.escape unpub.slug}</
+      assert_select 'loc', unpub.public_url, 0
+
+      assert_select 'loc', pg.public_url
+      assert_select 'loc', po.public_url
 
       assert_select 'loc', Tag.where(name: 'foo').first.public_url
-      assert_select 'loc', @category.public_url
-      assert_select 'loc', @post.author.decorate.canonical_url
+      assert_select 'loc', cat.public_url
+      assert_select 'loc', po.author.decorate.canonical_url
     end
 
   end

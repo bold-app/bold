@@ -22,7 +22,7 @@ require 'test_helper'
 class ContentPublishingTest < BoldIntegrationTest
 
   setup do
-    @page = create :page, slug: 'some-page', title: 'hello from site 1', body: 'some page', site: @site
+    @page = save_page slug: 'some-page', title: 'hello from site 1', body: 'some page'
   end
 
   test 'should not navigate to unpublished page' do
@@ -30,12 +30,13 @@ class ContentPublishingTest < BoldIntegrationTest
     assert_equal 404, status_code
     assert has_content? 'not found'
 
-    @page.publish!
+    SaveContent.call @page, publish: true
     visit '/some-page'
     assert has_content? 'hello from site 1'
     assert has_content? 'some page'
 
     @page.unpublish
+    @page.save
     visit '/some-page'
     assert_equal 404, status_code
     assert has_content? 'not found'

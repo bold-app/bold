@@ -32,11 +32,6 @@ class Page < Content
 
   private
 
-  def permalink_path_args
-    # only generate a permalink for published pages
-    [ slug ] if published?
-  end
-
   def set_default_values
     if new_record? && site
       self.template ||= site.theme_config.default_page_template

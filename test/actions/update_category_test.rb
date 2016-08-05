@@ -19,31 +19,37 @@
 #
 require 'test_helper'
 
-class TaggableTest < ActiveSupport::TestCase
+class UpdateCategoryTest < ActiveSupport::TestCase
+
   setup do
-    Bold::current_site = @site = create :site
-    @post = create :post, site: @site
+    Bold.current_site = @site = create :site
   end
 
-  test 'should tag post' do
-    assert_difference 'Tag.count', 1 do
-      assert_difference 'Tagging.count', 1 do
-        assert @post.update_attribute :tag_list, 'foo Bar multi-Word tag'
-      end
-    end
-    @post.reload
-    assert_equal 1, @post.taggings.count
-    assert_equal 1, @post.tags.count
-    assert_equal 'foo Bar multi-Word tag', @post.tag_list
-  end
+  test 'should create new permalink when slug changes and redirect old link' do
+    c = @site.categories.build name: 'My Category', slug: 'my-cat'
+    assert r = CreateCategory.call(c)
+    assert r.category_created?
+    assert c = r.category
+    assert_equal 'my-cat', c.slug
+    assert l = c.permalink
+    assert_equal 'my-cat', l.path
 
-  test 'should not create tagging when tag fails to save' do
-    create :category, name: 'foo'
-    assert_no_difference 'Tag.count' do
-      assert_no_difference 'Tagging.count' do
-        assert_raise(ActiveRecord::StatementInvalid){ @post.update_attribute(:tag_list, 'foo, bar') }
+    assert_difference 'Redirect.count' do
+      assert_difference 'Permalink.count' do
+        assert UpdateCategory.call(c, slug: 'my-category')
       end
     end
+
+    c.reload
+    assert l2 = c.permalink
+    assert_equal 'my-category', l2.path
+
+    l.reload
+    assert r = l.destination
+    assert r.permanent?
+    assert_equal '/my-category', r.location
   end
 
 end
+
+

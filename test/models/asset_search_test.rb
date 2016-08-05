@@ -30,6 +30,7 @@ class AssetSearchTest < ActiveSupport::TestCase
   end
 
   test 'should search assets' do
+    IndexAsset.call @asset
     assert s = AssetSearch.new(query: 'photo')
     assert !s.blank?
     assert r = s.search(@site.assets)

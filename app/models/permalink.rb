@@ -23,25 +23,36 @@ class Permalink < ActiveRecord::Base
   attr_accessor :path_args
   belongs_to :destination, polymorphic: true
 
-  validates :path, uniqueness: { scope: :site_id, case_sensitive: false }, presence: true
+  validates :path,
+    uniqueness: { scope: :site_id, case_sensitive: false },
+    presence: true
+
   validates :destination, presence: true
 
-  before_validation :build_path
-
-  def build_path
-    if path_args
-      self.path = path_args.flatten.map do |s|
-        next if s.blank?
-        s.to_url limit: 500, truncate_words: false, allow_slash: true
-      end.compact.join('/')
-    end
+  def self.build_path(*path_args)
+    return path_args[0] if path_args.size == 1 and String === path_args[0]
+    path_args.flatten.map do |s|
+      next if s.blank?
+      s.to_url limit: 500, truncate_words: false, allow_slash: true
+    end.compact.join('/')
   end
 
-  def redirect_to(path, is_permanent: true)
-    path = "/#{path}" unless path.starts_with?('/')
-    self.destination = Redirect.new(location: path,
+  def redirect_to(*new_path, is_permanent: true)
+    new_path = self.class.build_path new_path
+    return if self.path == new_path
+
+    new_path = "/#{new_path}" unless new_path.starts_with?('/')
+    self.destination = Redirect.new(location: new_path,
                                     permanent: is_permanent,
                                     site: site)
   end
 
+  def destination=(dest)
+    self.site ||= dest.site
+    super
+  end
+
+  def public_url
+    site.public_url path
+  end
 end

@@ -22,7 +22,11 @@ require 'test_helper'
 class FrontendTest < BoldIntegrationTest
 
   setup do
-    @post = create :published_post, title: 'Test Post Title', body: 'test post body', post_date: Time.local(2015, 02, 05), slug: 'test-post', site: @site
+    create_homepage
+    @post = publish_post title: 'Test Post Title',
+                         body: 'test post body',
+                         post_date: Time.local(2015, 02, 05),
+                         slug: 'test-post'
   end
 
   test 'should render homepage' do

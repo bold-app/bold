@@ -44,7 +44,8 @@ class Bold::Settings::CategoriesController < Bold::SettingsController
 
   def create
     @category = current_site.categories.build category_params
-    if @category.save
+    r = CreateCategory.call(@category)
+    if r.category_created?
       redirect_to bold_site_settings_categories_path(current_site)
     else
       render 'new'

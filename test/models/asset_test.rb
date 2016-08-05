@@ -24,17 +24,8 @@ class AssetTest < ActiveSupport::TestCase
     Bold::current_site = @site = create :site
   end
 
-  test 'should create from remote url' do
-    asset = create :asset, file: nil, site: @site, remote_file_url: 'https://oft-unterwegs.de/files/inline/7e9aaa6e-c1e4-48b6-8d70-e866ac01359f/teaser'
-    assert asset.image?
-    assert asset.scalable?
-    assert_equal 45232, asset.file_size
-    assert asset.persisted?
-  end
-
   test 'should detect image' do
-    file = Rack::Test::UploadedFile.new(File.join(File.dirname(__FILE__), '..', 'fixtures', 'photo.jpg'), 'text/plain')
-    asset = Asset.create file: file
+    asset = create_asset Rack::Test::UploadedFile.new(File.join(File.dirname(__FILE__), '..', 'fixtures', 'photo.jpg'), 'text/plain')
     assert asset.image?
     assert asset.scalable?
     assert_equal 'text/plain', asset.content_type
@@ -42,76 +33,48 @@ class AssetTest < ActiveSupport::TestCase
   end
 
   test 'should detect fake image' do
-    file = Rack::Test::UploadedFile.new(File.join(File.dirname(__FILE__), '..', 'fixtures', 'test.txt'), 'image/jpeg')
-    asset = Asset.create file: file
+    asset = create_asset Rack::Test::UploadedFile.new(File.join(File.dirname(__FILE__), '..', 'fixtures', 'test.txt'), 'image/jpeg')
     assert !asset.image?
     assert !asset.scalable?
     assert_equal 'image/jpeg', asset.content_type
     assert_equal '', asset.send(:magic_content_type)
   end
 
-  test 'should create scaler job' do
-    assert_enqueued_with job: ImageScalerJob do
-      @asset = create :asset, site: @site
-    end
-  end
-
-  test 'should have set up indexer' do
-    assert Bold::Search::AssetIndexer === Asset.indexer
-  end
-
-  test 'should rebuild index' do
-    @asset = create :asset
-    FulltextIndex.delete_all
-    assert_difference 'FulltextIndex.count', 1 do
-      Asset.rebuild_index
-    end
-  end
-
-  test 'should index assets' do
-    asset = nil
-    assert_difference 'FulltextIndex.count', 1 do
-      assert asset = create(:asset, title: 'this is the title')
-    end
-    assert asset.fulltext_indices.search('photo').map(&:searchable).include?(asset)
-    assert asset.fulltext_indices.search('title').map(&:searchable).include?(asset)
-  end
-
   test 'should return original for nil or :original version name' do
-    @asset = create :asset
-    assert_equal @asset.file.current_path, @asset.diskfile_path(nil)
-    assert_equal @asset.file.current_path, @asset.diskfile_path(:original)
+    asset = create_asset
+    assert_equal asset.file.current_path, asset.diskfile_path(nil)
+    assert_equal asset.file.current_path, asset.diskfile_path(:original)
   end
 
   test 'should remove file upon destruction' do
-    @asset = create :asset
-    assert file = @asset.file.current_path
+    asset = create :asset
+    assert file = asset.file.current_path
     assert File.file?(file), "expected file to be located at #{file}"
-    assert @asset.readable?
+    assert asset.readable?
     assert File.size(file) > 0
-    @asset.destroy
+    asset.destroy
     assert !File.file?(file)
-    assert !@asset.readable?
+    assert !asset.readable?
   end
 
   test 'should store files by date and site' do
-    @asset = create :asset
-    assert file = @asset.file.current_path
-    d = @asset.created_at
+    asset = create_asset
+    assert file = asset.file.current_path
+    d = asset.created_at
     assert file.include?("#{@site.id}/#{d.year}/#{d.month}/#{d.day}")
   end
 
   test 'should set slug from filename' do
-    @asset = create :asset
-    assert_equal 'photo', @asset.slug
+    asset = create_asset
+    assert_equal 'photo', asset.slug
   end
 
   test 'should store disk_directory' do
-    @asset = create :asset
-    @asset.reload
-    assert dir = @asset.disk_directory
+    asset = create_asset
+    asset.reload
+    assert dir = asset.disk_directory
     assert dir.present?
-    assert dir =~ /#{@asset.site_id}\/\d+\/\d+\/\d+\/#{@asset.id}/
+    assert dir =~ /#{@site.id}\/\d+\/\d+\/\d+\/#{asset.id}/
   end
 
 end

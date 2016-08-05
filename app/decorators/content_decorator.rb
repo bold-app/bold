@@ -74,11 +74,19 @@ class ContentDecorator < Draper::Decorator
   end
 
   def tags
-    @tags ||= object.tags.map{|t| TagDecorator.decorate t}
+    @tags ||= if object.respond_to?(:tags)
+                object.tags.map{|t| TagDecorator.decorate t}
+              else
+                []
+              end
   end
 
   def tags_class
-    @tags_class ||= object.tags.map{|t| "tag-#{t.slug}"}.join ' '
+    @tags_class ||= if tags?
+                      object.tags.map{|t| "tag-#{t.slug}"}.join ' '
+                    else
+                      ''
+                    end
   end
 
   def tag_links(glue: ', ', link_opts: {})

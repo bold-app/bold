@@ -22,6 +22,8 @@ require 'test_helper'
 class StatsVisitTest < ActiveSupport::TestCase
   setup do
     Bold::current_site = @site = create :site
+    @page = create :published_page, title: 'new page'
+    @page_link = create :permalink, path: @page.slug, destination: @page
   end
 
   test 'should decide wether to add to an existing visit or start a new one' do
@@ -31,7 +33,9 @@ class StatsVisitTest < ActiveSupport::TestCase
   end
 
   test 'should create from request log' do
-    log = create :request_log, created_at: 5.minutes.ago
+    log = create :request_log, created_at: 5.minutes.ago,
+                               resource: @page,
+                               permalink: @page_link
     log.reload
     assert log.visitor_id.present?
 

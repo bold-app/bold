@@ -24,8 +24,9 @@ class StatisticsTest < BoldIntegrationTest
   setup do
     @user = create :confirmed_user
     @site = create :site, hostname: 'site1.de', name: 'Site one'
-    create :published_post, title: 'hello from site 1', body: 'lorem ipsum', site: @site
     @site.add_user! @user
+    create_homepage
+    publish_post title: 'hello from site 1', body: 'lorem ipsum'
     RequestLog.any_instance.stubs(:bot?).returns false
   end
 

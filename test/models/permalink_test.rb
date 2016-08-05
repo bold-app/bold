@@ -24,14 +24,15 @@ class PermalinkTest < ActiveSupport::TestCase
     Bold::current_site = @site = create :site
   end
 
-  test 'should allow slashes in path components' do
-    c = create :category, name: 'my category', slug: 'my/category'
-    assert l = c.permalink
-    assert_equal 'my/category', l.path
+  test 'should build path' do
+    assert_equal 'foo/bar', Permalink.build_path('foo', 'BAR')
+    assert_equal 'foo/bar', Permalink.build_path(['foo', 'BAR'])
+    assert_equal 'foo/bar', Permalink.build_path('foo/bar')
+    assert_equal 'foo/bar', Permalink.build_path(['foo/bar'])
   end
 
   test 'should validate path uniqueness' do
-    create :category, name: 'my category'
+    create :permalink, path: 'my-category'
     p = Permalink.new path: 'my-category'
     assert !p.valid?
     assert p.errors[:path].any?
@@ -42,14 +43,13 @@ class PermalinkTest < ActiveSupport::TestCase
   end
 
   test 'should redirect to new location' do
-    post = create :published_post, slug: 'some-post', title: 'hello from site 1', body: 'lorem ipsum', site: @site
-    assert pl = post.permalink
+    l = create :permalink
     assert_difference 'Redirect.count' do
-      pl.redirect_to '/new-link'
-      pl.save
+      l.redirect_to '/new-link'
+      l.save
     end
-    pl.reload
-    assert r = pl.destination
+    l.reload
+    assert r = l.destination
     assert_equal Redirect, r.class
     assert_equal '/new-link', r.location
   end

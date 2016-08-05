@@ -27,7 +27,43 @@ module Bold
       @contents = @contents.page(params[:page]).per(20).includes(:tags)
     end
 
+    def update
+      save_post
+    end
+
+    def create
+      @content = current_site.posts.build
+      save_post
+    end
+
+
     private
+
+    def save_post
+      @content.attributes = content_params
+      result = SaveContent.call(
+        @content,
+        publish: (params[:publish] || params[:do_publish].present?)
+      )
+      flash[result.message_severity] = result.message
+
+      respond_to do |format|
+
+        format.html do
+          if result.saved?
+            redirect_to edit_bold_post_path @content
+          else
+            render @content.new_record? ? 'new' : 'edit'
+          end
+        end
+
+        format.js do
+          if params[:go_back].present?
+            @back_to = bold_site_posts_url(current_site)
+          end
+        end
+      end
+    end
 
     def find_content
       @content = Post.alive.find params[:id]

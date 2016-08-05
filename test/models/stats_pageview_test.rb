@@ -23,10 +23,14 @@ class StatsPageviewTest < ActiveSupport::TestCase
 
   setup do
     Bold::current_site = @site = create :site
+    @page = create :page
+    @page_link = create :permalink, destination: @page
   end
 
   test 'should build from request log' do
-    log = create :request_log, created_at: 5.minutes.ago
+    log = create :request_log, created_at: 5.minutes.ago,
+                               resource: @page,
+                               permalink: @page_link
     assert pv = StatsPageview.build_for_log(log)
     assert pv.save, pv.errors.inspect
     assert_equal log, pv.request_log
@@ -37,11 +41,22 @@ class StatsPageviewTest < ActiveSupport::TestCase
   end
 
   test 'should build pageviews for all unprocessed request logs' do
-    log = create :request_log, created_at: 50.minutes.ago, processed: true
-    log = create :bot_request, created_at: 50.minutes.ago
-    log = create :mobile_request, created_at: 1.hour.ago
-    log = create :request_log, created_at: 5.minutes.ago
-    log = create :request_log, created_at: 5.minutes.ago
+    create :request_log, created_at: 50.minutes.ago,
+                         processed: true,
+                         resource: @page,
+                         permalink: @page_link
+    create :bot_request, created_at: 50.minutes.ago,
+                         resource: @page,
+                         permalink: @page_link
+    create :mobile_request, created_at: 1.hour.ago,
+                            resource: @page,
+                            permalink: @page_link
+    create :request_log, created_at: 5.minutes.ago,
+                         resource: @page,
+                         permalink: @page_link
+    create :request_log, created_at: 5.minutes.ago,
+                         resource: @page,
+                         permalink: @page_link
 
     assert_difference 'StatsPageview.count', 3 do
       StatsPageview.build_pageviews @site

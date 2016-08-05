@@ -77,13 +77,13 @@ module Bold
     end
 
     test 'should save page draft for published page' do
-      @page.publish!
+      SaveContent.call @page, publish: true
       assert old_title = @page.title
       put :update, params: { id: @page.id, content: { title: 'new title' } }
       assert_redirected_to edit_bold_page_path(@page)
       @page.reload
       assert_equal old_title, @page.title
-      @page.load_draft!
+      @page.load_draft
       assert_equal 'new title', @page.title
     end
 

@@ -19,9 +19,7 @@
 #
 FactoryGirl.define do
   factory :permalink do
-    path "MyString"
-destination_type "MyString"
-destination_id ""
+    path "/my/link"
+    destination { FactoryGirl.create(:category) }
   end
-
 end

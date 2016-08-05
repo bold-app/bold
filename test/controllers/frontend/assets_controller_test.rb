@@ -22,11 +22,8 @@ require 'test_helper'
 module Frontend
   class AssetsControllerTest < ActionController::TestCase
 
-    setup do
-      @asset = create :asset, site: @site
-    end
-
     test 'should show hi res asset if enabled' do
+      @asset = create_asset
       @site.update_attributes adaptive_images: '1'
       @request.cookies['boldScreenSize'] = '2'
       get :show, params: { id: @asset.to_param, version: 'big' }
@@ -36,6 +33,7 @@ module Frontend
     end
 
     test 'should show 3x hi res asset' do
+      @asset = create_asset
       @site.update_attributes adaptive_images: '1'
       @request.cookies['boldScreenSize'] = '3|736' # iphone 6+
       get :show, params: { id: @asset.to_param, version: 'big' }
@@ -66,6 +64,7 @@ module Frontend
     end
 
     test 'should show asset' do
+      @asset = create_asset
       get :show, params: { id: @asset.to_param }
       assert_response :success
       assert disp = @response.headers['Content-Disposition']
@@ -73,6 +72,7 @@ module Frontend
     end
 
     test 'should download asset' do
+      @asset = create_asset
       get :download, params: { id: @asset.to_param, filename: 'foo.pdf' }
       assert_response :success
       assert disp = @response.headers['Content-Disposition']
@@ -80,6 +80,7 @@ module Frontend
     end
 
     test 'should create request log for asset' do
+      @asset = create_asset
       assert_difference 'RequestLog.count' do
         get :show, params: { id: @asset.to_param }
       end

@@ -21,7 +21,42 @@ module Bold
   class PagesController < SiteController
     include ContentEditing
 
+    def update
+      save_page
+    end
+
+    def create
+      @content = current_site.pages.build
+      save_page
+    end
+
     private
+
+    def save_page
+      @content.attributes = content_params
+      result = SaveContent.call(
+        @content,
+        publish: (params[:publish] || params[:do_publish].present?)
+      )
+      flash[result.message_severity] = result.message
+
+      respond_to do |format|
+
+        format.html do
+          if result.saved?
+            redirect_to edit_bold_page_path @content
+          else
+            render @content.new_record? ? 'new' : 'edit'
+          end
+        end
+
+        format.js do
+          if params[:go_back].present?
+            @back_to = bold_site_pages_url(current_site)
+          end
+        end
+      end
+    end
 
     def edit_url(content = @content)
       edit_bold_page_path(content)

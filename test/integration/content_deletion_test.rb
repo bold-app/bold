@@ -22,12 +22,12 @@ require 'test_helper'
 class ContentDeletionTest < BoldIntegrationTest
 
   setup do
-    @post = create :published_post, slug: 'some-post', title: 'hello from site 1', body: 'lorem ipsum', site: @site
+    @post = publish_post slug: 'some-post', title: 'hello from site 1', body: 'lorem ipsum'
   end
 
   test 'should not navigate to deleted post' do
-    path = @post.permalink.path
-    visit '/'+path
+    path = @post.path
+    visit "/#{path}"
     assert has_content? 'lorem ipsum'
 
     assert_no_difference 'Post.count' do
@@ -42,6 +42,7 @@ class ContentDeletionTest < BoldIntegrationTest
   end
 
   test 'search should not find deleted post' do
+    create_special_page :search
     assert search = @site.search_page
     visit '/'+search.permalink.path+'?q=lorem'
     assert has_content? 'hello from site 1'

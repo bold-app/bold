@@ -19,9 +19,7 @@
 #
 FactoryGirl.define do
   factory :redirect do
-    permalink_id ""
-location "MyString"
-permanent false
+    location "/foo"
+    permanent false
   end
-
 end

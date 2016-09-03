@@ -16,14 +16,16 @@ class ExportSiteTest < ActiveSupport::TestCase
     post = publish_post title: 'hello from site 1', body: 'lorem ipsum', site: @site, category: category
     assert @site.assets.include?(asset)
     assert @site.contents.include?(post)
-    @file = ExportSite.call @site, destination: '/tmp'
+    r = ExportSite.call @site, destination: '/tmp'
+    @file = r.zipfile
+    assert r.success?
+    assert r.errors.blank?
     assert @file
     assert File.size(@file) > 0
     assert_match /.+\.zip$/, @file
     assert listing = `unzip -l #{@file}`.lines
     assert listing.detect{ |l| l =~ /contents.yml/ }
     assert listing.detect{ |l| l =~ /assets.yml/ }
-    assert listing.detect{ |l| l =~ /categories.yml/ }
     assert listing.detect{ |l| l =~ /assets\/#{asset.id}\/#{asset.filename}/ }
   end
 

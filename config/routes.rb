@@ -122,9 +122,7 @@ Rails.application.routes.draw do
     # global admin
     namespace :admin do
 
-      resources :sites do
-        resource :import, only: %i(new create)
-      end
+      resources :sites
 
       resources :users do
         collection do

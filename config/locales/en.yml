@@ -19,7 +19,6 @@ en:
   flash:
     admin:
       email_changed: Do not forget to confirm your new address.
-      not_imported: Import failed.
       password_changed: Password changed.
       profile_saved: Profile saved.
       reset_user_password: "The user's password was reset, and an email with recovery instructions was sent to %{email}."
@@ -89,22 +88,6 @@ en:
 
   admin:
 
-    imports:
-      create:
-        back_to_index: Sites
-        h1: Import
-        p: Import completed.
-      new:
-        back_to_index: Sites
-        file: Filename
-        h1: Import
-        info: Import posts, pages and assets into <strong>%{site}</strong>.
-        ctime: Created
-        select_file_on_server: "Or, select a file from your server's exports directory:"
-        size: Size
-        submit: Import
-        upload: 'Upload'
-
     invitations:
       index:
         heading: Pending invitations
@@ -119,7 +102,6 @@ en:
         submit: Save
         link:
           delete: Delete
-          import: Import
           export: Export
       form:
         label_hostname: Primary hostname

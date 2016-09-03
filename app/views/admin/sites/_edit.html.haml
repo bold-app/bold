@@ -1,6 +1,5 @@
 %header.clearfix.edit-site
   = link_with_icon :trash, t('.link.delete'), admin_site_path(@site), method: :delete, data: { confirm: t('.confirm_delete', name: @site.name) }, class: 'pull-right btn btn-danger btn-sm'
-  = link_with_icon :upload, t('.link.import'), new_admin_site_import_path(@site), class: 'btn btn-default btn-sm'
   = link_with_icon :download, t('.link.export'), admin_site_path(@site), class: 'btn btn-default btn-sm'
 
 = simple_form_for @site, url: admin_site_path(@site) do |f|

@@ -14,3 +14,8 @@
 /public/assets
 /assets
 /config/database.yml
+/config/instagram.yml
+/config/puma.rb
+/exports
+
+.byebug_history

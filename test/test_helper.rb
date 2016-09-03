@@ -54,12 +54,13 @@ class ActiveSupport::TestCase
   private
 
   def publish_page(attributes = {})
-    save_page attributes, true
+    save_content_page attributes, true
   end
 
-  def save_page(attributes = {}, publish = false)
+  # save_page is taken by capybara
+  def save_content_page(attributes = {}, publish = false)
     build(:page, { site: @site }.merge(attributes)).tap do |p|
-      r = SaveContent.call p, publish: true
+      r = SaveContent.call p, publish: publish
       assert r.saved?, r.inspect
       p.reload
     end

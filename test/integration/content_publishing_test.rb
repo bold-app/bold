@@ -22,7 +22,7 @@ require 'test_helper'
 class ContentPublishingTest < BoldIntegrationTest
 
   setup do
-    @page = save_page slug: 'some-page', title: 'hello from site 1', body: 'some page'
+    @page = save_content_page slug: 'some-page', title: 'hello from site 1', body: 'some page'
   end
 
   test 'should not navigate to unpublished page' do

@@ -21,7 +21,9 @@ class ApplyTagsTest < ActiveSupport::TestCase
     end
 
     p.reload
-    assert_equal 'multi word, Bar, Foo', p.tag_list
+    assert_match /multi word/, p.tag_list
+    assert_match /Bar/, p.tag_list
+    assert_match /Foo/, p.tag_list
   end
 
   test 'should choose non-conflicting slug' do
@@ -50,7 +52,8 @@ class ApplyTagsTest < ActiveSupport::TestCase
     assert_equal 2, r.tag_count
 
     p.reload
-    assert_equal 'removeme, "bar,baz"', p.tag_list
+    assert_match /removeme/, p.tag_list
+    assert_match /"bar,baz"/, p.tag_list
 
     assert_difference 'Tag.count', -1 do
       assert_difference 'Tagging.count', -1 do

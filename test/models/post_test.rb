@@ -84,7 +84,9 @@ class PostTest < ActiveSupport::TestCase
     assert_equal 'the title', title[0]
     assert_equal 'meta title', title[1]
     assert_equal 'the body', data[:d]
-    assert_equal 'bar, foo Category', data[:b]
+    assert_match /bar/, data[:b]
+    assert_match /foo/, data[:b]
+    assert_match /Category/, data[:b]
     assert_nil data[:c][0]
     assert_equal 'meta desc', data[:c][1]
   end

@@ -90,7 +90,8 @@ class SaveContentTest < ActiveSupport::TestCase
     assert p = Post.find_by_title('new post')
     assert !p.published?
     assert_equal 'body', p.body
-    assert_equal 'bar, foo', p.tag_list
+    assert_match /bar/, p.tag_list
+    assert_match /foo/, p.tag_list
   end
 
   test 'should publish new post' do
@@ -112,7 +113,8 @@ class SaveContentTest < ActiveSupport::TestCase
     assert p = Post.find_by_title('new post')
     assert p.published?
     assert_equal 'body', p.body
-    assert_equal 'bar, foo', p.tag_list
+    assert_match /bar/, p.tag_list
+    assert_match /foo/, p.tag_list
   end
 
   test 'should create post draft' do

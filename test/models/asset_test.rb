@@ -28,16 +28,14 @@ class AssetTest < ActiveSupport::TestCase
     asset = create_asset Rack::Test::UploadedFile.new(File.join(File.dirname(__FILE__), '..', 'fixtures', 'photo.jpg'), 'text/plain')
     assert asset.image?
     assert asset.scalable?
-    assert_equal 'text/plain', asset.content_type
-    assert_equal 'image/jpeg', asset.send(:magic_content_type)
+    assert_equal 'image/jpeg', asset.content_type
   end
 
   test 'should detect fake image' do
     asset = create_asset Rack::Test::UploadedFile.new(File.join(File.dirname(__FILE__), '..', 'fixtures', 'test.txt'), 'image/jpeg')
     assert !asset.image?
     assert !asset.scalable?
-    assert_equal 'image/jpeg', asset.content_type
-    assert_equal '', asset.send(:magic_content_type)
+    assert_equal 'application/octet-stream', asset.content_type
   end
 
   test 'should return original for nil or :original version name' do

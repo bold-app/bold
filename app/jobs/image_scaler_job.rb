@@ -22,8 +22,8 @@ class ImageScalerJob < ActiveJob::Base
 
   def perform(*args)
     if asset = args.shift
-      Bold::with_site(asset.site) do
-        Bold::ImageScaler.new(asset).run
+      Bold::with_site asset.site do
+        ScaleImage.call asset
       end
     end
   end

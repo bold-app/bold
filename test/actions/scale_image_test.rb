@@ -19,33 +19,20 @@
 #
 require 'test_helper'
 
-class ImageScalerTest < ActiveSupport::TestCase
+class ScaleImageTest < ActiveSupport::TestCase
   setup do
-    AssetUploader.enable_processing = true
     Bold::current_site = @site = create :site
-    @asset = create :asset
-    @scaler = Bold::ImageScaler.new @asset
+    @asset = create_asset
   end
 
   teardown do
-    AssetUploader.enable_processing = false
   end
 
-
-  test 'should create scaled image version' do
-    cfg = { name: 'small', width: 200, ratio: 2, quality: 50, crop: false }
-    assert path = @scaler.send(:create_version, cfg)
-    img = MiniMagick::Image.open path
-    assert_equal 133, img[:width]
-    assert_equal 100, img[:height]
-  end
-
-  test 'should create cropped image version' do
-    cfg = { name: 'cropped', width: 200, ratio: 2, quality: 50, crop: true }
-    assert path = @scaler.send(:create_version, cfg)
-    img = MiniMagick::Image.open path
-    assert_equal 200, img[:width]
-    assert_equal 100, img[:height]
+  test 'should create image versions' do
+    r = ScaleImage.call @asset
+    assert r.success?
+    assert r.versions_created > 0
+    assert r.errors.blank?
   end
 
 end

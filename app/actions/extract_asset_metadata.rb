@@ -6,11 +6,11 @@ class ExtractAssetMetadata
 
   def initialize(asset)
     @asset = asset
-    @file = asset.file
+    @file = File.new(asset.diskfile_path)
   end
 
   def call
-    @asset.content_type = @file.content_type
+    @asset.content_type = magic_content_type
     @asset.file_size    = @file.size
 
     if @asset.file_size > 0 and @asset.image?
@@ -28,6 +28,10 @@ class ExtractAssetMetadata
 
 
   private
+
+  def magic_content_type
+    MimeMagic.by_magic(@file).to_s.presence || 'application/octet-stream'
+  end
 
   def set_jpeg_metadata
 

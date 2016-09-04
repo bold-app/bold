@@ -178,6 +178,11 @@ module Bold
       end
     end
 
+    def self.path(base_path, name)
+      path = Pathname(base_path)
+      path.dirname / "#{name}_#{path.basename}"
+    end
+
     private
 
     def max_dimension(params)

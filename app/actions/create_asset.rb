@@ -9,16 +9,17 @@ class CreateAsset
   end
 
   def call
-    @asset.site    ||= Site.current
+    @asset.site ||= Site.current
     @asset.creator ||= User.current
-
-    ExtractAssetMetadata.call @asset
+    @asset.file_size = @asset.file.size
 
     @asset.transaction do
 
       unless @asset.save
         raise ActiveRecord::Rollback
       end
+
+      ExtractAssetMetadata.call @asset
 
       ApplyTags.call @asset
 

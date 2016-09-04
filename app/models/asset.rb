@@ -77,7 +77,7 @@ class Asset < ActiveRecord::Base
     if version.blank?
       file.url
     else
-      Bold::ImageScaler.version_path(file.url, version_name)
+      ::Bold::ImageVersion.path(file.url, version_name)
     end
   end
 
@@ -109,7 +109,7 @@ class Asset < ActiveRecord::Base
 
   def ensure_version!(version = nil)
     if image? && scalable? && version.present? && !readable?(version)
-      Bold::ImageScaler.new(self).run
+      ScaleImage.call(self)
     end
   end
 
@@ -117,31 +117,16 @@ class Asset < ActiveRecord::Base
     File.readable? diskfile_path version
   end
 
-  # add segmentation by site id
-  def fix_location!
-    return if readable?
-
-    basedir = File.dirname diskfile_path
-    FileUtils.mkdir_p basedir
-    old_basedir = basedir.gsub %r{/#{site_id}/}, '/'
-    `mv #{old_basedir}/* #{basedir}`
-  end
-  def self.fix_locations!
-    all.each do |a|
-      a.fix_location!
-    end
-  end
-
   def jpeg?
-    magic_content_type == 'image/jpeg'
+    content_type == 'image/jpeg'
   end
 
   def image?
-    !!(magic_content_type.to_s =~ /\Aimage/)
+    !!(content_type.to_s =~ /\Aimage/)
   end
 
   def scalable?
-    !!(magic_content_type.to_s =~ /\Aimage\/(jpeg|png|tiff)\z/)
+    !!(content_type.to_s =~ /\Aimage\/(jpeg|png|tiff)\z/)
   end
 
   def scalable_image?
@@ -218,11 +203,5 @@ class Asset < ActiveRecord::Base
       end
     end
   end
-
-
-  def magic_content_type
-    @magic_content_type ||= MimeMagic.by_magic(file).to_s
-  end
-
 
 end

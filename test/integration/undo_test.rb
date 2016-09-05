@@ -39,10 +39,11 @@ class UndoTest < BoldIntegrationTest
 
   test 'should remove and restore draft' do
     skip unless defined? Capybara::Poltergeist
-    @post = create :published_post, title: 'Content title', body: 'Lorem ipsum ContentEditingTest', site: @site
+    @post = publish_post title: 'Content title',
+                         body: 'Lorem ipsum ContentEditingTest'
     @post.body = 'This is the updated content.'
     assert_difference 'Draft.count' do
-      @post.save
+      SaveDraft.call @post
     end
 
     login_as @user
@@ -75,7 +76,7 @@ class UndoTest < BoldIntegrationTest
   test 'should undo comment actions' do
     skip unless defined? Capybara::Poltergeist
     login_as @user
-    p = create :published_post, site: @site
+    p = publish_post
     c = create :comment, content: p, author_name: 'Max Muster', body: 'test comment'
     assert date = c.created_at
 

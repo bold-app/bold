@@ -1,8 +1,10 @@
 .modal-dialog.modal-lg
   .modal-content.assets-edit
 
-    .modal-body
+    .modal-header
       %button.close{"data-dismiss" => "modal", :type => "button"} ×
+
+    .modal-body
 
       = simple_form_for @asset, remote: true, url: bold_asset_path(@asset), multipart: true do |f|
 

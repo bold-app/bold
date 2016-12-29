@@ -53,7 +53,7 @@ class CommentTest < ActiveSupport::TestCase
   test 'mark spam should mark comment as deleted and enqueue job' do
     co = create :comment, content: @post
     assert_no_difference 'Comment.count' do
-      assert_difference 'Comment.alive.count', -1 do
+      assert_difference 'Comment.existing.count', -1 do
         assert_enqueued_with(job: AkismetUpdateJob) do
           co.mark_as_spam!
         end

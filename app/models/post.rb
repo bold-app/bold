@@ -24,17 +24,17 @@ class Post < Content
   belongs_to :category
 
 
-  scope :recent, ->(count){ alive.published.ordered.limit(count) }
+  scope :recent, ->(count){ existing.published.ordered.limit(count) }
   scope :ordered, ->{ order 'post_date DESC'.freeze }
 
   scope :for_year, ->(year){
     start = Time.zone.parse("#{year}-01-01")
-    alive.where 'post_date between ? AND ?'.freeze, start, start.end_of_year
+    existing.where 'post_date between ? AND ?'.freeze, start, start.end_of_year
   }
 
   scope :for_month, ->(year, month){
     start = Time.zone.parse("#{year}-#{month}-01")
-    alive.where 'post_date between ? AND ?'.freeze, start, start.end_of_month
+    existing.where 'post_date between ? AND ?'.freeze, start, start.end_of_month
   }
 
 
@@ -49,7 +49,7 @@ class Post < Content
 
 
   def comments
-    Comment.alive.where(content_id: id)
+    Comment.existing.where(content_id: id)
   end
 
   # approved comments in ascending order

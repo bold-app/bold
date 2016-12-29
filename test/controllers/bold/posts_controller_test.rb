@@ -148,7 +148,7 @@ module Bold
 
     test 'should destroy unpublished post' do
       p = save_post
-      assert_difference 'Post.alive.count', -1 do
+      assert_difference 'Post.existing.count', -1 do
         assert_no_difference 'Post.count' do
           delete :destroy, params: { id: p.id }
         end

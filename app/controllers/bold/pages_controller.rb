@@ -63,11 +63,11 @@ module Bold
     end
 
     def find_content
-      @content = Page.alive.find params[:id]
+      @content = Page.existing.find params[:id]
     end
 
     def collection
-      coll = current_site.pages.alive.order('slug ASC')
+      coll = current_site.pages.existing.order('slug ASC')
       @content_search.present? ? @content_search.search(coll) : coll
     end
 

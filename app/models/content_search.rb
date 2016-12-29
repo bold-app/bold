@@ -26,7 +26,7 @@ class ContentSearch < Search
   end
 
   def search(collection)
-    collection = super(collection).alive
+    collection = super(collection).existing
     collection = apply_status(collection) if status.present?
     return collection
   end

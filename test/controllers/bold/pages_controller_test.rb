@@ -88,7 +88,7 @@ module Bold
     end
 
     test 'should delete page' do
-      assert_difference 'Page.alive.count', -1 do
+      assert_difference 'Page.existing.count', -1 do
         assert_no_difference 'Page.count' do
           delete :destroy, params: { id: @page.id }
         end

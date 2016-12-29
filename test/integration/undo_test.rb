@@ -91,7 +91,7 @@ class UndoTest < BoldIntegrationTest
 
     assert_difference '@user.undo_sessions.count' do
       assert_no_difference 'Comment.count' do
-        assert_difference 'Comment.alive.count', -1 do
+        assert_difference 'Comment.existing.count', -1 do
           click_link 'Delete'
           wait_for_ajax
         end
@@ -99,7 +99,7 @@ class UndoTest < BoldIntegrationTest
     end
 
     assert_no_difference 'Comment.count' do
-      assert_difference 'Comment.alive.count' do
+      assert_difference 'Comment.existing.count' do
         click_link 'Undo'
         wait_for_ajax
       end
@@ -124,7 +124,7 @@ class UndoTest < BoldIntegrationTest
     assert_difference '@user.undo_sessions.count' do
       assert_difference 'Delayed::Job.count' do
         assert_no_difference 'Comment.count' do
-          assert_difference 'Comment.alive.count', -1 do
+          assert_difference 'Comment.existing.count', -1 do
             click_link 'Spam'
             wait_for_ajax
           end
@@ -133,7 +133,7 @@ class UndoTest < BoldIntegrationTest
     end
 
     assert_no_difference 'Comment.count' do
-      assert_difference 'Comment.alive.count' do
+      assert_difference 'Comment.existing.count' do
         # check removal of the spam report job:
         assert_difference 'Delayed::Job.count', -1 do
           click_link 'Undo'

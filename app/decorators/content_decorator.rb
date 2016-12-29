@@ -245,7 +245,7 @@ class ContentDecorator < Draper::Decorator
   #
   def next_post
     return unless Post === object
-    object.site.posts.alive.published.where('post_date > ?', object.post_date).order('post_date ASC').first&.decorate
+    object.site.posts.existing.published.where('post_date > ?', object.post_date).order('post_date ASC').first&.decorate
   end
 
   # FIXME actually suggest something here based on category / tags / content
@@ -256,7 +256,7 @@ class ContentDecorator < Draper::Decorator
 
   def prev_post
     return unless Post === object
-    object.site.posts.alive.published.where('post_date < ?', object.post_date).order('post_date DESC').first&.decorate
+    object.site.posts.existing.published.where('post_date < ?', object.post_date).order('post_date DESC').first&.decorate
   end
 
   def meta_pub_date

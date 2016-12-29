@@ -65,7 +65,7 @@ module Bold::Activity
 
 
       assert_no_difference 'Comment.count', -1 do
-        assert_difference 'Comment.alive.count', -1 do
+        assert_difference 'Comment.existing.count', -1 do
           patch :mark_spam, xhr: true, params: { id: @comment }
           assert_response :success
         end
@@ -75,7 +75,7 @@ module Bold::Activity
 
     test 'should delete contact_message' do
       assert_no_difference 'ContactMessage.count' do
-        assert_difference 'ContactMessage.alive.count', -1 do
+        assert_difference 'ContactMessage.existing.count', -1 do
           assert_difference 'Memento::Session.count' do
             assert_difference 'Memento::State.count' do
               delete :destroy, xhr: true, params: { id: @contact_msg }
@@ -87,7 +87,7 @@ module Bold::Activity
 
     test 'should delete comment' do
       assert_no_difference 'Comment.count' do
-        assert_difference 'Comment.alive.count', -1 do
+        assert_difference 'Comment.existing.count', -1 do
           assert_difference 'Memento::Session.count' do
             assert_difference 'Memento::State.count' do
               delete :destroy, xhr: true, params: { id: @comment }

@@ -32,7 +32,7 @@ class VisitorPosting < ActiveRecord::Base
   before_validation :init_status, on: :create
 
   scope :recent, ->{
-    alive.
+    existing.
     where('created_at > ?', 1.day.ago).
     where(status: [statuses[:pending], statuses[:approved]]).
     ordered

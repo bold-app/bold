@@ -65,7 +65,7 @@ module Bold::Activity
     private
 
     def set_object
-      @object = VisitorPosting.alive.find params[:id]
+      @object = VisitorPosting.existing.find params[:id]
     end
 
     def search_params

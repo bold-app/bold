@@ -21,7 +21,7 @@ module Admin
   module SitesHelper
     def all_themes
       Bold::Theme.all.values.sort do |a, b|
-        a.name.downcase <=> b.name.downcase
+        a.name.unicode_downcase <=> b.name.unicode_downcase
       end
     end
 

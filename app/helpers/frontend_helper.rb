@@ -98,12 +98,13 @@ module FrontendHelper
   #
   def comment_form(options = {}, &block)
     content = options.delete(:content) || @content
-    anchor = options.delete(:anchor) || 'new_comment'
-    if content.respond_to?(:commentable?) && content.commentable?
+    if CommentCreation.allowed? content
+      anchor = options.delete(:anchor) || 'new_comment'
       @comment ||= Comment.new
       simple_form_for @comment, { url: content_url(content.path, anchor: anchor), builder: Bold::Views::CommentFormBuilder }.merge(options), &block
     end
   end
+
 
   # Contact form builder
   #

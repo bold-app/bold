@@ -26,20 +26,6 @@ class CommentTest < ActiveSupport::TestCase
     configure 'enabled'
   end
 
-  test 'should refuse creation on non-published post' do
-    post = create :post, title: 'not published'
-    assert_raise(ActiveRecord::RecordInvalid) do
-      create :comment, content: post
-    end
-  end
-
-  test 'should refuse creation when configured' do
-    configure nil
-    assert_raise(ActiveRecord::RecordInvalid) do
-      create :comment, content: @post
-    end
-  end
-
   test 'should take site from post' do
     co = create :comment, content: @post
     assert_equal @post.site, co.site

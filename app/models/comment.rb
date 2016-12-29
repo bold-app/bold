@@ -36,8 +36,6 @@ class Comment < VisitorPosting
   validates :author_website, length: { maximum: 100 }
   validates :body, presence: true, length: { maximum: 10.kilobytes }
 
-  validate :check_approval_config, on: :create
-
   after_create :trigger_spamcheck
 
   def auto_approve?
@@ -70,10 +68,5 @@ class Comment < VisitorPosting
     }
   end
 
-  def check_approval_config
-    unless site.comments_enabled? && content.published?
-      errors[:base] << 'comments are disabled'
-    end
-  end
 
 end

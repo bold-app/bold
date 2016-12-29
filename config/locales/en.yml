@@ -58,9 +58,6 @@ en:
         link: Undo
         success: Undo successful!
 
-    comments:
-      created_appears_soon: Thank you very much. Your comment will be visible as soon as it passed the spam check.
-      created_awaits_moderation: Thank you very much. Your comment will be visible once it has been manually approved.
 
     contact_messages:
       created: Thank you for your message.
@@ -69,6 +66,11 @@ en:
     saved: Saved.
 
   actions:
+    create_comment:
+      disabled: Comments are disabled.
+      not_saved: Comment could not be saved.
+      appears_soon: Thank you very much. Your comment will be visible as soon as it passed the spam check.
+      awaits_moderation: Thank you very much. Your comment will be visible once it has been manually approved.
     create_site:
       site_not_saved: Failed to create the site.
       create_navigation_failed: Failed to create the default navigation.

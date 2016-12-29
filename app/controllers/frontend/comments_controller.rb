@@ -21,15 +21,13 @@ class Frontend::CommentsController < FrontendController
 
   def create
     @content = find_content
-    @comment = @content.comment! comment_params, request
-    if @comment.persisted?
-      notice = if current_site.auto_approve_comments?
-                 Bold::I18n.t('flash.comments.created_appears_soon')
-               else
-                 Bold::I18n.t('flash.comments.created_awaits_moderation')
-               end
-      redirect_to content_url(@content.path), notice: notice
+    @comment = @content.comments.build(comment_params)
+    r = CreateComment.call(@comment, request)
+
+    if r.comment_created?
+      redirect_to content_url(@content.path), notice: r.message
     else
+      flash.now[:alert] = r.message
       render_content
     end
   end

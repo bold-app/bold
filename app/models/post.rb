@@ -65,20 +65,6 @@ class Post < Content
     site.auto_approve_comments?
   end
 
-  def comments_enabled?
-    site.comments_enabled?
-  end
-  alias commentable? comments_enabled?
-
-  # FIXME -> CommentAction
-  def comment!(comment_params, request)
-    Comment.new(comment_params).tap do |comment|
-      comment.content = self
-      comment.set_request request
-      comment.save
-    end
-  end
-
   def data_for_index
     super.tap do |data|
       tags = tag_list

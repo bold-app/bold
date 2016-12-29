@@ -136,14 +136,19 @@ class FrontendController < BaseController
   end
 
   def handle_error(*args)
-    if site = Bold.current_site and page = site.error_page
-      render_content page, status: 500, formats: :html
-    else
-      render 'errors/500', layout: 'error', status: 500, formats: :html
+    unless performed? # avoid DoubleRenderError
+      if site = Bold.current_site and page = site.error_page
+        render_content page, status: 500, formats: :html
+      else
+        render 'errors/500', layout: 'error', status: 500, formats: :html
+      end
     end
     if exception = args.first
       Rails.logger.warn exception
       Rails.logger.info exception.backtrace.join("\n")
+      if defined? Airbrake
+        Airbrake.notify exception
+      end
     end
     log_request
   end

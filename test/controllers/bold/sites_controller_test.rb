@@ -34,6 +34,20 @@ module Bold
       assert_redirected_to bold_site_path(@site)
     end
 
+    test 'index should show unread items count for sites' do
+      another_site = create :site, theme_name: 'test'
+      another_site.add_user! @user
+
+      @site.update_attribute :post_comments, 'enabled'
+      p = publish_post
+      c = create :comment, content: p, author_name: 'Max Muster', body: 'test comment'
+      create :unread_item, user: @user, site: @site, item: c
+      create :unread_item, user: @admin, site: @site, item: c
+      get :index
+      assert_response :success
+      assert_select 'span.badge', '1'
+    end
+
     test 'user should get index when multiple sites are present' do
       another_site = create :site, theme_name: 'test'
       another_site.add_user! @user

@@ -9,6 +9,8 @@
           %tr
             %td
               = link_to site.name, bold_site_path(site)
+              - if (items = site.unread_items.for(current_user)).any?
+                %span.badge= items.count
 
 
 

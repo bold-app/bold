@@ -12,6 +12,7 @@ class CreateComment < ApplicationAction
     unless @policy.allowed?
       return Result.new message: t('.disabled')
     end
+
     @comment.set_request @request
     if @comment.save
       message = if @comment.site.auto_approve_comments?
@@ -19,6 +20,10 @@ class CreateComment < ApplicationAction
                 else
                   t('.awaits_moderation')
                 end
+
+      @comment.site.users.each do |user|
+        UnreadItem.create user: user, item: @comment
+      end
 
       Result.new comment_created: true, message: message
     else

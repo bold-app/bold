@@ -28,6 +28,7 @@ class Site < ActiveRecord::Base
   has_many :stats_pageviews
   has_many :stats_visits
   has_many :tags
+  has_many :unread_items
 
   # has_many with on_delete: :cascade
   has_many :permalinks

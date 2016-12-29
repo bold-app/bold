@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
   has_many :sites, through: :site_users
   has_many :contents, as: :author
   has_many :undo_sessions, class_name: 'Memento::Session'
+  has_many :unread_items
 
   scope :active, ->{ where 'locked_at IS NULL AND confirmed_at IS NOT NULL' }
   scope :locked, ->{ where 'locked_at IS NOT NULL' }

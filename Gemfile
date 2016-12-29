@@ -33,9 +33,7 @@ gem 'devise_invitable', github: 'bold-app/devise_invitable', branch: 'bold'
 
 gem 'diffy', '~> 3.0.7'
 
-# FIXME check for an officially Rails 5 compatible version of draper
-# gem 'draper', '~> 2.1'
-gem 'draper', github: 'bold-app/draper', branch: 'rails5'
+gem 'draper', '~> 3.0.0.pre'
 gem 'activemodel-serializers-xml', github: 'rails/activemodel-serializers-xml'
 
 gem 'exifr', '~> 1.2'

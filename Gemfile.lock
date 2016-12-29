@@ -15,10 +15,9 @@ GIT
 
 GIT
   remote: git://github.com/bold-app/bold-atom_feed.git
-  revision: 454454d449855e22489687ca86532b026e2448cb
+  revision: 5129749a62b96d97526782e5046cbc60e95352a2
   specs:
     bold-atom_feed (0.1.0)
-      draper (~> 2.1)
       liquid (~> 3.0)
 
 GIT
@@ -59,17 +58,6 @@ GIT
     devise_invitable (1.6.0)
       actionmailer (>= 3.2.6)
       devise (>= 3.2.0)
-
-GIT
-  remote: git://github.com/bold-app/draper.git
-  revision: ac29d070554538733653d4ac10774b2443107afe
-  branch: rails5
-  specs:
-    draper (2.1.0)
-      actionpack (>= 3.0)
-      activemodel (>= 3.0)
-      activesupport (>= 3.0)
-      request_store (~> 1.0)
 
 GIT
   remote: git://github.com/bold-app/i18n_language_select.git
@@ -226,6 +214,12 @@ GEM
       responders
       warden (~> 1.2.3)
     diffy (3.0.7)
+    draper (3.0.0.pre1)
+      actionpack (~> 5.0)
+      activemodel (~> 5.0)
+      activemodel-serializers-xml (~> 1.0)
+      activesupport (~> 5.0)
+      request_store (~> 1.0)
     erubis (2.7.0)
     execjs (2.7.0)
     exifr (1.2.4)
@@ -427,7 +421,7 @@ DEPENDENCIES
   devise (= 4.2.0)
   devise_invitable!
   diffy (~> 3.0.7)
-  draper!
+  draper (~> 3.0.0.pre)
   exifr (~> 1.2)
   factory_girl_rails (~> 4.5)
   faker (~> 1.4)

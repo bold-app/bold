@@ -72,7 +72,7 @@ class ImageVersionTest < ActiveSupport::TestCase
     assert_equal 'large_2x', v.name
     assert_equal Bold::ImageVersion::HIRES_JPG_QUALITY, v.quality
     assert_equal 3000, v.width
-    assert_equal nil, v.height
+    assert_nil v.height
   end
 
   test 'should find alternative version name for size' do

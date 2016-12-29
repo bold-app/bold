@@ -116,7 +116,7 @@ class PageTest < ActiveSupport::TestCase
     page.unpublish
     assert !page.published?
     assert page.draft?
-    assert_equal nil, page.last_update
+    assert_nil page.last_update
   end
 
   test 'should publish and set post date accordingly' do

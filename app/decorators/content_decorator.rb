@@ -19,7 +19,7 @@
 #
 class ContentDecorator < Draper::Decorator
 
-  delegate :title, :title_html, :body_html, :commentable?, :teaser_html, :post_date, :id, :path, :homepage?
+  delegate :title, :title_html, :body_html, :teaser_html, :post_date, :id, :path, :homepage?, :commentable?
 
   def post?
     Post === object
@@ -181,7 +181,7 @@ class ContentDecorator < Draper::Decorator
   # Comments
   #
   def has_comments?
-    commentable? && comment_count > 0
+    comment_count > 0
   end
   alias comments? has_comments?
 
@@ -189,8 +189,12 @@ class ContentDecorator < Draper::Decorator
     @comment_count ||= comments.count
   end
 
+  # approved comments in ascending order
+  # FIXME how to best handle comment count > 100? comment paging in themes?
   def comments(page = 0, limit = 100)
-    CommentsDecorator.decorate object.visible_comments(page, limit)
+    CommentsDecorator.decorate object.comments.
+                                 approved.
+                                 page(page).per(limit)
   end
 
 

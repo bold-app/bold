@@ -48,19 +48,6 @@ class Post < Content
   end
 
 
-  def comments
-    Comment.existing.where(content_id: id)
-  end
-
-  # approved comments in ascending order
-  #
-  # FIXME how to best handle comment count > 100? comment paging in themes?
-  def visible_comments(page = 0, limit = 100)
-      comments.approved.
-      order('created_at ASC').
-      page(page).per(limit)
-  end
-
   def auto_approve_comments?
     site.auto_approve_comments?
   end

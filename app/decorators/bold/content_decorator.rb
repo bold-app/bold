@@ -45,7 +45,7 @@ class Bold::ContentDecorator < Draper::Decorator
   end
 
   def comments?
-    object.commentable? && comment_count > 0
+    comment_count > 0
   end
 
   def has_unpublished_changes?

@@ -133,7 +133,17 @@ class Content < ActiveRecord::Base
     last_update || post_date
   end
 
-  def commentable?; false end
+
+  # comments in ascending order
+  def comments
+    Comment.existing.where(content_id: id).order('created_at ASC')
+  end
+
+  # true if this content may receive new comments
+  def commentable?
+    CommentCreation.allowed? self
+  end
+
 
   # does the current template show body content?
   def has_body?

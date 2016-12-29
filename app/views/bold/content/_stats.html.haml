@@ -8,7 +8,7 @@
     %span{title: t('.mobile_hits')}
       = icon(:phone)
       = count
-  - if content.commentable? and content.comments?
+  - if content.comments?
     %a{href: '#comments', title: t('.comments')}
       = icon(:comment)
       = content.comment_count

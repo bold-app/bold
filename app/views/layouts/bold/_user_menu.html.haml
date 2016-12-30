@@ -1,0 +1,12 @@
+.navbar-right.hidden-xs
+  %ul.nav.navbar-nav
+    %li.dropdown
+      %a.dropdown-toggle{ href: "#", data: { toggle: 'dropdown', hover: 'dropdown' } }
+        = gravatar_image_tag User.current.email, 26
+        %span.caret
+      %ul.dropdown-menu{role: 'menu'}
+        %li= link_with_icon :user, t('bold.common.nav.profile'), edit_bold_profile_path
+        %li= link_with_icon :eject, t('bold.common.nav.overview'), bold_root_path
+        %li.divider{role: 'presentation'}
+        %li= link_with_icon :off, t('bold.common.nav.signout'), destroy_user_session_path, method: :delete
+

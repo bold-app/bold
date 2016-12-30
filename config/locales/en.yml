@@ -267,11 +267,11 @@ en:
     common:
       nav:
         activities: Activity
-        admin: Administration
         assets: Files
         back: "Back"
         change_site: Switch site
         new_post: New post
+        overview: Overview
         pages: Pages
         plugins: Plugins
         posts: Posts

@@ -76,7 +76,7 @@ module BoldHelper
     content_tag :li, class: css_class do
       name = t("bold.common.nav.#{name}") if Symbol === name
       name = h(name)
-      if badge.present?
+      if badge.present? and badge != 0
         name << h(' ') << content_tag(:span, badge, class: 'badge')
       end
       link_to name, url

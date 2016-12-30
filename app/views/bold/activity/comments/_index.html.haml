@@ -1,19 +1,24 @@
-%h2.pull-left= t '.heading'
+%h2
+  - if current_site.spam.any?
+    = link_with_icon :trash, t('.delete_spam'), destroy_spam_bold_site_activity_comments_path(current_site), class: 'btn btn-sm btn-danger pull-right', data: { confirm: t('.delete_spam_confirm', count: current_site.spam.count) }, method: :delete
+  = t '.heading'
 
-= form_for @comment_search, url: '#', html: { class: 'pull-right', role: 'form', method: :get } do |f|
+= form_for @comment_search, url: '#', html: { role: 'form', method: :get } do |f|
   .form-group
-    = f.select :status, CommentSearch.status_values.map{|s| [t(".status.#{s}"), s]}, { include_blank: t('simple_form.labels.comment_search.state_blank') },  { class: 'form-control input-sm auto-submit' }
+    .row
+      .col-sm-4
+        = f.select :status, CommentSearch.status_values.map{|s| [t(".status.#{s}"), s]}, { include_blank: t('simple_form.labels.comment_search.state_blank') },  { class: 'form-control input-sm auto-submit' }
 
-  .form-group
-    = f.label :query, t('simple_form.labels.comment_search.query'), class: 'sr-only'
-    .input-group
-      = f.text_field :query, class: 'input-sm form-control', placeholder: t('simple_form.labels.comment_search.query')
-      .input-group-btn
-        - if @comment_search.query.blank?
-          %button.btn.btn-default.btn-sm{type:"submit"}
-            = icon :search
-        - else
-          = link_to icon(:remove), bold_site_activity_comments_path(current_site, comment_search: { status: @comment_search.status }), class: 'btn btn-sm btn-default'
+      .col-sm-4
+        = f.label :query, t('simple_form.labels.comment_search.query'), class: 'sr-only'
+        .input-group
+          = f.text_field :query, class: 'input-sm form-control', placeholder: t('simple_form.labels.comment_search.query')
+          .input-group-btn
+            - if @comment_search.query.blank?
+              %button.btn.btn-default.btn-sm{type:"submit"}
+                = icon :search
+            - else
+              = link_to icon(:remove), bold_site_activity_comments_path(current_site, comment_search: { status: @comment_search.status }), class: 'btn btn-sm btn-default'
 
 %p.clearfix
 

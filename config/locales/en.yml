@@ -36,6 +36,7 @@ en:
         deleted: 'Comment deleted.'
         spam: 'The comment was reported as spam and deleted.'
         ham: 'The comment has been marked as not spam.'
+        spam_deleted: 'All messages marked as spam were deleted.'
       content:
         created: Published!
         created_draft: Draft saved.
@@ -161,7 +162,9 @@ en:
         index:
           apply: Apply
           delete: Delete
-          heading: Comments and Messages
+          delete_spam: Delete spam
+          delete_spam_confirm: 'Delete %{count} spam messages?'
+          heading: 'Comments & Messages'
           status: &comment_states
             pending: Pending
             approved: Approved

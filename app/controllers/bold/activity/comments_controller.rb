@@ -19,7 +19,7 @@
 #
 module Bold::Activity
   class CommentsController < SiteController
-    prepend_before_action :set_object, except: :index
+    prepend_before_action :set_object, except: %i(index destroy_spam)
     site_object :object
 
     def index
@@ -62,6 +62,12 @@ module Bold::Activity
         @object.delete
       end
       flash.now[:notice] = 'bold.comment.deleted'
+    end
+
+    def destroy_spam
+      current_site.spam.delete
+      flash[:notice] = 'bold.comment.spam_deleted'
+      redirect_to bold_site_activity_comments_path(current_site)
     end
 
     private

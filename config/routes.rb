@@ -46,10 +46,12 @@ Rails.application.routes.draw do
 
         namespace :activity do
           resources :stats
-          # resources :contact_messages, only: %i(index destroy)
           resources :comments, shallow: true, only: %i(index destroy) do
             member do
               patch :restore, :mark_spam, :mark_ham, :approve, :unapprove
+            end
+            collection do
+              delete :destroy_spam
             end
           end
         end

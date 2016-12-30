@@ -45,6 +45,16 @@ module Bold::Activity
       assert_select "article#comment_#{@comment.id}", count: 0
     end
 
+    test 'should delete all spam' do
+
+      @comment.spam!
+      assert_difference 'VisitorPosting.count', -1 do
+        delete :destroy_spam, params: { site_id: @site }
+      end
+      assert_redirected_to bold_site_activity_comments_path(@site)
+      assert_raise(ActiveRecord::RecordNotFound){ @comment.reload }
+    end
+
     test 'should change state' do
       patch :unapprove, xhr: true, params: { id: @comment }
       assert_response :success

@@ -112,6 +112,10 @@ class Site < ActiveRecord::Base
     end
   end
 
+  def spam
+    @spam ||= SiteSpam.new self
+  end
+
   def unread?(item, user: Bold.current_user)
     unread_items.for(user).for(item).any?
   end

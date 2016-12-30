@@ -23,9 +23,9 @@ class Frontend::ContactMessagesController < FrontendController
     @content = find_content
     @contact_message = ContactMessage.new contact_message_params
     @contact_message.content = @content
-    @contact_message.set_request request
-    if @contact_message.save
-      ContactMessageSpamcheckJob.perform_later(@contact_message)
+    result = CreateContactMessage.call @contact_message, request
+
+    if result.contact_message_created?
       redirect_to content_url(@content.path),
         notice: Bold::I18n.t('flash.contact_messages.created')
     else

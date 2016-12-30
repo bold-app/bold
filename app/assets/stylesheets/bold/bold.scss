@@ -432,3 +432,9 @@ label span.small {
   font-weight: normal;
   margin-left: 10px;
 }
+
+/* badges with links */
+
+span.badge a {
+  color: $badge-color;
+}

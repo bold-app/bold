@@ -1,4 +1,4 @@
-%article{id: dom_id(comment)}
+%article{id: dom_id(comment), class: ('unread' if current_site.unread?(comment))}
   %aside
     = gravatar_image_tag comment.author_email, 64
 

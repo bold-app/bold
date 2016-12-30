@@ -112,6 +112,10 @@ class Site < ActiveRecord::Base
     end
   end
 
+  def unread?(item, user: Bold.current_user)
+    unread_items.for(user).for(item).any?
+  end
+
   def alias_string
     (aliases || []).join ' '
   end

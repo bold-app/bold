@@ -24,6 +24,11 @@ form#new_comment_search {
 #comments, .comments {
   margin-top: 40px;
   article {
+
+    &.unread {
+      border-left: solid 2px $nice-blue;
+    }
+
     aside {
       float: left;
     }

@@ -26,6 +26,8 @@ module Bold::Activity
       @comment_search = CommentSearch.new search_params
       @postings = @comment_search.search(current_site.visitor_postings.includes(:content)).
         order('created_at DESC').page(params[:page]).per(20)
+      @unread_items = UnreadItemCache.new(current_site, current_user, @postings)
+      @unread_items.mark_all_read!
     end
 
     def approve

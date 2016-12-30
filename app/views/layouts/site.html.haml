@@ -40,7 +40,7 @@
             = nav_link :assets, bold_site_assets_path(current_site), controller: 'bold/assets'
             - if current_user.site_admin?
               = nav_link :settings, bold_site_settings_root_path(current_site), controller: 'bold/settings/(settings|plugins|themes|site_users|backups|navigations|categories)'
-            = nav_link :activities, bold_site_activity_comments_path(current_site), controller: 'bold/comments', badge: current_site.unread_items.for(current_user).count
+            = nav_link :activities, bold_site_activity_comments_path(current_site), controller: 'bold/comments', badge: (@unread_items || current_site.unread_items.for(current_user)).count
 
             %li= link_to t('bold.common.nav.profile'), edit_bold_profile_path, class: 'visible-xs-block'
             - if current_user.admin?

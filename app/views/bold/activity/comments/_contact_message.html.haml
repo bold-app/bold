@@ -1,4 +1,4 @@
-%article{id: dom_id(contact_message), class: ('unread' if current_site.unread?(contact_message))}
+%article{id: dom_id(contact_message), class: ('unread' if @unread_items&.unread?(contact_message))}
   %aside
     = gravatar_image_tag contact_message.sender_email, 64
 

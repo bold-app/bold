@@ -22,7 +22,7 @@ require "benchmark"
 
 class RequestLogTest < ActiveSupport::TestCase
 
-  class MockRequest < Struct.new(:user_agent, :language)
+  MockRequest.class_eval do
     def headers
       {'HTTP_ACCEPT_LANGUAGE' => language}
     end
@@ -38,7 +38,10 @@ class RequestLogTest < ActiveSupport::TestCase
   end
 
   test 'should set device class' do
-    req = MockRequest.new 'Mozilla/5.0 (Android; Mobile; rv:38.0) Gecko/38.0 Firefox/38.0)', 'de-DE,en-US;q=0.7,en;q=0.3'
+    req = MockRequest.new(
+      user_agent: 'Mozilla/5.0 (Android; Mobile; rv:38.0) Gecko/38.0 Firefox/38.0)',
+      language: 'de-DE,en-US;q=0.7,en;q=0.3'
+    )
     log = create :request_log, site: @site, req: req, device_class: nil
     assert_nil log.device_class
     log.set_device_class!

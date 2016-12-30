@@ -40,6 +40,9 @@ class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include BoldHelpers
 
+  MockRequest = ImmutableStruct.new(:remote_ip, :user_agent, :referrer,
+                                    :env, :language)
+
   setup do
     Time.zone = 'UTC'
     Bold.current_user = create :confirmed_admin

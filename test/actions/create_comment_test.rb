@@ -2,8 +2,6 @@ require 'test_helper'
 
 class CreateCommentTest < ActiveSupport::TestCase
 
-  MockRequest = ImmutableStruct.new(:remote_ip, :user_agent, :referrer, :env)
-
   setup do
     Bold.current_site = @site = create :site
 

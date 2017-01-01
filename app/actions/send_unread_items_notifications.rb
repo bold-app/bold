@@ -3,7 +3,7 @@
 #
 # Run it from a cron job like this:
 #
-# bin/rails r 'SendUnreadItemsNotifications.call'
+# bin/rails runner -e production 'SendUnreadItemsNotifications.call'
 #
 class SendUnreadItemsNotifications < ApplicationAction
 

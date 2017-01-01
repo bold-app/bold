@@ -16,6 +16,12 @@ en:
     more: More
     delete: Delete
 
+  email:
+    unread_items:
+      subject:
+        one: "[%{site}] You have one unread message"
+        other: "[%{site}] You have %{count} unread messages"
+
   flash:
     admin:
       email_changed: Do not forget to confirm your new address.
@@ -83,11 +89,6 @@ en:
       not_saved_draft: "Draft could not be saved. %{reason}"
       saved: Published!
       saved_draft: Draft saved.
-
-  notifications:
-    daily_summary:
-      comment: Comments
-      contact_message: Contact Messages
 
   admin:
 
@@ -551,6 +552,7 @@ en:
         meta_google_plus_hint: "Will be used for the 'link rel=author' meta tag."
         time_zone_name_info: The backend will display all times relative to the time zone you select here.
         twitter_hint: "For Twitter Card meta data."
+        unread_items_hint: "At most one email per day and website."
         vim_hint: "Vim is an advanced text editor. Check the box to have the Bold text editor emulate it's keybindings."
       edit_email:
         button: Update Email Address
@@ -656,6 +658,7 @@ en:
         current_password: Current password
         password: Password
         password_confirmation: Confirm your new password
+        send_unread_items_notifications: Receive email notifications about new comments and messages
         time_zone_name: Your time zone
         vim_mode: Enable Vim mode for content editing
         admin: Administrator

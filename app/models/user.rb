@@ -19,6 +19,7 @@
 #
 class User < ActiveRecord::Base
   include HasTimezone
+  include HasLocale
 
   devise :database_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable,
@@ -49,12 +50,17 @@ class User < ActiveRecord::Base
     meta_author_name
     meta_google_plus
     twitter_handle
+    send_unread_items_notifications
   )
   PREFS.each do |attribute|
     store_accessor :prefs, attribute
   end
   def vim_mode?
     vim_mode.to_i == 1
+  end
+
+  def send_unread_items_notifications?
+    send_unread_items_notifications.to_i == 1
   end
 
   def display_name

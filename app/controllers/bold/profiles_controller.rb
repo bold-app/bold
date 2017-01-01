@@ -31,7 +31,7 @@ module Bold
     end
 
     def update
-      if @user.update_without_password params[:user].permit(:name, :meta_author_name, :meta_google_plus, :twitter_handle, :time_zone_name, :backend_locale, :author_page_id, :vim_mode)
+      if @user.update_without_password params[:user].permit(:name, :meta_author_name, :meta_google_plus, :twitter_handle, :time_zone_name, :backend_locale, :author_page_id, :vim_mode, :send_unread_items_notifications)
         redirect_to edit_bold_profile_path, notice: 'admin.profile_saved'
       else
         render 'edit'

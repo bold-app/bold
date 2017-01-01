@@ -1,4 +1,6 @@
 class ApplicationMailer < ActionMailer::Base
+  include Rails.application.routes.url_helpers
+
   def self.default_url_options
     { host: Bold::Config['backend_host'], protocol: 'https', only_path: false }
   end

@@ -31,13 +31,6 @@ class VisitorPosting < ActiveRecord::Base
   before_validation :strip_tags!, on: :create
   before_validation :init_status, on: :create
 
-  scope :recent, ->{
-    existing.
-    where('created_at > ?', 1.day.ago).
-    where(status: [statuses[:pending], statuses[:approved]]).
-    ordered
-  }
-
   scope :ordered, ->{ order('created_at DESC') }
 
   memento_changes :update

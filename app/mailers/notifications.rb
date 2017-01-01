@@ -1,14 +1,14 @@
 class Notifications < ApplicationMailer
-  def daily_summary(user, site)
+
+  def unread_items(email_address, site, count)
     @site = site
-    Bold.with_site(site) do
-      postings = site.visitor_postings.existing.recent
-      if postings.any?
-        @postings = postings.group_by(&:type)
-        subject = "[#{site.name}] Daily Activity (#{I18n.l Time.now.to_date}) - #{postings.count}"
-        mail to: user.email, subject: subject
-      end
-    end
+    @count = count
+    @url = bold_site_activity_comments_url(site)
+
+    subject = I18n.t(
+      "email.unread_items.subject", site: site.name, count: count
+    )
+    mail to: email_address, subject: subject
   end
 
 end

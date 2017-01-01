@@ -23,6 +23,7 @@
 
       %fieldset
         = f.input :vim_mode, as: :boolean, wrapper: :vertical_boolean, hint: t('.vim_hint')
+        = f.input :send_unread_items_notifications, as: :boolean, wrapper: :vertical_boolean, hint: t('.unread_items_hint')
 
       .buttons
         = button '.button'

@@ -47,11 +47,17 @@ module Bold
 
       def set_locale(&block)
         old_locale = ::I18n.locale
-        if user_signed_in? and locale = current_user.backend_locale and available_locales.include?(locale.to_sym)
+        if user_signed_in? and
+          locale = current_user.backend_locale and
+          available_locales.include?(locale.to_sym)
+
           ::I18n.locale = locale
+
         elsif locale = auto_locale
+
           ::I18n.locale = locale
         end
+
         block.call
       ensure
         ::I18n.locale = old_locale

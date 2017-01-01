@@ -26,6 +26,8 @@
 # BaseController features:
 #
 # - hook functions
+# - locale setting
+#
 class BaseController < ApplicationController
 
   # Prevent CSRF attacks by raising an exception.
@@ -33,6 +35,7 @@ class BaseController < ApplicationController
   protect_from_forgery with: :exception
 
   prepend DecoratedAssignments
+
   include Bold::Hooks::Helper
   helper Bold::Hooks::ViewHelper
 

@@ -51,7 +51,7 @@ class SendUnreadItemsNotifications < ApplicationAction
     }
 
     if items.any?
-      Bold.with_site(site) do
+      Bold.with_site(site, switch_timezone: false) do
         Notifications.unread_items(user.email, site, items.size).deliver
       end
       @mails_sent += 1

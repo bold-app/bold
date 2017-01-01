@@ -23,13 +23,18 @@ class ContactMessageSpamcheckJob < ActiveJob::Base
   def perform(contact_message)
     Bold.with_site(contact_message.site) do
       case contact_message.spam_check!
+
       when :blatant
         Rails.logger.warn "deleting unseen blatant spam: #{contact_message.sender_name} / #{contact_message.sender_email}\n#{contact_message.subject[0..99]}\n#{contact_message.body[0..99]}"
+        UnreadItem.mark_as_read contact_message
         contact_message.destroy
+
       when :ham
         contact_message.approve!
+
       else
-        # spam, no approval
+        # spam, no approval, mark as read
+        UnreadItem.mark_as_read contact_message
       end
     end
   end

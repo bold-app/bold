@@ -9,4 +9,8 @@ class UnreadItem < SiteRecord
       where item: user_or_item
     end
   }
+
+  def self.mark_as_read(item)
+    UnreadItem.for(item).delete_all
+  end
 end

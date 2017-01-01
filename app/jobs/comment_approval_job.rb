@@ -25,11 +25,13 @@ class CommentApprovalJob < ActiveJob::Base
       case comment.spam_check!
       when :blatant
         Rails.logger.warn "deleting unseen blatant spam: #{comment.author_name} / #{comment.author_email}\n#{comment.body[0..99]}"
+        UnreadItem.mark_as_read comment
         comment.destroy
       when :ham
         comment.approved! if comment.auto_approve?
       else
-        # spam, no approval
+        # spam, no approval, mark as read
+        UnreadItem.mark_as_read comment
       end
     end
   end

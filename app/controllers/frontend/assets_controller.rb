@@ -39,7 +39,7 @@ module Frontend
       if ico = current_site.favicon
         send_file ico.diskfile_path, disposition: 'inline; filename=favicon.ico', type: 'image/x-icon'
       else
-        render text: 'not found', status: :not_found
+        render plain: 'not found', status: :not_found
       end
     end
 

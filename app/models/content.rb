@@ -17,9 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-class Content < ActiveRecord::Base
-  include SiteModel
-  include Deletable
+class Content < SiteRecord
   include TextStats
 
   prepend HasPermalink
@@ -73,21 +71,10 @@ class Content < ActiveRecord::Base
     joins(:author).where("lower(users.name) = ?", name.to_s.unicode_downcase)
   }
 
+  scope :existing, ->{ where deleted_at: nil }
+
   def permalink_path_args
     [ slug ]
-  end
-
-  #
-  # marks this content as deleted and destroys the permalink
-  def delete
-    return false if homepage?
-    transaction do
-      unpublish if published?
-      update_attributes deleted_at: Time.now
-      permalink&.destroy
-      # FIXME need to cleanup any redirects pointing here as well. problem is,
-      # redirects just have a location(string)
-    end
   end
 
 

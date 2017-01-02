@@ -36,26 +36,6 @@ class CommentTest < ActiveSupport::TestCase
     assert co.pending?
   end
 
-  test 'mark spam should mark comment as deleted and enqueue job' do
-    co = create :comment, content: @post
-    assert_no_difference 'Comment.count' do
-      assert_difference 'Comment.existing.count', -1 do
-        assert_enqueued_with(job: AkismetUpdateJob) do
-          co.mark_as_spam!
-        end
-      end
-    end
-  end
-
-  test 'mark ham should change status and enqueue job' do
-    co = create :comment, content: @post
-    co.spam!
-    assert_enqueued_with(job: AkismetUpdateJob) do
-      co.mark_as_ham!
-    end
-    co.reload
-    assert co.pending?
-  end
 
   def configure(comment_config)
     @site.update_attribute :post_comments, comment_config

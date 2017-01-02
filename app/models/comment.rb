@@ -36,7 +36,6 @@ class Comment < VisitorPosting
   validates :author_website, length: { maximum: 100 }
   validates :body, presence: true, length: { maximum: 10.kilobytes }
 
-  after_create :trigger_spamcheck
 
   def auto_approve?
     site.auto_approve_comments?
@@ -48,24 +47,6 @@ class Comment < VisitorPosting
 
   def to_s
     "#{author_name} (#{author_email}) on #{content.title}"
-  end
-
-  private
-
-  def trigger_spamcheck
-    CommentApprovalJob.perform_later(self)
-  end
-
-  def additional_akismet_attributes
-    {
-      author: author_name,
-      author_email: author_email,
-      author_url: author_website,
-      type: 'comment',
-      text: body,
-      post_url: content.public_url,
-      post_modified_at: content.post_date.iso8601,
-    }
   end
 
 

@@ -22,17 +22,16 @@ class CommentApprovalJob < ActiveJob::Base
 
   def perform(comment)
     Bold.with_site(comment.site) do
-      case comment.spam_check!
-      when :blatant
-        Rails.logger.warn "deleting unseen blatant spam: #{comment.author_name} / #{comment.author_email}\n#{comment.body[0..99]}"
-        UnreadItem.mark_as_read comment
-        comment.destroy
-      when :ham
-        comment.approved! if comment.auto_approve?
+
+      result = SpamCheck.call comment
+
+      if result.spam?
+        MarkSpam.call comment, blatant: result.blatant?
       else
-        # spam, no approval, mark as read
-        UnreadItem.mark_as_read comment
+        comment.approved! if comment.auto_approve?
       end
+
     end
   end
+
 end

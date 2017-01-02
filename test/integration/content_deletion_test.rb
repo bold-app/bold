@@ -30,11 +30,7 @@ class ContentDeletionTest < BoldIntegrationTest
     visit "/#{path}"
     assert has_content? 'lorem ipsum'
 
-    assert_no_difference 'Post.count' do
-      assert_difference 'Permalink.count', -1 do
-        @post.delete
-      end
-    end
+    DeleteContent.call @post
 
     visit '/'+path
     assert_equal 404, status_code
@@ -47,11 +43,7 @@ class ContentDeletionTest < BoldIntegrationTest
     visit '/'+search.permalink.path+'?q=lorem'
     assert has_content? 'hello from site 1'
 
-    assert_no_difference 'Post.count' do
-      assert_difference 'Permalink.count', -1 do
-        @post.delete
-      end
-    end
+    DeleteContent.call @post
 
     visit '/'+search.permalink.path+'?q=lorem'
     assert !has_content?('hello from site 1')

@@ -90,7 +90,7 @@ module Bold
           redirect_to edit_url, alert: t('flash.bold.content.unpublish_failed', title: @content.title)
         end
       else
-        @content.delete
+        DeleteContent.call @content
         redirect_to( {site_id: current_site.id, action: :index}, notice: t('flash.bold.content.deleted', title: @content.title) )
       end
     end

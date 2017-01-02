@@ -13,11 +13,11 @@ class CreateContactMessage < ApplicationAction
 
     if @policy.allowed? and @contact_message.save
 
-      ContactMessageSpamcheckJob.perform_later(@contact_message)
-
       @contact_message.site.users.each do |user|
         UnreadItem.create user: user, item: @contact_message
       end
+
+      ContactMessageSpamcheckJob.perform_later(@contact_message)
 
       Result.new contact_message_created: true
 

@@ -29,7 +29,10 @@ class CommentApprovalJobTest < ActiveJob::TestCase
   end
 
   test 'should auto-approve when not spam and configured to do so' do
-    @comment.stubs(:run_akismet_check).returns(:ham)
+    SpamCheck.any_instance.
+      stubs(:call).
+      returns(SpamCheck::Result.new)
+
     assert @comment.pending?
     CommentApprovalJob.perform_now(@comment)
     @comment.reload
@@ -37,7 +40,10 @@ class CommentApprovalJobTest < ActiveJob::TestCase
   end
 
   test 'should not auto-approve when spam' do
-    @comment.stubs(:run_akismet_check).returns(:spam)
+    SpamCheck.any_instance.
+      stubs(:call).
+      returns(SpamCheck::Result.new(spam: true))
+
     assert @comment.pending?
     CommentApprovalJob.perform_now(@comment)
     @comment.reload
@@ -46,7 +52,10 @@ class CommentApprovalJobTest < ActiveJob::TestCase
 
   test 'should hold for approval when configured' do
     configure 'with_approval'
-    @comment.stubs(:run_akismet_check).returns(:ham)
+    SpamCheck.any_instance.
+      stubs(:call).
+      returns(SpamCheck::Result.new)
+
     assert @comment.pending?
     CommentApprovalJob.perform_now(@comment)
     @comment.reload
@@ -54,12 +63,15 @@ class CommentApprovalJobTest < ActiveJob::TestCase
   end
 
   test 'should destroy blatant spam' do
-    @comment.stubs(:run_akismet_check).returns(:blatant)
+    SpamCheck.any_instance.
+      stubs(:call).
+      returns(SpamCheck::Result.new(spam: true, blatant: true))
+
     assert @comment.pending?
-    assert_difference 'Comment.count', -1 do
+
+    assert_difference 'Comment.existing.count', -1 do
       CommentApprovalJob.perform_now(@comment)
     end
-    assert_nil Comment.where(id: @comment.id).first
   end
 
   def configure(comment_config)

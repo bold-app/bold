@@ -42,7 +42,7 @@ module Bold::Activity
 
     def mark_ham
       memento do
-        @object.mark_as_ham!
+        ReportHam.call @object
       end
       undo_with 'update_comment'
       flash[:notice] = 'bold.comment.ham'
@@ -51,7 +51,7 @@ module Bold::Activity
 
     def mark_spam
       memento undo_template: 'restore_comment' do
-        @object.mark_as_spam!
+        ReportSpam.call @object
       end
       flash.now[:notice] = 'bold.comment.spam'
       render 'destroy'
@@ -59,7 +59,7 @@ module Bold::Activity
 
     def destroy
       memento undo_template: 'restore_comment' do
-        @object.delete
+        DeletePosting.call @object
       end
       flash.now[:notice] = 'bold.comment.deleted'
     end

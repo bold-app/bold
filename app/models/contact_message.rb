@@ -42,15 +42,5 @@ class ContactMessage < VisitorPosting
     "#{subject} (#{sender_name} #{sender_email})"
   end
 
-  private
-
-  def additional_akismet_attributes
-    {
-      author:       sender_name,
-      author_email: sender_email,
-      text:         "#{subject}\n#{body}",
-      type:         'contact-form',
-    }
-  end
-
 end
+

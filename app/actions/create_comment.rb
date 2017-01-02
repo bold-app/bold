@@ -25,6 +25,8 @@ class CreateComment < ApplicationAction
         UnreadItem.create user: user, item: @comment
       end
 
+      CommentApprovalJob.perform_later(@comment)
+
       Result.new comment_created: true, message: message
     else
       Result.new message: t('.not_saved')

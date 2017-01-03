@@ -17,8 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-class Asset < ActiveRecord::Base
-  include SiteModel
+class Asset < SiteRecord
   include Rails.application.routes.url_helpers
 
   prepend Taggable

@@ -17,8 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-class Permalink < ActiveRecord::Base
-  include SiteModel
+class Permalink < SiteRecord
 
   attr_accessor :path_args
   belongs_to :destination, polymorphic: true

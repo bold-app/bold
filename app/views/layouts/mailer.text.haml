@@ -3,4 +3,4 @@
 
 = '--'
 This message was delivered by Bold running on
-= @site.public_url
+= Bold::Config['backend_host'].presence || @site.public_url

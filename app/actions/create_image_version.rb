@@ -4,8 +4,7 @@
 # TODO unsharp after resize?
 # http://www.imagemagick.org/Usage/resize/#resize_unsharp
 # http://redskiesatnight.com/2005/04/06/sharpening-using-image-magick/
-class CreateImageVersion
-  include Action
+class CreateImageVersion < ApplicationAction
 
   Result = ImmutableStruct.new(:version_created?, :path)
 

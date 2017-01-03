@@ -1,8 +1,7 @@
 # Extracts asset meta data from the underlying file and sets it on asset.
 #
 # Does *not* attempt to save the asset.
-class ExtractAssetMetadata
-  include Action
+class ExtractAssetMetadata < ApplicationAction
 
   def initialize(asset)
     @asset = asset

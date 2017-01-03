@@ -1,5 +1,4 @@
-class ExportSite
-  include Action
+class ExportSite < ApplicationAction
 
   Result = ImmutableStruct.new(:success?, :zipfile, [:errors])
 

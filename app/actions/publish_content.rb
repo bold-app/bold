@@ -1,5 +1,4 @@
-class PublishContent
-  include Action
+class PublishContent < ApplicationAction
 
   Result = ImmutableStruct.new(:published?, :error)
 

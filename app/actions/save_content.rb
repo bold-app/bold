@@ -1,8 +1,7 @@
 # wraps all that might have to be done when saving a page or post.
 #
 # Uses the PublishContent, ApplyTags, SaveDraft and IndexContent actions.
-class SaveContent
-  include Action
+class SaveContent < ApplicationAction
 
   Result = ImmutableStruct.new(:saved?, :published?,
                                :message, :message_severity)

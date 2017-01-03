@@ -1,5 +1,4 @@
-class ApplyTags
-  include Action
+class ApplyTags < ApplicationAction
 
   Result = ImmutableStruct.new(:success?, :tag_count)
 

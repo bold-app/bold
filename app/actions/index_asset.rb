@@ -1,5 +1,4 @@
-class IndexAsset
-  include Action
+class IndexAsset < ApplicationAction
 
   def initialize(asset = nil)
     @asset = asset

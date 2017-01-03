@@ -1,5 +1,4 @@
-class CreateTag
-  include Action
+class CreateTag < ApplicationAction
 
   Result = ImmutableStruct.new(:tag_created?, :tag)
 

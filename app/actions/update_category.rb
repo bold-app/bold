@@ -1,5 +1,4 @@
-class UpdateCategory
-  include Action
+class UpdateCategory < ApplicationAction
 
   def initialize(category, attributes = {})
     @category = category

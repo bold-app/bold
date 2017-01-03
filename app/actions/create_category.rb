@@ -1,5 +1,4 @@
-class CreateCategory
-  include Action
+class CreateCategory < ApplicationAction
 
   Result = ImmutableStruct.new(:category_created?, :category)
 

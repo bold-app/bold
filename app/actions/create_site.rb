@@ -3,8 +3,7 @@
 # Along with the site itself, several default pages and a default navigation
 # are created. The current user, if present, is added as a manager to the new
 # site.
-class CreateSite
-  include Action
+class CreateSite < ApplicationAction
 
   Result = ImmutableStruct.new(:site_created?, :error_message)
 

@@ -1,5 +1,4 @@
-class CreatePermalink
-  include Action
+class CreatePermalink < ApplicationAction
 
   Result = ImmutableStruct.new(:link_created?, :link)
 

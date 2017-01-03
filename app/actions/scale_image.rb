@@ -19,8 +19,7 @@
 #
 
 # Scales an image to all required sizes.
-class ScaleImage
-  include Action
+class ScaleImage < ApplicationAction
 
   Result = ImmutableStruct.new(:success?, :versions_created, [:errors])
 

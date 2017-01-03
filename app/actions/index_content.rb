@@ -1,5 +1,4 @@
-class IndexContent
-  include Action
+class IndexContent < ApplicationAction
 
   Result = ImmutableStruct.new(:index_updated?)
 

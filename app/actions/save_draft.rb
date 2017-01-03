@@ -2,8 +2,7 @@
 #
 # Content that's not published yet is just saved.
 #
-class SaveDraft
-  include Action
+class SaveDraft < ApplicationAction
 
   Result = ImmutableStruct.new(:draft_saved?, :message)
 

@@ -1,6 +1,5 @@
 # Saves the given asset and makes it searchable.
-class CreateAsset
-  include Action
+class CreateAsset < ApplicationAction
 
   Result = ImmutableStruct.new(:asset_created?, :asset)
 

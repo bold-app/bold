@@ -37,6 +37,27 @@ class SaveContentTest < ActiveSupport::TestCase
     assert p = Page.find_by_title('new page')
     assert !p.published?
     assert_equal 'body', p.body
+    assert_equal 'new-page', p.slug
+
+    p.slug = 'new slug'
+    r = SaveContent.call p
+    assert r.saved?
+    assert !r.published?
+    assert_equal 'new-slug', p.slug
+  end
+
+  test 'should update unpublished page' do
+    p = @site.pages.build(title: 'new page', body: 'body')
+    r = SaveContent.call p
+    assert r.saved?
+    assert !r.published?
+    assert_equal 'new-page', p.slug
+
+    p.slug = 'new slug'
+    r = SaveContent.call p
+    assert r.saved?
+    assert !r.published?
+    assert_equal 'new-slug', p.slug
   end
 
   test 'should publish new page' do

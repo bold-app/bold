@@ -31,7 +31,8 @@ class Bold::Settings::CategoriesController < Bold::SettingsController
   end
 
   def update
-    if @category.update_attributes(category_params)
+    r = UpdateCategory.call @category, category_params
+    if r.category_updated?
       redirect_to bold_site_settings_categories_path(current_site)
     else
       render 'edit'
@@ -43,11 +44,11 @@ class Bold::Settings::CategoriesController < Bold::SettingsController
   end
 
   def create
-    @category = current_site.categories.build category_params
-    r = CreateCategory.call(@category)
+    r = CreateCategory.call(category_params)
     if r.category_created?
       redirect_to bold_site_settings_categories_path(current_site)
     else
+      @category = r.category
       render 'new'
     end
   end

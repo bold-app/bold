@@ -9,7 +9,7 @@ class CreateTag < ApplicationAction
 
   def call
     @site.transaction do
-      tag = @site.tags.build(name: @name)
+      tag = @site.tags.create(name: @name)
 
       r = CreatePermalink.call tag, tag.slug
       unless r.link_created?
@@ -17,7 +17,7 @@ class CreateTag < ApplicationAction
         r = CreatePermalink.call tag, "tag-#{tag.slug}"
       end
 
-      if r.link_created? and tag.save
+      if r.link_created?
         return Result.new tag_created: true, tag: tag
       end
 

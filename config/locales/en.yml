@@ -83,6 +83,7 @@ en:
       create_navigation_failed: Failed to create the default navigation.
       create_content_failed: Failed to create the default content.
     save_content:
+      invalid_template: 'No template named "%{name}" could be found.'
       no_changes: Nothing changed.
       no_changes_draft: Nothing changed.
       not_saved: "Error, could not publish. %{reason}"

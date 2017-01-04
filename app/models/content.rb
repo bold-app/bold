@@ -32,8 +32,6 @@ class Content < SiteRecord
   validates :author,   presence: true
   validates :title,    presence: true
 
-  validate :check_template_existence
-
   belongs_to :author, class_name: 'User'
 
   has_many :fulltext_indices, as: :searchable, dependent: :delete_all
@@ -50,13 +48,6 @@ class Content < SiteRecord
     r.status ||= :draft
     r.template_field_values ||= {}
   end
-  before_validation do |r|
-    r.slug = r.title if r.slug.blank?
-    r.slug.sub! %r{\A/}, ''
-    r.body ||= ''
-  end
-
-  before_validation :set_author, on: :create
 
   scope :drafts, ->{
     includes(:draft).
@@ -201,12 +192,6 @@ class Content < SiteRecord
     @template ||= site.theme.template(template)
   end
 
-  def check_template_existence
-    unless get_template.present?
-      errors.add :template, :invalid
-    end
-  end
-
   def publishing_year
     (post_date || Time.zone.now).year.to_s
   end
@@ -252,10 +237,6 @@ class Content < SiteRecord
 
   def count_pageviews(scope)
     scope.count 'distinct(content_id, stats_visit_id)'
-  end
-
-  def set_author
-    self.author ||= User.current
   end
 
 

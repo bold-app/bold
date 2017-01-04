@@ -64,7 +64,7 @@ class PageTest < ActiveSupport::TestCase
   end
 
   test 'may be saved empty' do
-    page = Page.new site: @site, title: 'blank page'
+    page = Page.new title: 'blank page', author: Bold.current_user
     assert page.save, page.errors.inspect
     page.reload
     assert page.draft?
@@ -72,44 +72,10 @@ class PageTest < ActiveSupport::TestCase
     assert page.body.blank?
   end
 
-  test 'new record should save slug' do
-    p = Page.new title: 'new title', site: @site
-    assert p.save
-    assert p.id
-    assert_equal 'new title', p.title
-    assert_equal 'new-title', p.slug
-    assert p.draft?
-    assert !p.published?
-  end
-
-  test 'should allow slug editing if not published' do
-    @page = create :page
-    assert_equal 'this-is-a-page', @page.slug
-    @page.title = 'New title'
-
-    assert @page.save
-    @page.reload
-    assert_equal 'this-is-a-page', @page.slug
-    assert_equal 'New title', @page.title
-
-    @page.slug = 'foo'
-    assert @page.save
-    @page.reload
-    assert_equal 'New title', @page.title
-    assert_equal 'foo', @page.slug
-
-    @page.attributes = { title: 'foo bar', slug: '' }
-    assert @page.save
-    @page.reload
-    assert_equal 'foo-bar', @page.slug
-    assert_equal 'foo bar', @page.title
-  end
-
   test 'should have template' do
     @page = create :page
     assert @page.get_template
   end
-
 
   test 'should unpublish page' do
     page = Page.new status: :published, last_update: 2.days.ago

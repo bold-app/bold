@@ -20,7 +20,7 @@ class ReportHamTest < ActiveSupport::TestCase
   end
 
   test 'mark ham should change status of contact_message and enqueue job' do
-    page = publish_page template: 'contact_page'
+    page = create :published_page
     co = create :contact_message, content: page
     co.spam!
 

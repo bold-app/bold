@@ -57,9 +57,7 @@ module Frontend
 
     test 'should show category' do
       create_special_page :category
-      r = CreateCategory.call @site.categories.build(name: 'New Category')
-      assert r.category_created?
-      assert cat = r.category
+      cat = CreateCategory.call({ name: 'New Category'}, site: @site).category
       p = publish_post category: cat
       get :show, params: { path: cat.path }
       assert_response :success

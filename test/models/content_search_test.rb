@@ -23,7 +23,7 @@ class ContentSearchTest < ActiveSupport::TestCase
   setup do
     Bold::current_site = @site = create :site
     @category = create :category, name: 'Some Category'
-    @post = Post.create template: 'post', title: 'search test title', body: 'This is the body TEXT', tag_list: 'a tag, bar', category: @category
+    @post = create :published_post, title: 'search test title', body: 'This is the body TEXT', tag_list: 'a tag, bar', category: @category
   end
 
   test 'should be blank or present' do

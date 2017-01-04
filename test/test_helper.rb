@@ -86,9 +86,7 @@ class ActiveSupport::TestCase
   end
 
   def create_category(name = 'New category')
-    @site.categories.build(name: name).tap do |cat|
-      CreateCategory.call cat
-    end
+    CreateCategory.call({name: name}, site: @site).category
   end
 
   def create_homepage(site: @site)

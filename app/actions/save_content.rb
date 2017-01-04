@@ -15,7 +15,21 @@ class SaveContent < ApplicationAction
     @had_changes   = content.changed?
   end
 
+  def init_defaults
+    @content.slug = @content.title.dup if @content.slug.blank?
+    @content.slug.sub! %r{\A/}, ''
+    @content.body ||= ''
+    @content.author ||= Bold.current_user
+  end
+
   def call
+
+    unless @content.get_template.present?
+      e = t '.invalid_template', name: @content.template
+      return Result.new saved: false, message: e, message_severity: :alert
+    end
+
+    init_defaults
 
     published = false
 

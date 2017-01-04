@@ -26,36 +26,32 @@ class CreateCategoryTest < ActiveSupport::TestCase
   end
 
   test 'should create permalink' do
-    cat = @site.categories.build name: 'Category One'
-    assert r = CreateCategory.call(cat)
+    assert r = CreateCategory.call(name: 'Category One')
     assert r.category_created?
     assert c = r.category
-    assert_equal 'category-one', c.path
     assert l = c.permalink
     assert_equal 'category-one', l.path
+    assert_equal 'category-one', c.path
     assert_equal @site, l.site
   end
 
   test 'should validate uniqueness of name' do
-    cat = @site.categories.build name: 'Category One'
-    assert r = CreateCategory.call(cat)
+    assert r = CreateCategory.call(name: 'Category One')
     assert r.category_created?
 
-    cat = @site.categories.build name: 'Category One'
     assert_no_difference 'Category.count' do
       assert_no_difference 'Permalink.count' do
-        assert r = CreateCategory.call(cat)
+        assert r = CreateCategory.call(name: 'Category One')
         assert !r.category_created?
-        assert_nil r.category
+        refute r.category.persisted?
       end
     end
   end
 
   test 'should create unique path in case of collision with other models' do
     create :permalink, path: 'foo'
-    cat = @site.categories.build name: 'Foo'
 
-    assert r = CreateCategory.call(cat)
+    assert r = CreateCategory.call(name: 'Foo')
     assert r.category_created?
     assert c = r.category
     assert_equal 'foo', c.slug

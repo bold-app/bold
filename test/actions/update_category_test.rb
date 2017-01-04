@@ -26,8 +26,7 @@ class UpdateCategoryTest < ActiveSupport::TestCase
   end
 
   test 'should create new permalink when slug changes and redirect old link' do
-    c = @site.categories.build name: 'My Category', slug: 'my-cat'
-    assert r = CreateCategory.call(c)
+    assert r = CreateCategory.call(name: 'My Category', slug: 'my-cat')
     assert r.category_created?
     assert c = r.category
     assert_equal 'my-cat', c.slug
@@ -48,6 +47,24 @@ class UpdateCategoryTest < ActiveSupport::TestCase
     assert r = l.destination
     assert r.permanent?
     assert_equal '/my-category', r.location
+  end
+
+
+  test 'should reuse old redirected slug' do
+    r = CreateCategory.call name: 'Category One'
+    assert r.category_created?
+    cat = r.category
+    assert_equal 'category-one', cat.slug
+
+    r = UpdateCategory.call cat, slug: 'new-slug'
+    assert r.category_updated?
+    cat = r.category
+    assert_equal 'new-slug', cat.slug
+
+    r = UpdateCategory.call cat, slug: 'category-one'
+    assert r.category_updated?
+    cat = r.category
+    assert_equal 'category-one', cat.slug
   end
 
 end

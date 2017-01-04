@@ -48,5 +48,22 @@ class CreatePermalinkTest < ActiveSupport::TestCase
     assert_equal tag, r.link.destination
   end
 
+  test 'should replace redirect on update' do
+    redirect = create :redirect, location: '/bar'
+    cat = CreateCategory.call(name: 'my category').category
+
+    r = CreatePermalink.call redirect, 'foo'
+    assert r.link_created?
+
+    # one is removed, one created (from the category's old slug to the new path)
+    assert_no_difference 'Redirect.count' do
+      assert_no_difference 'Permalink.count' do
+        r = CreatePermalink.call cat, 'foo'
+      end
+    end
+    assert r.link_created?
+    assert_equal cat, r.link.destination
+  end
+
 
 end

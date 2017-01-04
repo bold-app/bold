@@ -24,8 +24,8 @@ class PublishContent < ApplicationAction
 
         else
           # publish now
-          CreatePermalink.call @content, @content.permalink_path_args
           @content.save!
+          CreatePermalink.call @content, @content.permalink_path_args
 
           if @was_not_published
             RpcPingJob.perform_later @content

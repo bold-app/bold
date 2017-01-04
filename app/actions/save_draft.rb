@@ -14,10 +14,6 @@ class SaveDraft < ApplicationAction
     @content.transaction do
 
       if @content.published?
-        # FIXME check on what happens during validations that we need to be done
-        # and do it here
-        @content.valid?
-        @content.errors.clear
 
         draft.take_changes
 
@@ -26,9 +22,7 @@ class SaveDraft < ApplicationAction
         end
 
         if draft.save
-          # bump up updated_at (and make sure after_save hooks get triggered even
-          # if we only saved the draft in case of an already published content)
-          # FIXME check hooks for stuff to move here
+          # bump up updated_at
           @content.touch
           return Result.new draft_saved: true
         end
@@ -52,4 +46,5 @@ class SaveDraft < ApplicationAction
   def draft
     @draft ||= @content.draft || Draft.new(content: @content)
   end
+
 end

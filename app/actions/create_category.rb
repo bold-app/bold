@@ -2,27 +2,31 @@ class CreateCategory < ApplicationAction
 
   Result = ImmutableStruct.new(:category_created?, :category)
 
-  def initialize(category)
-    @category = category
+  def initialize(attributes, site: Bold.current_site)
+    @category_attributes = attributes
+    @site = site
   end
 
   def call
-    @category.transaction do
+    category = @site.categories.build @category_attributes
+    category.transaction do
 
-      r = CreatePermalink.call @category, @category.slug
-      unless r.link_created?
-        # try again with a (hopefully) unique path
-        r = CreatePermalink.call @category, "category-#{@category.slug}"
-      end
+      if category.save
+        r = CreatePermalink.call category, category.slug
+        unless r.link_created?
+          # try again with a (hopefully) unique path
+          r = CreatePermalink.call category, "category-#{category.slug}"
+        end
 
-      if r.link_created? and @category.save
-        return Result.new category_created: true, category: @category
+        if r.link_created?
+          return Result.new category_created: true, category: category
+        end
       end
 
       raise ActiveRecord::Rollback
     end
 
-    Result.new category_created: false
+    Result.new category_created: false, category: category
   end
 
 end

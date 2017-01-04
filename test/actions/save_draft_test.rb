@@ -27,8 +27,9 @@ class SaveDraftTest < ActiveSupport::TestCase
   end
 
   test 'saves empty page' do
-    page = Page.new site: @site, title: 'blank page'
-    assert SaveDraft.call(page), page.errors.inspect
+    page = Page.new site: @site, title: 'blank page', author: Bold.current_user
+    result = SaveDraft.call(page)
+    assert result.draft_saved?, page.errors.inspect
 
     page.reload
     assert page.draft?
@@ -54,7 +55,9 @@ class SaveDraftTest < ActiveSupport::TestCase
   end
 
   test 'stores tags in unpublished post' do
-    post = Post.new site: @site, tag_list: 'foo', title: 'new post'
+    post = Post.new tag_list: 'foo', title: 'new post',
+                    author: Bold.current_user
+
     assert_no_difference 'Draft.count' do
       assert_difference 'Post.count' do
         assert_difference 'Tagging.count' do
@@ -93,8 +96,9 @@ class SaveDraftTest < ActiveSupport::TestCase
     assert_equal 'new body', page.body
   end
 
-  test 'new page should not save draft' do
-    page = Page.new title: 'new page', body: 'new content', site: @site
+  test 'new page should save page but not create draft' do
+    page = Page.new title: 'new page', body: 'new content',
+                    author: Bold.current_user
     assert_difference 'Page.count', 1 do
       assert_no_difference 'Draft.count' do
         assert SaveDraft.call(page)

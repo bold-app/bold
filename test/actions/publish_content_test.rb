@@ -82,10 +82,10 @@ class PublishContentTest < ActiveSupport::TestCase
       end
     end
 
-    assert p2 = create(:page, title: 'My Great Page')
+    p2 = nil
     assert_no_difference 'Permalink.count' do
       assert_difference 'Redirect.count', -1 do
-        PublishContent.new(p2).call
+        p2 = publish_page(title: 'My Great Page')
       end
     end
     l.reload

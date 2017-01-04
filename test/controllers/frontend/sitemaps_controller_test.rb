@@ -23,11 +23,10 @@ module Frontend
   class SitemapsControllerTest < ActionController::TestCase
 
     test 'should show sitemap' do
-      cat = build :category, site: @site
       create_special_page :tag
       create_special_page :category
       create_special_page :author
-      CreateCategory.call cat
+      cat = CreateCategory.call({ name: 'My Category'}, site: @site).category
 
       pg = publish_page
       po = publish_post tag_list: 'foo', category_id: cat.id

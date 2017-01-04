@@ -32,10 +32,7 @@ class CategoryTest < ActiveSupport::TestCase
 
 
   test 'should destroy permalink when category is destroyed' do
-    cat = @site.categories.build name: 'Category One'
-    r = CreateCategory.call cat
-    assert r.category_created?
-    assert category = r.category
+    category = CreateCategory.call({name: 'Category One'}, site: @site).category
     assert category.permalink.present?
 
     assert_difference 'Permalink.count', -1 do

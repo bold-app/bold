@@ -89,18 +89,23 @@ Rails.application.routes.draw do
 
           resources :backups, only: %i(index create)
           resources :categories, shallow: true
+          resources :tags, shallow: true, only: %i(index edit update destroy)
+
           resources :navigations, shallow: true, only: %i(index create update destroy) do
             collection{ put :sort }
           end
+
           resources :plugins, only: %i(index edit update enable destroy) do
             member{ put :enable }
           end
+
           resource :settings, only: %i(edit update favicon set_favicon) do
             member do
               get :favicon
               get :logo
             end
           end
+
           resource :html_snippet, only: %i(edit update)
 
           resources :site_users do

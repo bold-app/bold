@@ -1,0 +1,8 @@
+.row
+  .col-sm-6
+    = f.input :name, input_html: { tabindex: 1, class: 'title' }
+    = f.input :slug, input_html: { tabindex: 2, class: 'content-slug' }
+
+= button t('.save'), :primary, tabindex: 3
+
+

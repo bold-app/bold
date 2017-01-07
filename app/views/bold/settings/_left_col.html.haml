@@ -3,6 +3,7 @@
   .list-group
     = link_to t('.general'), bold_site_settings_root_path(current_site), class: "list-group-item#{' active' if 'bold/settings/settings' == params[:controller]}"
     = link_to t('.categories'), bold_site_settings_categories_path(current_site), class: "list-group-item#{' active' if 'bold/settings/categories' == params[:controller]}"
+    = link_to t('.tags'), bold_site_settings_tags_path(current_site), class: "list-group-item#{' active' if 'bold/settings/tags' == params[:controller]}"
     = link_to t('.navigation'), bold_site_settings_navigations_path(current_site), class: "list-group-item#{' active' if 'bold/settings/navigations' == params[:controller]}"
     = link_to t('.html_snippets'), edit_bold_site_settings_html_snippet_path(current_site), class: "list-group-item#{' active' if 'bold/settings/html_snippets' == params[:controller]}"
     = link_to t('.themes'), bold_site_settings_themes_path(current_site), class: "list-group-item#{' active' if 'bold/settings/themes' == params[:controller]}"

@@ -1,0 +1,27 @@
+.row
+  = render 'bold/settings/left_col'
+
+  .col-xs-12.col-sm-8.col-md-7.col-sm-offset-1
+
+    %h2
+      = t'.heading'
+
+    %table.table.table-striped
+      %thead
+        %tr
+          %th= t'.name'
+          %th= t'.slug'
+
+      %tbody
+        - for tag in @tags
+          %tr{class: cycle('odd', 'even')}
+            %td= link_to tag.name, edit_bold_settings_tag_path(tag)
+            %td= tag.slug
+
+
+    - if @tags.empty?
+      %p.no-data= t'.no_data'
+
+
+
+

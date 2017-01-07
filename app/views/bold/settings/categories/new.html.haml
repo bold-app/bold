@@ -4,7 +4,7 @@
   .col-xs-12.col-sm-7.col-md-6.col-sm-offset-1.right-col
     %h2= t'.heading'
 
-    = simple_form_for @category, url: bold_settings_categories_path do |f|
+    = simple_form_for @category, url: bold_site_settings_categories_path do |f|
       = render 'form', f: f
 
 

@@ -467,12 +467,15 @@ en:
           info: These snippets will be inserted into each page. You can use them to add custom meta tags, javascript or tracking code to your site.
 
       left_col:
+        backup: Backup
+        categories: Categories
         general: General
         html_snippets: Custom HTML
+        navigation: Navigation
         plugins: Plugins
+        tags: Tags
         themes: Themes
         users: Users
-        backup: Backup
 
       navigations:
         index:
@@ -512,6 +515,9 @@ en:
           no_possible_files: "I couldn't find any suitable files."
           upload: "Upload one!"
 
+      tags:
+        index:
+          heading: Tags
 
 
       site_users:

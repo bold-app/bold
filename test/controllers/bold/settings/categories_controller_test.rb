@@ -46,6 +46,16 @@ class Bold::Settings::CategoriesControllerTest < ActionController::TestCase
     assert_equal 'foobar', @cat.slug
   end
 
+  test 'should get new' do
+    get :new, params: { site_id: @site.id }
+    assert_response :success
+  end
+
+  test 'should get edit' do
+    get :edit, params: { id: @cat.id }
+    assert_response :success
+  end
+
   test 'should delete category' do
     assert_difference '@site.categories.count', -1 do
       delete :destroy, params: { id: @cat.to_param }

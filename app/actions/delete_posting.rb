@@ -8,8 +8,10 @@ class DeletePosting < ApplicationAction
   end
 
   def call
-    @site.unread_items.for(@posting).delete_all
-    @posting.update_attribute :deleted_at, Time.now
+    @posting.transaction do
+      @site.unread_items.for(@posting).delete_all
+      @posting.update_attribute :deleted_at, Time.now
+    end
     Result.new posting_deleted: true
   end
 end

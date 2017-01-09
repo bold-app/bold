@@ -14,6 +14,13 @@ de:
   common:
     back: Zurück
     more: Mehr
+    delete: Löschen
+
+  email:
+    unread_items:
+      subject:
+        one: "[%{site}] Du hast eine ungelesene Nachricht"
+        other: "[%{site}] Du hast %{count} ungelesene Nachrichten"
 
   flash:
     admin:
@@ -35,6 +42,7 @@ de:
         deleted: Kommentar gelöscht.
         spam: 'Der Kommentar wurde als Spam gemeldet und gelöscht.'
         ham: 'Der Kommentar wurde als "nicht Spam" markiert.'
+        spam_deleted: 'Alle als Spam markierten Nachrichten wurden gelöscht.'
       content:
         created: Veröffentlicht!
         created_draft: Entwurf gespeichert.
@@ -49,6 +57,7 @@ de:
         template_change_failure: Änderung der Vorlage fehlgeschlagen.
         template_change_success: Vorlage geändert.
         unpublished: "%{title} wurde als Entwurf gespeichert."
+        unpublish_failed: "%{title} konnte nicht als Entwurf gespeichert werden."
       navigation:
         deleted: 'Navigationspunkt gelöscht.'
         created: 'Navigationspunkt angelegt.'
@@ -62,25 +71,40 @@ de:
         link: Rückgängig
         success: Rückgängig gemacht!
 
-    comments:
-      created_appears_soon: Vielen Dank. Der Kommentar wird veröffentlicht nachdem er den Spam-Filter passiert hat.
-      created_awaits_moderation: Vielen Dank. Der Kommentar wird veröffentlich sobald er durch uns freigeschaltet wurde.
-
     contact_messages:
       created: Vielen Dank für Ihre Nachricht.
 
     created: Erstellt.
     saved: Gespeichert.
 
+  actions:
+    create_comment:
+      disabled: Die Kommentarfunktion ist deaktiviert.
+      not_saved: Der Kommentar konnte nicht gespeichert werden.
+      appears_soon: Vielen Dank. Der Kommentar wird veröffentlicht nachdem er den Spam-Filter passiert hat.
+      awaits_moderation: Vielen Dank. Der Kommentar wird veröffentlich sobald er durch uns freigeschaltet wurde.
+    create_site:
+      site_not_saved: Failed to create the site.
+      create_navigation_failed: Failed to create the default navigation.
+      create_content_failed: Failed to create the default content.
+    save_content:
+      invalid_template: 'Eine Vorlage namens "%{name}" wurde nicht gefunden.'
+      no_changes: Nichts geändert.
+      no_changes_draft: Nichts geändert.
+      not_saved: "Veröffentlichung fehlgeschlagen. %{reason}"
+      not_saved_draft: "Der Entwurf konnte nicht gespeichert werden. %{reason}"
+      saved: Veröffentlicht!
+      saved_draft: Entwurf gespeichert.
+
   admin:
 
     invitations:
       index:
-        heading: Pending invitations
-        no_data: There are no invitations pending at the moment.
+        heading: Ausstehende Einladungen
+        no_data: Derzeit gibt es keine ausstehenden Einladungen.
       new:
-        heading: Invite user
-        invite: Send invitation
+        heading: Benutzer einladen
+        invite: Einladung senden
 
     sites:
       edit:
@@ -102,9 +126,6 @@ de:
         heading: New site
         label_hostname: Primary hostname
         submit: Create
-
-      select:
-        h2: Select a site
 
     site_users:
       index:
@@ -148,6 +169,8 @@ de:
         index:
           apply: Anwenden
           delete: Löschen
+          delete_spam: Spam löschen
+          delete_spam_confirm: '%{count} Spam-Nachrichten löschen?'
           heading: "Kommentare & Nachrichten"
           status: &comment_states
             pending: Wartend auf Freigabe
@@ -155,9 +178,9 @@ de:
             deleted: Gelöscht
             spam: Spam
           th:
-            author: Author
-            comment: Comment
-            in_response_to: In response to
+            author: Autor
+            comment: Kommentar
+            in_response_to: In Antwort auf
         comment:
           approve: Freigeben
           delete: Löschen
@@ -221,21 +244,24 @@ de:
         button_close: Abbrechen
 
     assets:
-      asset:
+      edit:
+        button_close: Abbrechen
+        change_file: Datei ersetzen...
         confirm_delete:
           zero: "%{name} löschen?"
           one: "%{name} wird von einem Artikel / einer Seite verwendet. Trotzdem löschen?"
           other: "%{name} wird von %{count} Artikeln oder Seiten verwendet. Trotzdem löschen?"
-      edit:
-        button_close: Abbrechen
-        change_file: Datei ersetzen...
         save: Speichern
+      form:
+        size: Größe
+        taken_on: Datum
+        uploaded: Hochgeladen
       index:
         upload: Hochladen
       new:
         source:
-          local: Dateien hochladen
           url: Entfernte Dateien hinzufügen
+          upload: Dateien hochladen
       meta:
         taken_on: "Aufgenommen am %{date}"
       update:
@@ -251,11 +277,11 @@ de:
     common:
       nav:
         activities: Aktivität
-        admin: Administration
         assets: Dateien
         back: "Zurück"
         change_site: Seite wechseln
         new_post: Neuer Artikel
+        overview: Übersicht
         pages: Seiten
         plugins: Plugins
         posts: Artikel
@@ -282,13 +308,16 @@ de:
 
       page_body:
         notfound: Seite nicht gefunden.
+        error: Beim bearteiten Ihrer Anfrage trat ein Fehler auf.
       page_title:
         archive: Archiv
         author: Artikel nach Autor
+        category: Artikel nach Kategorie
+        error: Fehler
         homepage: Startseite
         notfound: Nicht gefunden
+        search: Suche
         tag: Artikel nach Tag
-        category: Artikel nach Kategorie
 
       change_template:
         heading: Vorlage ändern
@@ -325,7 +354,6 @@ de:
         published_on: Veröffentlicht am %{date}.
         published_on_updated: Erstmals veröffentlicht am %{date}, zuletzt aktualisiert am %{update}.
         save: Speichern
-        template: Vorlage
 
       markdown_help:
         heading: Markdown
@@ -381,6 +409,7 @@ de:
 
       new:
         h1: Neue Seite
+
       show:
         created_by: Erstellt von %{author} am %{date}.
         published_by: Veröffentlicht von %{author} am %{date}.
@@ -443,13 +472,15 @@ de:
           info: Der HTML-Code wird auf jeder Seite eingefügt. Diese Funktion kann verwendet werden um spezielle Meta-Tags, Javascript oder Tracking Codes zu deiner Seite hinzuzufügen.
 
       left_col:
-        general: Allgemein
-        html_snippets: HTML einfügen
-        plugins: Plugins
-        themes: Themes
-        users: Benutzer
         backup: Backup
         categories: Kategorien
+        general: Allgemein
+        html_snippets: HTML einfügen
+        navigation: Navigation
+        plugins: Plugins
+        tags: Tags
+        themes: Themes
+        users: Benutzer
 
       navigations:
         index:
@@ -470,6 +501,7 @@ de:
       settings:
         edit:
           akismet_key_hint: Akismet ist ein weit verbreiteter Dienst zur Spam-Filterung in Kommentaren. Um Akismet zu verwenden, besorge dir einen API key auf akismet.com
+          adaptive_images_hint: Auslieferung von hochauflösenden Bildern an Geräte mit Retina- oder vergleichbaren Displays. Außerdem wird die Bildgröße für Displays mobiler Geräte angepasst.
           twitter_hint: "Für Twitter Card Metadaten."
           comments:
             disabled: Deaktiviert
@@ -488,6 +520,9 @@ de:
           no_possible_files: "Es gibt noch keine passenden Dateien"
           upload: "Eine Datei hochladen"
 
+      tags:
+        index:
+          heading: Tags
 
 
       site_users:
@@ -529,6 +564,7 @@ de:
         meta_google_plus_hint: "Für das 'link rel=author' Metatag."
         time_zone_name_info: Das Backend wird alle Zeitangaben relativ zu dieser Zeitzone anzeigen.
         twitter_hint: "Für Twitter Card Metadaten."
+        unread_items_hint: "Maximal eine Email pro Tag und Website."
         vim_hint: "Vim ist ein fortgeschrittener Texteditor. Diese Option aktiviert Vim-ähnliches Verhalten im Bold Texteditor."
       edit_email:
         button: Update Email Address
@@ -545,6 +581,10 @@ de:
         profile: Dein Profil
         email: Email-Addresse ändern
         password: Passwort ändern
+
+    sites:
+      index:
+        heading: Select a site
 
   layouts:
     admin:
@@ -599,10 +639,11 @@ de:
         default_image_link_version: Standard-Bildformat auf das Bilder im Text verlinken sollen
         hostname: Hostname
         homepage_id: Startseite
-        honor_donottrack: "Respect the 'Do Not Track' header"
+        honor_donottrack: "'Do Not Track' header respektieren"
         html_head_snippet: In HTML <head> einfügen
         body_start_snippet: Am Anfang vom <body> einfügen
         body_end_snippet: Am Ende vom <body> anhängen
+        adaptive_images: Client-spezifische Bildauflösungen und -größen
         site_css: Eigenes CSS
         site_js: Eigenes JavaScript
         name: Name der Website
@@ -630,6 +671,7 @@ de:
         current_password: Aktuelles Passwort
         password: Passwort
         password_confirmation: Passwort bestätigen
+        send_unread_items_notifications: Per Email über neue Nachrichten benachrichtigen.
         time_zone_name: Zeitzone
         vim_mode: Vim-Mode für Texteditor aktivieren
         admin: Administrator

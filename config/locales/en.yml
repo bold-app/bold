@@ -65,7 +65,6 @@ en:
         link: Undo
         success: Undo successful!
 
-
     contact_messages:
       created: Thank you for your message.
 
@@ -307,12 +306,12 @@ en:
       page_title:
         archive: Posts Archive
         author: Posts by Author
+        category: Category Posts
+        error: Error
         homepage: Homepage
         notfound: Not Found
-        error: Error
-        tag: Posts by Tag
-        category: Category Posts
         search: Search
+        tag: Posts by Tag
 
       change_template:
         heading: Change template

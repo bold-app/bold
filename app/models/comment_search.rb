@@ -18,7 +18,6 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 class CommentSearch < ContentSearch
-  include ActiveModel::Model
 
   def self.status_values
     %i(pending approved spam)
@@ -32,6 +31,10 @@ class CommentSearch < ContentSearch
   end
 
   def apply_status(collection)
-    collection.send status
+    if status.blank?
+      collection
+    else
+      collection.send status
+    end
   end
 end

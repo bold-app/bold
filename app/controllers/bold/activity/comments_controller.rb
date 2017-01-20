@@ -79,7 +79,7 @@ module Bold::Activity
     def search_params
       if params[:comment_search].present?
         params[:comment_search].permit :status, :query
-      elsif Comment.pending.any?
+      elsif current_site.comments.pending.any?
         { status: 'pending' }
       else
         {}

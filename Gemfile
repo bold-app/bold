@@ -69,6 +69,7 @@ gem 'warden', '~> 1.2'
 gem 'words_counted', '~> 1.0'
 gem 'xmp', github: 'jkraemer/xmp'
 
+gem 'ahoy_matey'
 
 group :development, :test do
   #gem 'minitest-rails', '~> 2.2.1'

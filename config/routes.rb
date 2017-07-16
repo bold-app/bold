@@ -159,6 +159,7 @@ Rails.application.routes.draw do
   Bold::Plugin.install_routes! self
   Bold::Theme.install_routes! self
 
+  mount Ahoy::Engine => "/ahoy"
 
   # Frontend routes
 

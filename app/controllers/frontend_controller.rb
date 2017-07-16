@@ -161,9 +161,10 @@ class FrontendController < BaseController
   def do_not_track?
     request.headers['DNT'] == '1'
   end
+  helper_method :do_not_track?
 
   def log_request
-    if site = Bold.current_site and request.get? and !(do_not_track? and site.honor_donottrack)
+    if site = Bold.current_site and request.get? and !(do_not_track? and site.honor_donottrack?)
       visitor_id = session[:visitor_id]
       content = (@content || @asset)
       content = content.object if content.respond_to?(:object)

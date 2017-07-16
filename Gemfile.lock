@@ -162,6 +162,17 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.1)
       public_suffix (~> 2.0, >= 2.0.2)
+    ahoy_matey (1.6.0)
+      addressable
+      browser (~> 2.0)
+      geocoder
+      rack-attack (< 6)
+      railties
+      referer-parser (>= 0.3.0)
+      request_store
+      safely_block (>= 0.1.1)
+      user_agent_parser
+      uuidtools
     akismet (2.0.0)
     arel (8.0.0)
     autoprefixer-rails (7.1.2.2)
@@ -175,6 +186,7 @@ GEM
     bootstrap-sass (3.3.7)
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
+    browser (2.4.0)
     builder (3.2.3)
     byebug (9.0.6)
     capybara (2.6.2)
@@ -222,6 +234,7 @@ GEM
       activemodel-serializers-xml (~> 1.0)
       activesupport (~> 5.0)
       request_store (~> 1.0)
+    errbase (0.0.3)
     erubi (1.6.1)
     erubis (2.7.0)
     execjs (2.7.0)
@@ -234,6 +247,7 @@ GEM
     faker (1.8.4)
       i18n (~> 0.5)
     ffi (1.9.18)
+    geocoder (1.4.4)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
     haml (4.0.7)
@@ -303,6 +317,8 @@ GEM
     public_suffix (2.0.5)
     puma (3.9.1)
     rack (2.0.3)
+    rack-attack (5.0.1)
+      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.1.2)
@@ -341,6 +357,7 @@ GEM
       ffi (>= 0.5.0, < 2)
     rdoc (4.3.0)
     ref (2.0.0)
+    referer-parser (0.3.0)
     request_store (1.3.2)
     responders (2.4.0)
       actionpack (>= 4.2.0, < 5.3)
@@ -348,6 +365,8 @@ GEM
     ruby_parser (3.9.0)
       sexp_processor (~> 4.1)
     safe_shell (1.0.3)
+    safely_block (0.2.0)
+      errbase
     sass (3.5.1)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -390,6 +409,7 @@ GEM
       thread_safe (~> 0.1)
     uglifier (3.2.0)
       execjs (>= 0.3.0, < 3)
+    uuidtools (2.1.5)
     valid_email (0.0.13)
       activemodel
       mail (~> 2.6.1)
@@ -414,6 +434,7 @@ DEPENDENCIES
   activemodel-serializers-xml!
   activerecord-jdbcpostgresql-adapter
   acts_as_list!
+  ahoy_matey
   akismet (~> 2.0.0)
   bold-atom_feed!
   bold-featherlight!

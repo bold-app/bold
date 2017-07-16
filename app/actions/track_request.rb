@@ -23,7 +23,7 @@ class TrackRequest < ApplicationAction
 
     when Asset
 
-      ahoy.track(
+      @ahoy.track(
         "asset download", asset_id: object.id,
                           status: @status,
                           site_id: object.site_id

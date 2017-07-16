@@ -33,7 +33,7 @@ class SiteDecorator < Draper::Decorator
       if object.site_css.present?
         output << h.stylesheet_link_tag(h.site_content_path(format: :css))
       end
-      unless h.do_not_track? and object.honor_donottrack?
+      unless h.do_not_track? && object.honor_donottrack?
         output << h.javascript_include_tag('ahoy_standalone')
       end
       if object.adaptive_images?

@@ -166,9 +166,9 @@ class FrontendController < BaseController
   def log_request
     if site = Bold.current_site and request.get? and !(do_not_track? and site.honor_donottrack?)
 
-      TrackRequest.(ahoy, object: (@content || @asset),
-                          permalink: @permalink,
-                          status: response.status)
+      # TrackRequest.(ahoy, object: (@content || @asset),
+      #                     permalink: @permalink,
+      #                     status: response.status)
 
 
       visitor_id = session[:visitor_id]

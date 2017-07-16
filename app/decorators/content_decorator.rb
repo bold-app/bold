@@ -313,6 +313,8 @@ class ContentDecorator < Draper::Decorator
 
       # Schema.org metadata in ld+json format
       meta << h.ld_json_tag(meta_ld_json)
+
+      meta << h.javascript_tag("ahoy.configure({page: '#{object.id}'});ahoy.trackView();")
     end
   end
 

@@ -1,3 +1,5 @@
+# unfortunately this never attaches the first event of a visit to it's visit.
+# We use the JS based page view tracking for this reason.
 class TrackRequest < ApplicationAction
 
   def initialize(ahoy, object:, permalink: nil, status:)

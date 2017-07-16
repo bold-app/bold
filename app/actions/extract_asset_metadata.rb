@@ -1,3 +1,5 @@
+require 'exifr/jpeg'
+
 # Extracts asset meta data from the underlying file and sets it on asset.
 #
 # Does *not* attempt to save the asset.

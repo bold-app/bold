@@ -37,7 +37,7 @@ class Stats
     @time_frame = TIME_FRAMES.key?(time_frame) ? time_frame : :month
     @time_frame_length = TIME_FRAMES[@time_frame]
     @end_date   = end_date
-    @start_date = start_date || (@end_date - length + 1)
+    @start_date = start_date || @time_frame_length.before(@end_date) + 1.day
   end
 
   def daily_pageviews
@@ -56,8 +56,9 @@ class Stats
     )
   end
 
+  # days
   def length
-    time_frame_length / 1.day
+    time_frame_length.to_i / 1.day.to_i
   end
 
 

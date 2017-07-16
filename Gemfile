@@ -1,19 +1,19 @@
 source 'https://rubygems.org'
 
 gem 'nokogiri'
-gem 'rails', '~> 5.0.0'
+gem 'rails', '~> 5.1.0'
 gem 'rails-i18n', '~> 4.0'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.1.0'
+gem 'coffee-rails', '~> 4.2'
 gem 'therubyracer', platforms: :ruby
 
-gem 'pg', '~> 0.18.2', platforms: :ruby
+gem 'pg', '~> 0.18', platforms: :ruby
 gem "activerecord-jdbcpostgresql-adapter", platforms: :jruby
 
 gem 'jquery-rails' #, '~> 4.0.4'
 # gem 'turbolinks'
-gem 'jbuilder', '~> 2.0'
+gem 'jbuilder', '~> 2.5'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 
@@ -28,13 +28,12 @@ gem 'coderay_bash', '~> 1.0.7'
 gem 'daemons'
 gem 'delayed_job_active_record', '~> 4.0'
 
-# FIXME revert to ~> 4.0.0 once released
-gem 'devise', '4.2.0'
+gem 'devise', '~> 4.3'
 gem 'devise_invitable', github: 'bold-app/devise_invitable', branch: 'bold'
 
 gem 'diffy', '~> 3.0.7'
 
-gem 'draper', '~> 3.0.0.pre'
+gem 'draper' #, '~> 3.0.0.pre'
 gem 'activemodel-serializers-xml', github: 'rails/activemodel-serializers-xml'
 
 gem 'exifr', '~> 1.2'
@@ -51,7 +50,7 @@ gem 'haml-rails', '~> 0.9'
 gem 'kramdown', '~> 1.9.0'
 gem 'request_store', '~> 1.1'
 gem 'safe_shell', '~> 1.0.2'
-gem 'simple_form', '~> 3.2.1'
+gem 'simple_form', '~> 3.5'
 gem 'speakingurl-rails', '~> 8.0'
 gem 'stringex', '~> 2.5'
 gem 'teambox-icons-rails', github: 'bold-app/teambox-icons-rails'

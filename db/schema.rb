@@ -328,6 +328,7 @@ ActiveRecord::Schema.define(version: 20170716082629) do
   create_table "visits", force: :cascade do |t|
     t.string "visit_token"
     t.string "visitor_token"
+    t.uuid "site_id"
     t.string "ip"
     t.text "user_agent"
     t.text "referrer"

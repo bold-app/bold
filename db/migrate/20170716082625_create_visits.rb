@@ -4,6 +4,8 @@ class CreateVisits < ActiveRecord::Migration[5.1]
       t.string :visit_token
       t.string :visitor_token
 
+      t.uuid :site_id
+
       # the rest are recommended but optional
       # simply remove the columns you don't want
 

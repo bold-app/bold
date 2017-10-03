@@ -1,4 +1,3 @@
-#
 # Bold - more than just blogging.
 # Copyright (C) 2015-2016 Jens Krämer <jk@jkraemer.net>
 #
@@ -21,9 +20,9 @@ class ImageScalerJob < ActiveJob::Base
   queue_as :default
 
   def perform(*args)
-    if asset = args.shift
+    if asset_id = args.shift and asset = Asset.find_by_id(asset_id)
       Bold::with_site asset.site do
-        ScaleImage.call asset
+        ScaleImage.(asset)
       end
     end
   end

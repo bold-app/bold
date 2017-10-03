@@ -25,7 +25,7 @@ class CreateAsset < ApplicationAction
       IndexAsset.call @asset
 
       if @asset.scalable_image?
-        ImageScalerJob.perform_later(@asset)
+        ImageScalerJob.perform_later(@asset.id)
       end
 
       return Result.new asset_created: true, asset: @asset

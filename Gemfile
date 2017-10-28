@@ -84,6 +84,7 @@ end
 
 group :development do
   gem 'web-console', '~> 2.0', platforms: :ruby
+  gem 'letter_opener_web'
 end
 
 group :test do

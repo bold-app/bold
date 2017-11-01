@@ -90,7 +90,7 @@ end
 group :test do
   gem 'capybara', '~> 2.6.0'
   gem 'connection_pool', '~> 2.1.1'
-  gem 'factory_girl_rails', '~> 4.5'
+  gem 'factory_girl_rails', '< 4.8.2'
   gem 'faker', '~> 1.4'
   gem 'mocha', '~> 1.1.0'
   gem 'rails-controller-testing'

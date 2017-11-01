@@ -80,6 +80,15 @@ class SiteDecorator < Draper::Decorator
   end
 
   #
+  # Categories
+  #
+
+  def categories
+    CategoriesDecorator.decorate object.categories.order(created_at: :desc)
+  end
+
+
+  #
   # Posts
   #
 

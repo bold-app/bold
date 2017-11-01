@@ -75,7 +75,15 @@ module Bold
         slug, size, link_to = el.attr['src'].to_s.split('!')
         if site = Site.current and asset = site.assets.where('slug = :slug OR file = :slug', slug: slug).first
           attr = el.attr.dup
-          attr['src'] = image_path asset, size
+
+          if iv = asset.site.image_version(size) and iv.srcset?
+            attr['srcset'] = iv.srcset_versions.map{ |v|
+              "#{image_path(asset, v.name)} #{v.width}w"
+            }.join ", "
+            attr['src'] = image_path asset, iv.srcset_default.name
+          else
+            attr['src'] = image_path asset, size
+          end
 
           if size.present?
             ((attr['class'] ||= '') << ' ' << size).strip!
@@ -84,12 +92,16 @@ module Bold
           image_tag = "<img#{html_attributes(attr)} />"
 
           if link_to.present?
-            link = if asset.site.has_image_version?(link_to)
-              asset.public_path link_to
+            link_url = if iv = asset.site.image_version(link_to)
+              if iv.srcset?
+                asset.public_path iv.srcset_default.name
+              else
+                asset.public_path link_to
+              end
             else
               link_to
             end
-            return "#{' '*indent}<a#{html_attributes href: link}>#{image_tag}</a>"
+            return "#{' '*indent}<a#{html_attributes href: link_url}>#{image_tag}</a>"
           else
             return (' '*indent) + image_tag
           end

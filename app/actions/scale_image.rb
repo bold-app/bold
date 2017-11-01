@@ -42,7 +42,7 @@ class ScaleImage < ApplicationAction
        @site.image_versions).uniq.each do |image_version|
 
       # create adaptive image sizes if enabled:
-      if @site.adaptive_images?
+      if @site.adaptive_images? || image_version.srcset?
         image_version.possible_variations.each do |v|
           create_version config.merge(v.to_hash)
         end

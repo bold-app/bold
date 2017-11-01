@@ -31,8 +31,9 @@ module Bold
   class ImageVersion
     include ActiveModel::Model
 
-    attr_accessor :name, :width, :height, :quality, :ratio, :crop, :gravity
-    attr_writer :dpr
+    attr_accessor :name, :width, :height, :quality, :ratio, :crop, :gravity,
+      :default
+    attr_writer :dpr, :srcset
 
     validates :name, presence: true
 
@@ -61,13 +62,42 @@ module Bold
       self.quality ||= 80
       self.crop = false if crop.nil?
       self.gravity = 'Center' if gravity.blank?
-      super
+      if srcset?
+        srcset_versions.all?(&:valid?)
+      else
+        super
+      end
     end
 
     def dpr
       @dpr ||= 1
     end
 
+    def srcset?
+      @srcset.present?
+    end
+
+    def srcset_default
+      srcset_versions.detect(&:default) || srcset_versions.first
+    end
+
+    def srcset_versions
+      @srcset_versions ||= @srcset[:versions].map do |name, config|
+        version_config = {
+          quality: self.quality,
+          width: self.width,
+          height: self.height,
+          crop: self.crop,
+          ratio: self.ratio,
+          gravity: self.gravity,
+          default: false
+        }
+        version_config.update config
+        version_config[:name] = "#{self.name}_#{name}"
+        version_config[:default] = true if name == @srcset[:default]
+        ImageVersion.new version_config
+      end
+    end
 
     # hi res displays still look good with higher compression due to smaller
     # pixel size
@@ -109,6 +139,8 @@ module Bold
     end
 
     def possible_variations
+      return srcset_versions if srcset?
+
       VALID_DPR.map do |dpr|
         [ for_display(dpr: dpr) ].tap do |result|
           if @alternatives.present?

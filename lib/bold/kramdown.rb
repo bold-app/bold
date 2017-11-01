@@ -92,7 +92,7 @@ module Bold
     end
 
     ALLOWED_TAGS = Loofah::HTML5::WhiteList::ACCEPTABLE_ELEMENTS.to_a.freeze
-    ALLOWED_ATTRIBUTES = %w(id rel href src alt cite title class name abbr).freeze
+    ALLOWED_ATTRIBUTES = %w(id rel href src srcset alt cite title class name abbr).freeze
     TRUSTED_ALLOWED_ATTRIBUTES = (ALLOWED_ATTRIBUTES + %w(datetime style width height)).freeze
 
     def sanitize(html, trusted = false)

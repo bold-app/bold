@@ -32,6 +32,25 @@ class ImageVersionTest < ActiveSupport::TestCase
     end
   end
 
+  test 'should handle srcset' do
+    v = Bold::ImageVersion.new name: :ou_ls, quality: 90, srcset: {
+      versions: {
+        xl: { width: 2000 },
+        lg: { width: 1400 },
+        md: { width: 800 },
+        sm: { width: 400 },
+      }, default: :lg
+    }
+
+    assert v.valid?
+    assert v.srcset?
+    assert default = v.srcset_default
+    assert_equal 90, default.quality
+    assert_equal 1400, default.width
+    assert versions = v.srcset_versions
+    assert_equal 4, versions.size
+  end
+
   test 'should create high res version' do
     v = Bold::ImageVersion.new name: :small, width: 280,
                                height: 210, quality: 80, crop: true

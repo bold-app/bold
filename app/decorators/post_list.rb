@@ -28,12 +28,14 @@ module PostList
     _posts.count
   end
 
-  def posts(page: h.params[:page], limit: 20, random: false)
+  def posts(page: h.params[:page], limit: 20, random: false, where: nil)
+    scope = _posts.all
+    scope = scope.where(where) if where
     ContentsDecorator.decorate(
       if random
-        _posts.all.sample(limit)
+        scope.sample(limit)
       else
-        _posts.page(page).per(limit)
+        scope.page(page).per(limit)
       end
     )
   end

@@ -224,3 +224,10 @@ class ThemeIntegrationTest < BoldIntegrationTest
   end
 
 end
+
+# make sure the ft search config exists
+begin
+  ::User.connection.execute Bold::Search.sql_for_language_config 'english'
+rescue ActiveRecord::RecordNotUnique
+end
+

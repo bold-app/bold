@@ -38,11 +38,15 @@ class CategoryDecorator < Draper::Decorator
   # Linking to this category
   #
 
-  def link_to(*args)
+  def link_to(*args, &block)
     options = args.extract_options!
     title = args.shift || name
     args.push options
-    h.link_to title, h.content_path(path), *args
+    if block_given?
+      h.link_to h.content_path(path), *args, &block
+    else
+      h.link_to title, h.content_path(path), *args
+    end
   end
 
   #

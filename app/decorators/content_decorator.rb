@@ -58,11 +58,15 @@ class ContentDecorator < Draper::Decorator
   alias url canonical_url
 
   # renders a link to this post / page
-  def link_to(*args)
+  def link_to(*args, &block)
     options = args.extract_options!
     title = args.shift || object.title
     args.push options
-    h.link_to title, h.content_path(path, anchor: options.delete(:anchor)), *args
+    if block_given?
+      h.link_to h.content_path(path, anchor: options.delete(:anchor)), *args, &block
+    else
+      h.link_to title, h.content_path(path, anchor: options.delete(:anchor)), *args
+    end
   end
 
   #

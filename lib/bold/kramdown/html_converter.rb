@@ -76,6 +76,7 @@ module Bold
         if site = Site.current and asset = site.assets.where('slug = :slug OR file = :slug', slug: slug).first
           attr = el.attr.dup
 
+          # TODO refactor srcset stuff so can use in decorators as well
           if iv = asset.site.image_version(size) and iv.srcset?
             attr['srcset'] = iv.srcset_versions.map{ |v|
               "#{image_path(asset, v.name)} #{v.width}w"

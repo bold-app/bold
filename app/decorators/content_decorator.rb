@@ -18,8 +18,9 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 class ContentDecorator < Draper::Decorator
+  include SrcsetImages
 
-  delegate :title, :title_html, :body_html, :teaser_html, :post_date, :id, :path, :homepage?, :commentable?
+  delegate :title, :title_html, :body_html, :teaser_html, :post_date, :id, :path, :homepage?, :commentable?, :tagged_with?
 
   def post?
     Post === object
@@ -231,14 +232,14 @@ class ContentDecorator < Draper::Decorator
   # an image tag for that image for the given size.
   # You can specify a fallback image path as +default+.
   def image(field_id, size: :original, default: nil, html: {})
-    h.image_tag image_path(field_id, size: size, default: default), html
+    super find_asset(self[field_id]), size: size, default: default, html: html
   end
 
   # Given the id of a template field holding an image reference, this returns
   # the path of that image for the given size.
   # You can specify a fallback image path as +default+.
   def image_path(field_id, size: :original, default: nil)
-    h.site.image_path self[field_id], size: size, default: default
+    image_path_for_asset find_asset(self[field_id]), size: size, default: default
   end
 
   # Given the id of a template field holding an image reference, this returns
@@ -248,12 +249,17 @@ class ContentDecorator < Draper::Decorator
     h.site.canonical_url image_path(*args)
   end
 
+  def find_asset(id)
+    object.site.assets.find_by_id id if id
+  end
+
   #
   # related content
   #
-  def next_post
+  def next_post(scope: object.site.posts_scope)
     return unless Post === object
-    object.site.posts.existing.published.where('post_date > ?', object.post_date).order('post_date ASC').first&.decorate
+    scope = scope.existing.published.where('post_date > ?', object.post_date).order('post_date ASC')
+    scope.first&.decorate
   end
 
   # FIXME actually suggest something here based on category / tags / content

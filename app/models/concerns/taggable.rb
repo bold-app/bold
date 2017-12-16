@@ -37,6 +37,10 @@ module Taggable
     end
   end
 
+  def tagged_with?(name)
+    tag_list.include? name
+  end
+
   def tag_list
     @tag_list ||= Tag.join_tag_names tags.map(&:quoted_name)
   end

@@ -83,8 +83,10 @@ class SiteDecorator < Draper::Decorator
   # Categories
   #
 
-  def categories
-    CategoriesDecorator.decorate object.categories.order(created_at: :desc)
+  def categories(where: nil, order: { created_at: :desc })
+    scope = object.categories.order(order)
+    scope = scope.where(where) if where
+    CategoriesDecorator.decorate scope
   end
 
 

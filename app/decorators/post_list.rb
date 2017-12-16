@@ -28,9 +28,14 @@ module PostList
     _posts.count
   end
 
-  def posts(page: h.params[:page], limit: 20, random: false, where: nil)
-    scope = _posts.all
+  def posts_scope
+    _posts.all
+  end
+
+  def posts(page: h.params[:page], limit: 20, random: false, where: nil, order: nil)
+    scope = posts_scope
     scope = scope.where(where) if where
+    scope = scope.reorder(order) if order
     ContentsDecorator.decorate(
       if random
         scope.sample(limit)

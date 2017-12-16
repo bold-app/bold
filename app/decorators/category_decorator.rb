@@ -19,15 +19,20 @@
 #
 class CategoryDecorator < Draper::Decorator
   include PostList
+  include SrcsetImages
 
   delegate :name, :description, :path
 
-  def image_path(size: :original, default: nil)
-    if image?
-      h.site.image_path object.asset, size: size
-    else
-      default
-    end
+  def image_path(*_)
+    image_path_for_asset object.asset, *_
+  end
+
+  # Given the id of a template field holding an image reference, this returns
+  # an image tag for that image for the given size.
+  # You can specify a fallback image path as +default+.
+  def image(size: :original, default: nil, html: {})
+    html[:alt] ||= object.asset.title || name
+    super object.asset, size: size, default: default, html: html
   end
 
   def image?

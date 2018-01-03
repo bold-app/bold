@@ -256,7 +256,7 @@ class ContentDecorator < Draper::Decorator
   #
   # related content
   #
-  def next_post(scope: object.site.posts_scope)
+  def next_post(scope: h.site.posts_scope)
     return unless Post === object
     scope = scope.existing.published.where('post_date > ?', object.post_date).order('post_date ASC')
     scope.first&.decorate

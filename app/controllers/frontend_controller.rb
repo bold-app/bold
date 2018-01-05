@@ -31,13 +31,16 @@ class FrontendController < BaseController
   around_action :use_site_time_zone
   after_action  :log_request
 
-  # order matters, least specific has to be first
-  rescue_from Exception, with: :handle_error
-  rescue_from Bold::SetupNeeded, with: :handle_404
-  rescue_from Bold::NotFound, with: :handle_404
-  rescue_from Bold::SiteNotFound, with: :handle_404_or_goto_admin
-  rescue_from ActionController::InvalidAuthenticityToken, with: :handle_error
-  rescue_from ActionController::UnknownFormat, with: :handle_404
+  # in dev mode, Rails' standard error handling is fine.
+  unless Rails.env.development?
+    # order matters, least specific has to be first
+    rescue_from Exception, with: :handle_error
+    rescue_from Bold::SetupNeeded, with: :handle_404
+    rescue_from Bold::NotFound, with: :handle_404
+    rescue_from Bold::SiteNotFound, with: :handle_404_or_goto_admin
+    rescue_from ActionController::InvalidAuthenticityToken, with: :handle_error
+    rescue_from ActionController::UnknownFormat, with: :handle_404
+  end
 
   decorate_assigned :site, :content, :tag, :author, :category
 
@@ -166,6 +169,8 @@ class FrontendController < BaseController
   def log_request
     if site = Bold.current_site and request.get? and !(do_not_track? and site.honor_donottrack?)
 
+      # unfortunately this never attaches the first event of a visit to it's visit.
+      # We use the JS based page view tracking for this reason.
       # TrackRequest.(ahoy, object: (@content || @asset),
       #                     permalink: @permalink,
       #                     status: response.status)

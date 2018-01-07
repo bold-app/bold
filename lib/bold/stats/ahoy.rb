@@ -35,6 +35,17 @@ module Bold
         @pageviews_per_visit ||= PageViewsPerVisit.new(site:@site, from:@from, to:@to).compute
       end
 
+      def popular_pages(limit: 7)
+        @popular_pages ||= ::Ahoy::Event
+          .joins(:visit)
+          .where(name: '$view', visits: { site_id: @site.id })
+          .where("time >= ? and time <= ?", @from, @to)
+          .limit(limit)
+          .group("properties->'url', properties->'title'")
+          .order('count DESC')
+          .pluck("properties->'url', properties->'title'", "count(*) as count")
+      end
+
 
       def self.for(time_frame:, site:)
         time_frame = TIME_FRAMES.key?(time_frame) ? time_frame : :month
@@ -67,9 +78,10 @@ module Bold
 
         private
 
-        def avg(array)
+        def avg(array, decimals: 0)
           if array.any?
-            ((array.sum.to_f / array.size) * 100).round / 100
+            factor = 10 ** decimals
+            ((array.sum.to_f / array.size) * factor).round / factor.to_f
           else
             0
           end
@@ -114,7 +126,7 @@ module Bold
             .pluck(:started_at, 'count(ahoy_events.id)')
             .group_by{ |row| row[0].in_time_zone(@site.time_zone).to_date }
           data.values.each{|row| row.map! &:last }
-          Hash[data.map {|date, values| [date, avg(values)] }]
+          Hash[data.map {|date, values| [date, avg(values, decimals: 1)] }]
         end
       end
 

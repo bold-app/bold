@@ -49,7 +49,11 @@ Rails.application.routes.draw do
       resources :sites, only: %i(show index)  do
 
         namespace :activity do
-          resources :stats
+          resources :stats, only: :index do
+            collection do
+              get :visits_per_day
+            end
+          end
           resources :comments, shallow: true, only: %i(index destroy) do
             member do
               patch :restore, :mark_spam, :mark_ham, :approve, :unapprove

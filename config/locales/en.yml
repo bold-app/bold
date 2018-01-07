@@ -580,6 +580,12 @@ en:
     sites:
       index:
         heading: Select a site
+      show:
+        daily_visits: Daily visits (last 4 weeks)
+        more_stats: More charts
+        page: Page
+        popular_pages: Top pages in the last 4 weeks
+        views: Views
 
   layouts:
     admin:

@@ -29,6 +29,7 @@ module Bold
 
     def show
       Bold::current_site = Site.find params[:id]
+      @stats = Bold::Stats::Ahoy.for time_frame: :month, site: current_site
       render layout: 'site'
     end
 

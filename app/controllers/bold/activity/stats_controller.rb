@@ -21,8 +21,18 @@ module Bold::Activity
   class StatsController < SiteController
 
     def index
-      @stats = Bold::Stats::Ahoy.for time_frame: params[:time_frame]&.to_sym, site: current_site
+      @stats = Bold::Stats::Ahoy.for time_frame: time_frame_param, site: current_site
     end
 
+    def visits_per_day
+      render json: Bold::Stats::Ahoy.for(site: current_site,
+                                         time_frame: time_frame_param).daily_visits.data
+    end
+
+    private
+
+    def time_frame_param
+      (params[:time_frame].presence || :month).to_sym
+    end
   end
 end

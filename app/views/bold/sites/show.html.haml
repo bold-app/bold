@@ -1,3 +1,22 @@
 .row
+  .col-xs-12.col-sm-6
+    %h3= t '.daily_visits'
+    = line_chart visits_per_day_bold_site_activity_stats_path(current_site)
+
+  .col-xs-12.col-sm-6
+    %h3= t'.popular_pages'
+    %table.table.table-striped
+      %thead
+        %tr
+          %th= t'.page'
+          %th= t'.views'
+      - @stats.popular_pages.each do |url, title, count|
+        %tr
+          %td= link_to title, url
+          %td= count
+
+.row
   .col-xs-12
+    %p=link_to t('.more_stats'), bold_site_activity_stats_path(current_site)
+
 

@@ -12,7 +12,7 @@
           %th= t'.views'
       - @stats.popular_pages.each do |url, title, count|
         %tr
-          %td= link_to (title.presence || url), url
+          %td= link_to (title.join(", ").presence || url), url
           %td= count
 
 .row

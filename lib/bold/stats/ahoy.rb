@@ -36,14 +36,23 @@ module Bold
       end
 
       def popular_pages(limit: 7)
-        @popular_pages ||= ::Ahoy::Event
-          .joins(:visit)
-          .where(name: '$view', visits: { site_id: @site.id })
-          .where("time >= ? and time <= ?", @from, @to)
-          .limit(limit)
-          .group("properties->'url', properties->'title'")
-          .order('count DESC')
-          .pluck("properties->'url', properties->'title'", "count(*) as count")
+        @popular_pages ||= begin
+          data = ::Ahoy::Event
+            .joins(:visit)
+            .where(name: '$view', visits: { site_id: @site.id })
+            .where("time >= ? and time <= ?", @from, @to)
+            .limit(limit)
+            .group("properties->'url', properties->'title'")
+            .order('count DESC')
+            .pluck("properties->'url', properties->'title'", "count(*) as count")
+
+          data.group_by{|row| row[0]}.values.map do |rows|
+            [rows.first[0],
+             rows.map{|r| r[1]}.uniq,
+             rows.map(&:last).sum
+            ]
+          end
+        end
       end
 
 

@@ -87,7 +87,7 @@ module Bold
 
         private
 
-        def avg(array, decimals: 0)
+        def avg(array, decimals: 1)
           if array.any?
             factor = 10 ** decimals
             ((array.sum.to_f / array.size) * factor).round / factor.to_f
@@ -135,7 +135,7 @@ module Bold
             .pluck(:started_at, 'count(ahoy_events.id)')
             .group_by{ |row| row[0].in_time_zone(@site.time_zone).to_date }
           data.values.each{|row| row.map! &:last }
-          Hash[data.map {|date, values| [date, avg(values, decimals: 1)] }]
+          Hash[data.map {|date, values| [date, avg(values)] }]
         end
       end
 

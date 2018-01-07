@@ -43,11 +43,6 @@
 //= require bold/jquery.charcount
 //= require bold/jquery.dirty
 
-//= require bold/jquery.jqplot
-//= require bold/jqplot.dateAxisRenderer
-//= require bold/jqplot.highlighter
-//= require bold/jqplot.trendline
-
 //= require moment
 //= require Chart.min
 //= require chartkick

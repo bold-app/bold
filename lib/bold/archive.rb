@@ -50,7 +50,7 @@ module Bold
     end
 
     def to_date
-      Time.zone.local(@year, @month || 1, 1).to_date
+      Time.zone.local(@year, @month || 1, 1).to_date if @year
     end
 
     def posts(limit: 50, page: 1)

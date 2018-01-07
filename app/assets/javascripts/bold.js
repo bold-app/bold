@@ -48,6 +48,10 @@
 //= require bold/jqplot.highlighter
 //= require bold/jqplot.trendline
 
+//= require moment
+//= require Chart.min
+//= require chartkick
+
 //= require bold/html.sortable
 
 

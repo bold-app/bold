@@ -72,6 +72,10 @@ gem 'words_counted', '~> 1.0'
 gem 'xmp', github: 'jkraemer/xmp'
 
 gem 'ahoy_matey'
+gem 'groupdate'
+gem 'chart-js-rails'
+gem 'momentjs-rails'
+gem 'chartkick'
 
 group :development, :test do
   #gem 'minitest-rails', '~> 2.2.1'

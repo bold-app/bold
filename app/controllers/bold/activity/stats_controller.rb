@@ -21,19 +21,8 @@ module Bold::Activity
   class StatsController < SiteController
 
     def index
-      args = stats_params
-      @stats = ::Stats.new time_frame: args[:time_frame].to_sym
+      @stats = Bold::Stats::Ahoy.for time_frame: params[:time_frame]&.to_sym, site: current_site
     end
 
-
-    private
-
-    def stats_params
-      if params[:stats]
-        params[:stats].permit :time_frame
-      else
-        { time_frame: :month }
-      end
-    end
   end
 end

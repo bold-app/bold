@@ -195,7 +195,8 @@ en:
       stats:
         index:
           heading: Statistics
-          pageviews_per_visit: "%{number} page views / visit (%{delta})"
+          pageviews_per_visit: "Average page views per visit"
+          pageviews_per_visit_avg: "%{value} / visit (%{delta})"
           pageviews: Page views / day
           pageviews_avg: "%{value} / day (%{delta})"
           visits: Visits / day

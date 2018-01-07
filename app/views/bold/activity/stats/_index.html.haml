@@ -1,35 +1,30 @@
 %h2.pull-left
   =t '.heading'
-  %span.small #{l(@stats.start_date)} - #{l(@stats.end_date)}
+  %span.small #{l(@stats.from_date)} - #{l(@stats.to_date)}
 
-= form_for @stats, url: bold_site_activity_stats_path(current_site), html: { class: 'form-inline pull-right' }, method: :get do |f|
-  = f.select :time_frame, Stats::TIME_FRAMES.keys.map{|k| [t(".#{k}"), k]}, {}, class: 'form-control input-sm auto-submit'
+= form_tag bold_site_activity_stats_path(current_site), class: 'form-inline pull-right', method: :get do |f|
+  = select_tag :time_frame, options_from_collection_for_select(@stats.time_frames.keys.map{|k| [t(".#{k}"), k]}, :last, :first, params[:time_frame]), class: 'form-control input-sm auto-submit'
 
 .row
   .col-sm-9
 
     %h3= t'.visits'
-    %p= t'.visits_avg', value: @stats.daily_visits.avg, delta: delta(@stats.daily_visits.delta)
-    #chart.chart
+    %p= t'.visits_avg', value: @stats.daily_visits.avg, delta: @stats.daily_visits.prev_avg
 
-    %p= t'.pageviews_per_visit', number: @stats.daily_visits.pageviews_per_visit, delta: delta(@stats.daily_visits.pageviews_per_visit_delta)
+    = line_chart @stats.daily_visits.data
 
-  .col-sm-3
-    %p
+.row
+  .col-sm-9
 
+    %h3= t'.pageviews'
+    %p= t'.pageviews_avg', value: @stats.daily_pageviews.avg, delta: @stats.daily_pageviews.prev_avg
 
+    = line_chart @stats.daily_pageviews.data
 
-= javascript_tag do
-  var dates = #{ raw [@stats.start_date, @stats.end_date].to_json };
-  var options = {
-  highlighter: { show: true, tooltipAxes: 'y' },
-  //highlighter: { show: true },
-  //seriesColors: [ "#4bb2c5", "#c5b47f"],
-  //series: [{lineWidth: 1}, {lineWidth: 2}],
-  axes: { yaxis: { pad: 1.0 }, xaxis: { renderer: $.jqplot.DateAxisRenderer, tickOptions: { formatString:'%b&nbsp;%#d'}, numberTicks: 10, min: dates[0], max: dates[1] } }
-  };
+.row
+  .col-sm-9
 
-  var data = #{ raw @stats.daily_visits.data.to_json };
-  $.jqplot('chart', [data], options);
+    %h3= t'.pageviews_per_visit'
+    %p= t'.pageviews_per_visit_avg', value: @stats.daily_pageviews_per_visit.avg, delta: @stats.daily_pageviews_per_visit.prev_avg
 
-
+    = line_chart @stats.daily_pageviews_per_visit.data

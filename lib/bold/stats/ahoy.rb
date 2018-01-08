@@ -109,9 +109,9 @@ module Bold
       class DailyPageViews < Metric
         def grouped_data(delta: 0)
           ::Ahoy::Event
-            .joins(:visit)
-            .where(name: '$view', visits: { site_id: @site.id })
-            .where("time >= ? and time <= ?", @from+delta, @to+delta)
+            .pageviews(site_id: @site.id)
+            .since(@from+delta)
+            .until(@to+delta)
             .group_by_day(:time,  time_zone: @site.time_zone).count
         end
       end

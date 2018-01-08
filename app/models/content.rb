@@ -200,12 +200,8 @@ class Content < SiteRecord
     "%02d" % (post_date || Time.zone.now).month
   end
 
-  def stats_pageviews
-    site.stats_pageviews.where(content_id: id)
-  end
-
   def pageviews(from: nil, to: nil)
-    hits = stats_pageviews
+    hits = ::Ahoy::Event.page_views(site_id: site_id, content_id: id)
     hits = hits.since(from) if from
     hits = hits.until(to) if to
     hits
@@ -216,15 +212,14 @@ class Content < SiteRecord
   end
 
   def hit_count_by_device_class(from: nil, to: nil)
-    count_pageviews(
+    hits = count_pageviews(
       pageviews(from: from, to: to).
-      includes(:stats_visit).
-      references(:stats_visit).
-      group('stats_visits.mobile')
-    ).tap do |hits|
-      hits[:mobile]  = hits.delete true
-      hits[:desktop] = hits.delete false
-    end
+      references(:visit).
+      group('visits.device_type')
+    )
+
+    mobile = hits.delete('Mobile')
+    { mobile: mobile, desktop: hits.values.sum }
   end
 
   def title=(new_title)
@@ -236,7 +231,7 @@ class Content < SiteRecord
   private
 
   def count_pageviews(scope)
-    scope.count 'distinct(content_id, stats_visit_id)'
+    scope.count "distinct(properties->'page', visit_id)"
   end
 
 

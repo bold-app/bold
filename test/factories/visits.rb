@@ -18,11 +18,13 @@
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
 FactoryGirl.define do
-  factory :stats_visit do
+  factory :visit do
     site { Site.current }
-    mobile false
-    visitor_id 'fdba58a0-d2f5-4f20-9450-ff21ab70b54f'
+    device_type 'Desktop'
+    visit_token { SecureRandom.uuid }
+    visitor_token { SecureRandom.uuid }
     started_at { 5.minutes.ago }
   end
 
 end
+

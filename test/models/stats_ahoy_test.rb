@@ -19,32 +19,17 @@
 #
 require 'test_helper'
 
-class StatisticsTest < BoldIntegrationTest
+class StatsAhoyTest < ActiveSupport::TestCase
 
   setup do
-    @user = create :confirmed_user
-    @site = create :site, hostname: 'site1.de', name: 'Site one'
-    @site.add_user! @user
-    create_homepage
-    publish_post title: 'hello from site 1', body: 'lorem ipsum'
-    RequestLog.any_instance.stubs(:bot?).returns false
+    Bold::current_site = @site = create :site, time_zone_name: 'UTC'
   end
 
-  test 'should count pageviews' do
-    set_host 'site1.de'
-    assert_difference 'RequestLog.count' do
-      visit '/'
-    end
-    assert_difference 'RequestLog.count' do
-      click_on 'hello from site 1'
-    end
-
-    assert_difference 'StatsPageview.count', 2 do
-      assert_difference 'StatsVisit.count' do
-        @site.compute_stats
-      end
-    end
-
+  test 'should calculate dates from time_frame' do
+    stats = Bold::Stats::Ahoy.for time_frame: :month, site: @site
+    assert_equal 28.days, (stats.to - stats.from) / 1.day
+    assert_equal @site.time_zone.yesterday, stats.to_date
+    assert_equal @site.time_zone.yesterday - 27.days, stats.from_date
   end
 
 end

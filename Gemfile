@@ -78,8 +78,6 @@ gem 'momentjs-rails'
 gem 'chartkick'
 
 group :development, :test do
-  #gem 'minitest-rails', '~> 2.2.1'
-  gem 'minitest-rails', github: 'blowmage/minitest-rails'
   gem 'pry-byebug', platforms: :ruby
   gem 'puma'
   gem 'spring'
@@ -92,7 +90,8 @@ group :development do
 end
 
 group :test do
-  gem 'capybara', '~> 2.6.0'
+  gem 'capybara'
+  gem 'selenium-webdriver'
   gem 'connection_pool', '~> 2.1.1'
   gem 'factory_girl_rails', '< 4.8.2'
   gem 'faker', '~> 1.4'

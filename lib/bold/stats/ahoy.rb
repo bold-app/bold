@@ -109,7 +109,7 @@ module Bold
       class DailyPageViews < Metric
         def grouped_data(delta: 0)
           ::Ahoy::Event
-            .pageviews(site_id: @site.id)
+            .page_views(site_id: @site.id)
             .since(@from+delta)
             .until(@to+delta)
             .group_by_day(:time,  time_zone: @site.time_zone).count

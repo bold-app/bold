@@ -33,28 +33,7 @@ namespace :bold do
     end
   end
 
-  desc 'summarizes request logs for all sites'
-  task :compute_stats  => :environment do
-    if ENV['REBUILD_ALL'].present?
-      Site.all.each(&:recompute_stats)
-    else
-      Site.all.each(&:compute_stats)
-    end
-  end
-
   namespace :site do
-
-    desc 'summarizes request logs for named site into stats'
-    task :compute_stats  => :environment do
-      site = Site.where('hostname = :site or name = :site',
-                        site: ENV['site']).first
-      raise('site not found!') unless site
-      if ENV['REBUILD_ALL'].present?
-        site.recompute_stats
-      else
-        site.compute_stats
-      end
-    end
 
     desc 'import content into site'
     task :import => :environment do

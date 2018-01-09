@@ -38,7 +38,7 @@ class PageTest < ActiveSupport::TestCase
   test 'should have hit count' do
     assert p = create(:published_page, title: 'My Great Page')
     assert_equal 0, p.hit_count
-    StatsPageview.build_for_log(create(:request_log, resource: p)).save!
+    create :ahoy_event, properties: { page: p.id }
     assert_equal 1, p.hit_count
   end
 

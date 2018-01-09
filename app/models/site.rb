@@ -285,20 +285,6 @@ class Site < ActiveRecord::Base
     adaptive_images.to_s == '1'
   end
 
-  def compute_stats
-    transaction do
-      StatsPageview.build_pageviews self
-    end
-  end
-
-  def recompute_stats
-    transaction do
-      StatsVisit.delete_all(site_id: id) # cascade-deletes all pageviews as well
-      request_logs.update_all processed: false, device_class: nil
-      compute_stats
-    end
-  end
-
   def comments
     visitor_postings.where type: 'Comment'
   end

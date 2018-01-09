@@ -36,112 +36,88 @@ class StatsMetricsTest < ActiveSupport::TestCase
     day_5 = today - 1
 
     # these dont count
-    create :request_log, created_at: 12.days.ago,
-                         resource: @page,
-                         permalink: @page.permalink
-    create :request_log, created_at: 8.days.ago,
-                         resource: @post,
-                         permalink: @post.permalink
+    v = create :visit, started_at: 12.days.ago, site_id: @site.id
+    create :ahoy_event, time: 12.days.ago, visit: v,
+      properties: { page: @page.id }
+    v = create :visit, started_at: 8.days.ago, site_id: @site.id
+    create :ahoy_event, time: 8.days.ago, visit: v,
+      properties: { page: @post.id }
 
-    @v0_1  = create :request_log, created_at: day_0.beginning_of_day + 1.hours,
-                                  resource: @page,
-                                  permalink: @page.permalink
-    @v1_1  = create :request_log, created_at: day_0.beginning_of_day + 8.hours,
-                                  resource: @page,
-                                  permalink: @page.permalink
+    v = create :visit, started_at: day_0.beginning_of_day + 1.hours, site_id: @site.id
+    @v0_1  = create :ahoy_event, time: day_0.beginning_of_day + 1.hours, visit: v,
+      properties: { page: @page.id }
+    v = create :visit, started_at: day_0.beginning_of_day + 8.hours, site_id: @site.id
+    @v1_1  = create :ahoy_event, time: day_0.beginning_of_day + 8.hours, visit: v,
+      properties: { page: @page.id }
 
-    @v1_1a = create :request_log, created_at: day_0.beginning_of_day + 8.hours + 5.minutes,
-                                  visitor_id: @v1_1.visitor_id,
-                                  resource: @page,
-                                  permalink: @page.permalink
-    @v1_2  = create :request_log, created_at: day_0.beginning_of_day + 8.hours + 6.minutes,
-                                  visitor_id: @v1_1.visitor_id,
-                                  resource: @post,
-                                  permalink: @post.permalink
+    @v1_1a = create :ahoy_event, time: day_0.beginning_of_day + 8.hours + 5.minutes,
+                                  visit: @v1_1.visit,
+                                  properties: { page: @page.id }
+    @v1_2  = create :ahoy_event, time: day_0.beginning_of_day + 8.hours + 6.minutes,
+                                  visit: @v1_1.visit,
+                                  properties: { page: @post.id }
 
 
     # same time and page, different visitor
-    @v2 = create :request_log, created_at: day_2.beginning_of_day + 1.hour,
-                               resource: @page,
-                               permalink: @page.permalink
-    @v3 = create :request_log, created_at: day_2.beginning_of_day + 1.hour,
-                               visitor_id: @v1_1.visitor_id,
-                               resource: @page,
-                               permalink: @page.permalink
+    v = create :visit, started_at: day_2.beginning_of_day + 1.hour, site_id: @site.id
+    @v2 = create :ahoy_event, time: day_2.beginning_of_day + 1.hour, visit: v,
+      properties: { page: @page.id }
+    @v3 = create :ahoy_event, time: day_2.beginning_of_day + 1.hour,
+                               visit: @v1_1.visit,
+                               properties: { page: @page.id }
 
-    @v4 = create :request_log, created_at: day_4,
-                               resource: @page,
-                               permalink: @page.permalink
+    v = create :visit, started_at: day_4, site_id: @site.id
+    @v4 = create :ahoy_event, time: day_4, visit: v,
+      properties: { page: @page.id }
 
     # two pageviews by same visitor, same page but different visits
-    @v5 = create :request_log, created_at: day_5.beginning_of_day + 9.hours,
-                               resource: @page,
-                               permalink: @page.permalink
-    @v6 = create :request_log, created_at: day_5.beginning_of_day + 10.hours,
-                               visitor_id: @v5.visitor_id,
-                               resource: @page,
-                               permalink: @page.permalink
+    v = create :visit, started_at: day_5.beginning_of_day + 9.hours, site_id: @site.id
+    @v5 = create :ahoy_event, visit: v, time: day_5.beginning_of_day + 9.hours,
+      properties: { page: @page.id }
+    v = create :visit, started_at: day_5.beginning_of_day + 17.hours, site_id: @site.id
+    @v6 = create :ahoy_event, time: day_5.beginning_of_day + 17.hours,
+                               visit: v,
+                               properties: { page: @page.id }
 
-    StatsPageview.build_pageviews @site
   end
 
   test 'should get pageviews data' do
-    stats = Bold::Stats::Metrics::DailyPageviews.new from: 6.days.ago
+    stats = Bold::Stats::Ahoy::DailyPageViews.new(from: 7.days.ago, to: Time.now, site: @site).compute
     assert data = stats.data
-    assert_equal 7, data.length
-    days, counters = data.transpose
-    assert_equal [4, 0, 2, 0, 1, 2, 0], counters
+    assert_equal 6, data.length
+    assert_equal [4, 0, 2, 0, 1, 2], data.values
   end
 
   test 'should get average pageviews' do
-    stats = Bold::Stats::Metrics::DailyPageviews.new from: 6.days.ago
-    assert_equal 1.29, stats.avg
-  end
-
-  test 'should get unique pageviews data' do
-    stats = Bold::Stats::Metrics::DailyUniquePageviews.new from: 6.days.ago
-    assert data = stats.data
-    assert_equal 7, data.length
-    days, counters = data.transpose
-    assert_equal [3, 0, 2, 0, 1, 2, 0], counters
-  end
-
-  test 'should get average unique pageviews' do
-    stats = Bold::Stats::Metrics::DailyUniquePageviews.new from: 6.days.ago
-    assert_equal 1.14, stats.avg
+    stats = Bold::Stats::Ahoy::DailyPageViews.new(from: 7.days.ago, to: Time.now, site: @site).compute
+    assert_equal 1.5, stats.avg
   end
 
   test 'should get visits data' do
-    stats = Bold::Stats::Metrics::DailyVisits.new from: 6.days.ago
+    stats = Bold::Stats::Ahoy::DailyVisits.new(from: 7.days.ago, to: Time.now, site: @site).compute
     assert data = stats.data
-    assert_equal 7, data.length
-    days, counters = data.transpose
-    assert_equal [2, 0, 2, 0, 1, 2, 0], counters
+    assert_equal 6, data.length
+    assert_equal [2, 0, 1, 0, 1, 2], data.values
   end
 
-  test 'should get previous visits data' do
-    stats = Bold::Stats::Metrics::DailyVisits.new from: 6.days.ago
-    prev = stats.previous
-    assert data = prev.data
-    assert_equal 7, data.length
-    days, counters = data.transpose
-    assert_equal [0, 1, 0, 0, 0, 1, 0], counters
+  test 'should get previous visits average' do
+    stats = Bold::Stats::Ahoy::DailyVisits.new(from: 7.days.ago, to: Time.now, site: @site).compute
+    assert_equal 0.4, stats.prev_avg
   end
 
   test 'should get average visits' do
-    stats = Bold::Stats::Metrics::DailyVisits.new from: 6.days.ago
+    stats = Bold::Stats::Ahoy::DailyVisits.new(from: 7.days.ago, to: Time.now, site: @site).compute
     assert_equal 1, stats.avg
   end
 
   test 'should get pageviews per visit' do
-    stats = Bold::Stats::Metrics::DailyVisits.new from: 6.days.ago
-    assert_equal 1.29, stats.pageviews_per_visit
+    stats = Bold::Stats::Ahoy::PageViewsPerVisit.new(from: 7.days.ago, to: Time.now, site: @site).compute
+    assert_equal 1.4, stats.avg
   end
 
   test 'should get previous average visits' do
-    stats = Bold::Stats::Metrics::DailyVisits.new from: 6.days.ago
-    prev = stats.previous
-    assert_equal 0.29, prev.avg
+    stats = Bold::Stats::Ahoy::DailyVisits.new(from: 7.days.ago, to: Time.now, site: @site).compute
+    assert_equal 0.4, stats.prev_avg
   end
 
 end

@@ -24,8 +24,8 @@ class SiteDecorator < Draper::Decorator
 
   # global meta tags and other html-head things rendered on every page
   def site_html_head_tags
-    h.csrf_meta_tags.to_s.tap do |output|
-      output << "\n"
+    (h.csrf_meta_tags || ''.html_safe).tap do |output|
+      output << "\n".html_safe
       if object.favicon.present?
         output << h.tag(:link, rel: 'shortcut icon', href: h.favicon_url, type: 'image/x-icon') << "\n"
       end

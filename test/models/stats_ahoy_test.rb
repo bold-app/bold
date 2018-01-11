@@ -27,7 +27,7 @@ class StatsAhoyTest < ActiveSupport::TestCase
 
   test 'should calculate dates from time_frame' do
     stats = Bold::Stats::Ahoy.for time_frame: :month, site: @site
-    assert_equal 28.days, (stats.to - stats.from) / 1.day
+    assert_equal 28, ((stats.to - stats.from) / 1.day).round
     assert_equal @site.time_zone.yesterday, stats.to_date
     assert_equal @site.time_zone.yesterday - 27.days, stats.from_date
   end

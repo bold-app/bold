@@ -17,32 +17,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-require 'test_helper'
+require "application_system_test_case"
 
-class FrontendTest < BoldIntegrationTest
+class SiteContentsTest < ApplicationSystemTestCase
 
   setup do
-    create_homepage
-    @post = publish_post title: 'Test Post Title',
-                         body: 'test post body',
-                         post_date: Time.local(2015, 02, 05),
-                         slug: 'test-post'
+    @site.update_attributes site_css: "site css", site_js: "site js"
   end
 
-  test 'should render homepage' do
-    visit '/'
-    assert has_content? @post.title
-    visit '/2015/02/test-post'
-    assert has_content? @post.title
-    assert has_content? @post.body
+  test 'should render site js' do
+    visit '/site.js'
+    assert_text 'site js'
   end
 
-  test 'should render 404 for non existing path' do
-    visit '/foo'
-    assert has_content? 'not found'
+  test 'should render site css' do
+    visit '/site.css'
+    assert_text 'site css'
   end
 
 end
-
 
 

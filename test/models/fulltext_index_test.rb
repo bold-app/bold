@@ -28,9 +28,9 @@ class FulltextIndexTest < ActiveSupport::TestCase
   test 'should init tsv and be searchable' do
     FulltextIndex.create! data: { a: 'title lorem', b: 'this is the less important body' }, config: 'bold_english', searchable: @post
 
-    assert FulltextIndex.where("plainto_tsquery(?) @@ tsv", 'title').any?
-    assert FulltextIndex.where("plainto_tsquery(?) @@ tsv", 'the').blank?
-    assert FulltextIndex.where("plainto_tsquery(?) @@ tsv", 'less').any?
+    assert FulltextIndex.search('title').any?
+    assert FulltextIndex.search('the').blank?
+    assert FulltextIndex.search('less').any?
   end
 
   test 'should update tsv with new data' do

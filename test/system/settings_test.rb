@@ -17,15 +17,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-require 'test_helper'
+require 'application_system_test_case'
 
-class SettingsTest < BoldIntegrationTest
-
-  setup do
-  end
-
-  teardown do
-  end
+class SettingsTest < ApplicationSystemTestCase
 
   test 'should require sign in' do
     visit "/bold/sites/#{@site.id}/settings"
@@ -52,7 +46,7 @@ class SettingsTest < BoldIntegrationTest
     visit "/bold/sites/#{@site.id}/settings"
     click_on 'Themes'
     click_link(@site.theme_name)
-    assert has_content? 'presets'
+    assert_text 'presets'
     select 'homepage', from: 'Default template for posts'
     fill_in 'Subtitle', with: 'yay new subtitle!'
     click_on 'Save'

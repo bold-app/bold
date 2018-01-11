@@ -17,15 +17,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-require 'test_helper'
+require 'application_system_test_case'
 
-class BackendNavigationTest < BoldIntegrationTest
-
-  setup do
-  end
-
-  teardown do
-  end
+class BackendNavigationTest < ApplicationSystemTestCase
 
   test 'should require sign in' do
     visit "/bold"
@@ -43,10 +37,10 @@ class BackendNavigationTest < BoldIntegrationTest
   test 'should hide settings from editor' do
     login_as @user
     within '.navbar' do
-      assert has_content? 'Pages'
-      assert has_content? 'Posts'
-      assert !has_content?('Settings')
-      assert has_content? @site.name
+      assert_text 'Pages'
+      assert_text 'Posts'
+      refute_text('Settings')
+      assert_text @site.name
     end
     click_on 'Pages'
     assert_equal "/bold/sites/#{@site.id}/pages", current_path
@@ -60,11 +54,12 @@ class BackendNavigationTest < BoldIntegrationTest
   test 'should show all menu items to site admin' do
     login_as @site_admin
     within '.navbar' do
-      assert has_content? 'Pages'
-      assert has_content? 'Posts'
-      assert has_content? 'Settings'
-      assert has_content? @site.name
-      assert has_link? 'Sign out'
+      assert_text 'Pages'
+      assert_text 'Posts'
+      assert_text 'Settings'
+      assert_text @site.name
+      #assert has_link? 'Sign out' hidden behind profile pic / can we simulate
+      #hover?
     end
     click_on 'Pages'
     assert_equal "/bold/sites/#{@site.id}/pages", current_path

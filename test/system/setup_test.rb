@@ -17,9 +17,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-require 'test_helper'
+require 'application_system_test_case'
 
-class SetupTest < BoldIntegrationTest
+class SetupTest < ApplicationSystemTestCase
 
   setup do
     Site.destroy_all
@@ -28,7 +28,7 @@ class SetupTest < BoldIntegrationTest
 
   test 'root should render 404 when no sites' do
     visit '/'
-    assert has_content? 'Page not found'
+    assert_text 'Page not found'
   end
 
 

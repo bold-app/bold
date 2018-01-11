@@ -134,31 +134,6 @@ class ActionController::TestCase
 
 end
 
-class BoldIntegrationTest < ActionDispatch::IntegrationTest
-  include Capybara::DSL
-  include FactoryGirl::Syntax::Methods
-  include BoldIntegrationTestHelpers
-
-  setup do
-    setup_bold
-  end
-end
-
-class ThemeIntegrationTest < BoldIntegrationTest
-
-  private
-
-
-  def has_comment_form?
-    fill_in 'comment_body', with: 'lorem'
-    fill_in 'comment_body', with: ''
-    true
-  rescue
-    false
-  end
-
-end
-
 # make sure the ft search config exists
 begin
   ::User.connection.execute Bold::Search.sql_for_language_config 'english'

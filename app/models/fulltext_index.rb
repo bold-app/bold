@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 #
 # Bold - more than just blogging.
 # Copyright (C) 2015-2016 Jens Krämer <jk@jkraemer.net>

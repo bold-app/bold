@@ -17,14 +17,26 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-require 'test_helper'
+require 'application_system_test_case'
 
-class ContentEditingTest < BoldIntegrationTest
+class AuthoringTest < ApplicationSystemTestCase
 
-  setup do
+  test 'new post' do
+    login_as @user
+    click_link 'Posts'
+    within '.left-col header' do
+      click_link 'new-post'
+    end
+    assert_equal "/bold/sites/#{@site.id}/posts/new", current_path
   end
 
-  teardown do
+  test 'page template change' do
+    login_as @user
+    click_link 'Pages'
+    within '.left-col header' do
+      click_link 'new-page'
+    end
+
   end
 
 end

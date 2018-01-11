@@ -17,37 +17,38 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-require 'test_helper'
+require 'application_system_test_case'
 
-class ContentDeletionTest < BoldIntegrationTest
+class PermalinkResolvingTest < ApplicationSystemTestCase
 
   setup do
     @post = publish_post slug: 'some-post', title: 'hello from site 1', body: 'lorem ipsum'
   end
 
-  test 'should not navigate to deleted post' do
-    path = @post.path
-    visit "/#{path}"
-    assert has_content? 'lorem ipsum'
+  test 'should redirect to new slug' do
+    assert pl = @post.permalink
+    assert old_path = pl.path
+    assert_equal '2014/07/some-post', old_path
 
-    DeleteContent.call @post
+    assert_difference 'Redirect.count' do
+      assert_difference 'Permalink.count' do
+        @post.slug = 'new-link'
+        CreatePermalink.call @post, @post.permalink_path_args
+      end
+    end
+    @post.reload
+    assert pl2 = @post.permalink
+    assert new_path = pl2.path
+    assert_equal '2014/07/new-link', new_path
 
-    visit '/'+path
-    assert_equal 404, status_code
-    assert has_content? 'not found'
-  end
+    pl.reload
+    assert r = pl.destination
+    assert_equal Redirect, r.class
+    assert_equal '/2014/07/new-link', r.location
 
-  test 'search should not find deleted post' do
-    create_special_page :search
-    assert search = @site.search_page
-    visit '/'+search.permalink.path+'?q=lorem'
-    assert has_content? 'hello from site 1'
-
-    DeleteContent.call @post
-
-    visit '/'+search.permalink.path+'?q=lorem'
-    assert !has_content?('hello from site 1')
+    visit '/'+old_path
+    assert_equal '/2014/07/new-link', current_path
+    assert_text 'hello from site 1'
   end
 
 end
-

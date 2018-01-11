@@ -17,31 +17,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-require 'test_helper'
+require 'application_system_test_case'
 
-class ContentPublishingTest < BoldIntegrationTest
+class ContentEditingTest < ApplicationSystemTestCase
 
   setup do
-    @page = save_content_page slug: 'some-page', title: 'hello from site 1', body: 'some page'
   end
 
-  test 'should not navigate to unpublished page' do
-    visit '/some-page'
-    assert_equal 404, status_code
-    assert has_content? 'not found'
-
-    SaveContent.call @page, publish: true
-    visit '/some-page'
-    assert has_content? 'hello from site 1'
-    assert has_content? 'some page'
-
-    @page.unpublish
-    @page.save
-    visit '/some-page'
-    assert_equal 404, status_code
-    assert has_content? 'not found'
+  teardown do
   end
 
 end
-
-

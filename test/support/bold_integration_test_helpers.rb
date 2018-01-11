@@ -55,7 +55,7 @@ module BoldIntegrationTestHelpers
   def wait_for_ajax
     Timeout.timeout(Capybara.default_max_wait_time) do
       loop do
-        active = page.evaluate_script('jQuery.active')
+        active = page.evaluate_script("$.active") rescue 0
         break if active == 0
       end
     end
@@ -65,6 +65,13 @@ module BoldIntegrationTestHelpers
     Capybara.current_session.driver.response.body
   end
 
+  def has_comment_form?
+    fill_in 'comment_body', with: 'lorem'
+    fill_in 'comment_body', with: ''
+    true
+  rescue
+    false
+  end
 end
 
 

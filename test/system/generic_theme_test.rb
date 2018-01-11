@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-require 'test_helper'
+require "application_system_test_case"
 
 # generic theme test case.
 #
@@ -25,7 +25,7 @@ require 'test_helper'
 #
 # BOLD_THEME=casper bundle exec bin/rails test test/integration/theme_test.rb
 #
-class GenericThemeTest < BoldIntegrationTest
+class GenericThemeTest < ApplicationSystemTestCase
 
   puts "Testing the #{ENV['BOLD_THEME'] || 'test'} theme."
 
@@ -44,8 +44,8 @@ class GenericThemeTest < BoldIntegrationTest
       body: 'test page body',
       template: tpl.name
     visit '/test-page-title'
-    assert has_content? 'Test Page Title'
-    assert has_content? 'test page body'
+    assert_text 'Test Page Title'
+    assert_text 'test page body'
   end
 
   test 'should show post' do
@@ -58,8 +58,8 @@ class GenericThemeTest < BoldIntegrationTest
     )
 
     visit '/2015/02/test-post-title'
-    assert has_content? 'Test Post Title'
-    assert has_content? 'test post body'
+    assert_text 'Test Post Title'
+    assert_text 'test post body'
     if has_comment_form?
       fill_in 'comment_author_name', with: 'Max Muster'
       fill_in 'comment_author_email', with: 'user@host.com'
@@ -74,7 +74,7 @@ class GenericThemeTest < BoldIntegrationTest
       c.approved!
 
       visit '/2015/02/test-post-title'
-      assert has_content?('What a nice post!')
+      assert_text('What a nice post!')
     end
   end
 
@@ -86,7 +86,7 @@ class GenericThemeTest < BoldIntegrationTest
     publish_post title: 'Test Post Title', category: cat
 
     visit cat.path
-    assert has_content? 'Test Post Title'
+    assert_text 'Test Post Title'
     assert !has_content?('Test Page Title')
   end
 
@@ -95,7 +95,7 @@ class GenericThemeTest < BoldIntegrationTest
     return unless @site.tag_page
     publish_post title: 'Test Post Title', tag_list: 'foo, bar'
     visit '/foo'
-    assert has_content? 'Test Post Title'
+    assert_text 'Test Post Title'
     assert !has_content?('Test Page Title')
   end
 
@@ -108,10 +108,10 @@ class GenericThemeTest < BoldIntegrationTest
     create_special_page :archive
     return unless @site.archive_page
     visit '/2015/02'
-    assert has_content? 'Test Post Title'
+    assert_text 'Test Post Title'
     assert !has_content?('Test Page Title')
     visit '/2015'
-    assert has_content? 'Test Post Title'
+    assert_text 'Test Post Title'
     assert !has_content?('Test Page Title')
     visit '/2014/02'
     assert !has_content?('Test Post Title')

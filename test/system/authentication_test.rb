@@ -17,9 +17,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Bold.  If not, see <http://www.gnu.org/licenses/>.
 #
-require 'test_helper'
+require 'application_system_test_case'
 
-class AuthenticationTest < BoldIntegrationTest
+class AuthenticationTest < ApplicationSystemTestCase
 
   test 'should redirect to original url after sign in' do
     create(:site).add_user! @user
@@ -57,6 +57,7 @@ class AuthenticationTest < BoldIntegrationTest
     fill_in 'invitation_email', with: 'new_user@test.com'
     assert_enqueued_jobs 1 do
       click_on 'Send invitation'
+      sleep 1
     end
     assert token = enqueued_jobs.last[:args][-2]
 
@@ -79,9 +80,9 @@ class AuthenticationTest < BoldIntegrationTest
     fill_in 'Password', with: 'password'
     click_button 'Sign in'
     assert_equal "/bold/sites/#{@site.id}", current_path
-    assert has_content?('Pages')
-    assert has_content?('Posts')
-    assert !has_content?('Settings')
+    assert_text('Pages')
+    assert_text('Posts')
+    refute_text('Settings')
   end
 
 end

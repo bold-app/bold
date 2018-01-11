@@ -79,17 +79,6 @@ module Frontend
       assert_equal "attachment; filename=\"#{@asset.filename}\"", disp
     end
 
-    test 'should create request log for asset' do
-      @asset = create_asset
-      assert_difference 'RequestLog.count' do
-        get :show, params: { id: @asset.to_param }
-      end
-      assert l = RequestLog.order('created_at').last
-      assert_equal 200, l.status
-      assert_equal @asset, l.resource
-      assert_equal @asset.site, l.site
-      assert_match /^inline/, l.response['disposition']
-    end
   end
 
 end

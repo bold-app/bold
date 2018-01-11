@@ -139,29 +139,6 @@ module Frontend
       assert_select 'h3', p.title
     end
 
-    test 'should create request log' do
-      p = publish_page
-      assert_difference 'RequestLog.count' do
-        get :show, params: { path: p.path }
-      end
-      assert l = RequestLog.order('created_at').last
-      assert_equal 200, l.status
-      assert_equal p, l.resource
-      assert_equal p.site, l.site
-    end
-
-    test 'should record 404' do
-      assert_difference 'RequestLog.count' do
-        get :show, params: { path: 'foo-bar' }
-      end
-      assert l = RequestLog.order('created_at').last
-      assert_equal 404, l.status
-      assert l.path['foo-bar']
-      assert_nil l.resource
-      assert_equal @site, l.site
-      assert_nil l.permalink
-    end
-
   end
 
 end

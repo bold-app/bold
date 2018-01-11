@@ -29,7 +29,6 @@ class FrontendController < BaseController
 
   prepend_before_action :set_site
   around_action :use_site_time_zone
-  after_action  :log_request
 
   # in dev mode, Rails' standard error handling is fine.
   unless Rails.env.development?
@@ -135,7 +134,6 @@ class FrontendController < BaseController
         format.any { head :not_found }
       end
     end
-    log_request
   end
 
   def handle_error(*args)
@@ -153,38 +151,11 @@ class FrontendController < BaseController
         Airbrake.notify exception
       end
     end
-    log_request
-  end
-
-  def handle_missing_file(*args)
-    super
-    log_request
   end
 
   def do_not_track?
     request.headers['DNT'] == '1'
   end
   helper_method :do_not_track?
-
-  def log_request
-    if site = Bold.current_site and request.get? and !(do_not_track? and site.honor_donottrack?)
-
-      # unfortunately this never attaches the first event of a visit to it's visit.
-      # We use the JS based page view tracking for this reason.
-      # TrackRequest.(ahoy, object: (@content || @asset),
-      #                     permalink: @permalink,
-      #                     status: response.status)
-
-
-      visitor_id = session[:visitor_id]
-      content = (@content || @asset)
-      content = content.object if content.respond_to?(:object)
-      r = site.request_logs.create req: request, res: response, resource: content, permalink: (@permalink || content.try(:permalink)), visitor_id: visitor_id
-      if visitor_id.nil?
-        # a new visitor_id has been generated on insert
-        session[:visitor_id] = RequestLog.where(id: r.id).pluck(:visitor_id).first
-      end
-    end
-  end
 
 end
